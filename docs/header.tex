@@ -1,0 +1,36 @@
+\documentclass{mini}
+\usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[polish]{babel}
+\usepackage{graphicx}
+\usepackage{mathtools}
+\usepackage{algpseudocode}
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{catchfilebetweentags}
+\usepackage{enumitem}
+
+\usepackage{catchfilebetweentags}
+\usepackage{etoolbox}
+\setcounter{tocdepth}{2}
+\makeatletter
+\patchcmd{\CatchFBT@Fin@l}{\endlinechar\m@ne}{}
+  {}{\typeout{Unsuccessful patch!}}
+\makeatother
+
+\addto\extraspolish{%  
+ \def\figureautorefname{Rysunek}%  
+} 
+
+%------------------------------------------------------------------------------%
+\title{Scenariusze działań z projektami domyślymi}
+\pm{Tomasz Janiszewski}
+\author{Tomasz Janiszewski
+\\Jakub Dutkowski
+\\Tomasz Łącki
+\\Rafał Wyka
+\\Maciej Bednarz}
+\monthyear{\today}
+%------------------------------------------------------------------------------%
