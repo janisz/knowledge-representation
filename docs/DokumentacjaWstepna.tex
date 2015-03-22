@@ -5,4 +5,144 @@
 
 \newpage
 
+\section{Opis zadania}
+Zadaniem projektu jest opracowanie i zaimplementowanie:
+\begin{itemize}
+\item języka akcji pewnej klasy systemów dynamicznych,
+\item języka kwerend, zapewniającego uzyskanie odpowiedzi na określone pytania.
+\end{itemize}
+Szczegółowy opis klasy systemów dynamicznych oraz języka akcji jest opisany w rozdziale 'Opis języka akcji',
+natomiast język kwerend oraz~zadawane pytania znajdują się w rozdziale 'Opis języka kwerend'.
+W tym dokumencie znajdują się również przykłady.
+Pokazują one konkretne przypadki użycia oraz oczekiwane wyniki działania programu.
+
+\section{Język akcji}
+
+Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
+\begin{itemize}
+	\item Prawo inercji
+	\item Linowy model czasu (czas dyskretny)
+	\item Skewencyjność działań
+	\item Niedeterminizm
+	\item Z każdą akcją związane są
+		\begin{itemize}
+			\item Waruneki początkowe
+			\item Skutki
+				\begin{itemize}
+					\item[środowskowe] 
+						\begin{itemize}
+							\item[pewne] występuje zawsze po zakończeniu akcji
+							\item[typowe] występują zazwyczaj po zakończeniu akcji
+						\end{itemize}
+					\item[dynamiczne] występują po czasie $d \geqslant 0$
+						\begin{itemize}
+							\item[pewne] występuje zawsze po zakończeniu akcji
+							\item[typowe] występują zazwyczaj po zakończeniu akcji
+						\end{itemize}
+				\end{itemize}
+			\item Wykonawca (agent)
+			\item Czas trwania $t = 1$
+		\end{itemize}	
+	\item Pewne stany mogą rozpoczynać wykonywanie pewnych akcji
+	\item Agenci mogą nie potrafić wykonać akcji w pewnych stanach. Stany te są określone przez podanie
+	warunków lub konkretnych punktów czasowych.	
+\end{itemize}
+Językiem odpowiadającym powyższym warunkom jest jezyk $\mathcal{AL}$ 
+opisujący domeny akcji z czasem liniowym.
+
+\subsection{Opis symboli języka}
+\begin{definition}
+Język definujemy jako trójkę
+\begin{equation}
+\psi = \left( \mathcal{F}, \mathcal{A}, \mathcal{T} \right)
+\end{equation}
+\begin{itemize}
+\item[$\mathcal{F}$] niepusty zbiór inercji (dalej \emph{fluenty})
+\item[$\mathcal{A}$] niepusty zbiór akcji (dalej \emph{akcje})
+\item[$\mathcal{T}$] niepusty zbiór punktów czasu, $\mathcal{T} = \mathbb{N}$
+\end{itemize}
+\end{definition}
+
+\subsection{Syntaktyka języka}
+\todo[inline]{nie jestem pewien czy tak to powinno wyglądać}
+\begin{description}[style=nextline]
+	\item[$\texttt{initially } \alpha$]	
+	stan początkowy fluentów w formule $\alpha$
+	\item[$a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
+	akcja $a_i$ powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
+	\item[$\texttt{typically } a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
+	zazwyczaj akcja $a_i$ powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
+	\item[$a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$] 
+	akcja $a_i$ powoduje wykonanie akcji $a_j$ po $d$ chwilach od zakończenia akcji $a_i$,
+	jeśli zachodzi warunek $\pi$
+	\item[$\texttt{typically } a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$] 
+	zazwyczaj akcja $a_i$ powoduje wykonanie akcji $a_j$ po $d$ chwilach od zakończenia akcji $a_i$,
+	jeśli zachodzi warunek $\pi$
+	\item[$a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$] 
+	akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
+	jeśli zachodzi warunek $\pi$	
+	\item[$\texttt{typically } a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$] 
+	zazwyczaj akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
+	jeśli zachodzi warunek $\pi$	
+	\item[$\pi \texttt{ triggers } a_i$] 
+	jeśli zachodzi warunek $\pi$	to wykonywana jest akcja $a_i$
+	\item[$\texttt{typically }\pi \texttt{ triggers } a_i$] 
+	zazwyczaj jeśli zachodzi warunek $\pi$ to wykonywana jest akcja $a_i$
+	\item[$\texttt{impossible } a_i \texttt{ at } t \texttt{ if } \pi$] 
+	akcja $a_i$ jest niemożliwa  w chwili $t$, jeśli zachodzi warunek $\pi$	
+	\item[$\texttt{always } \pi$] 
+	każdy stan spełnia warunek $\pi$
+\end{description}
+
+\begin{example}
+	Rozważmy przykład studenta Janka. Janek mieszka w akademiku.
+	Przed wyjściem zazwyczaj bierze ze sobą kartę do wstępu do akademika i zamyka pokój.
+	W chwili 10 cieć zamyka akademik i można wejść tylko z kartą.
+	\begin{align*}
+	&\texttt{initially } \neg roomClosed, \neg hostelClosed, inHostel, \neg hasCard \\
+	&\texttt{typically } \neq hasCard \texttt{ triggers } TakeCard \\
+	&\texttt{typically } Leave \texttt{ invokes } LookTheDoor \\
+	&TakeCard \texttt{ causes } hasCard \\
+	&Leave \texttt{ causes } \neg inHostel \\
+	&Comeback \texttt{ causes } inHostel \texttt{ after } 10 \texttt{ if } hasCard \\
+	&hostelClosed \texttt{ occures at } 10
+	\end{align*}
+\end{example}
+
+
+\subsection{Scenariusze działań}
+\begin{definition}
+Scenariusze działań definujemy jako zbiór obserwacji i akcji:
+\begin{equation}
+	Sc = (OBS, ACS)\\
+\end{equation}
+\begin{description}
+	\item[$OBS = \lbrace(\gamma_1, t_1), \dots, (\gamma_m, t_m)\rbrace$]
+	obserwacja, każda obserwacja jest stanme spełniającym warunek $\gamma$ w pewnej chwili $t$
+	\item[$ACS = \lbrace(a_1, t_1), \dots, (a_n, t_n) \rbrace$]
+	gdzie $a_i$ -- akcje, $t_i$ -- punkt w czasie rozpoczęcia akcji
+\end{description}
+\end{definition}
+
+\subsection{Semantyka}
+\todo{Przpisać}
+
+\section{Język zapytań}
+Zdefiniowany język akcji może być odpytywany przez poniższy język zapytan,
+który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
+\begin{description}[style=nextline]
+	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ warunek $\gamma$ zachodzi zawsze/kiedykolwiek/na ogół?]
+	$\texttt{always/ever/generally } \gamma \texttt{ at } t \texttt{ when } Sc$
+	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ akcja $a$ wykonywana jest zawsze/kiedykolwiek?]
+	$\texttt{always/ever/generally performed } a \texttt{ at } t \texttt{ when } Sc$
+	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agnetów $Ag$ zawsze/kiedykolwiek?]
+	$\texttt{always/ever involed } Ag \texttt{ when } Sc$	
+\end{description}
+
+\subsection{Semantyka}
+\todo{Przepisać}
+
+\section{Przykłady}
+\todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
+
 \end{document}
