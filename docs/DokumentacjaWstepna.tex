@@ -128,7 +128,55 @@ Scenariusze działań definiujemy jako zbiór obserwacji i akcji:
 \end{definition}
 
 \subsection{Semantyka}
-\todo{Przepisać}
+\begin{definition}
+Semantyczną strukturą języka $\mathcal{AL}$ nazywamy system $ S=(H,O,E,T_{\infty }) $ taki, że:
+	\begin{itemize}
+		\item $ H: Forms(F) $ $\times$ $ \mathbb{N}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii, pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
+		\item $ O: Ac$ $\times$ $ \mathbb{N}$ $\longrightarrow$ $2^{F}$ jest funkcją okluzji. Dla pewnej ustalonej akcji $A \in Ac$, chwili czasu $t\in\mathbb{N}$, funkcja $O(A,t) $ zwraca zbiór fluentów, na który akcja $A$ ma wpływ, jeśli będzie ona trwała w chwili $t$. 
+Wartość funkcji okluzji będziemy nazywać regionem okluzji. 
+		\item $E\subseteq Ac \times \mathbb{N} \times \mathbb{N}$ jest relacją wykonań akcji. Trójka $(A,t,d)$ należy do relacji $E$ jeśli akcja $A$ trwająca d jednostek czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że tylko jedną akcje możemy wykonać w danym czasie tak, więc jeśli $(t_{1},t_{1}+d_{1}) \subseteq (t_{2},t_{2}+d_{2} )$ lub $(t_{2},t_{2}+d_{2} ) \subseteq (t_{1},t_{1}+d_{1}) $ oraz $(A,t_{1},d_{1})\in E$ i $(B,t_{2},d_{2})\in E$, to $A=B$, $t_{1}=t_{2}$, $d_{1}=d_{2} $. Natomiast jeżeli $(t_{1},t_{1}+d_{1}) \nsubseteq (t_{2},t_{2}+d_{2} )$, $(t_{2},t_{2}+d_{2} ) \nsubseteq (t_{1},t_{1}+d_{1}) $ oraz $(A,t_{1},d_{1})\in E$ i $(B,t_{2},d_{2})\in E$, to $t_{1}+d_{1}<t_{2}$ lub $t_{2}+d_{2}<t_{1}$.
+		\item $T_{\infty } \in \mathbb{N} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna. 
+		Mówi ona do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu. 
+		Oznacza to, że nie będziemy rozpatrywać nieskończonych scenariuszy. 
+	\end{itemize}
+\end{definition}
+
+Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - będą formułami, $d,d_{2},d_{3} $ - liczbami naturalnymi (oznaczającymi czas trwania akcji) oraz $fl(\alpha)$ będzie zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
+   \begin{itemize} 
+   		\item Dla każdego wyrażenia $ ( (A,d)\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t,d) \in E$, wtedy $H(\alpha,t+d)=1$ oraz dla każdego momentu w czasie $ d' \in \mathbb{N}$ takiego, że $1\leq d'\leq d$ mamy $fl(\alpha)\subseteq O(A,t+d')$.
+   		\item Dla każdego wyrażenia $( (A,d) \;release\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t,d)\in E$, wtedy dla każdego momentu w czasie $ d' \in \mathbb{N}$ takiego, że $1\leq d'\leq d$ mamy $f\in O(A,t+d')$.
+   		\item Dla każdego wyrażenia $(\pi\;triggers\; (A,d))\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $t+d\leq T_{\infty}$, wtedy $(A,t,d)\in E$.
+		\item Dla każdego wyrażenia $( (A,d_{1})\;invokes\;(B,d_{2})\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t,d_{1})\in E $ oraz $t+d+d_{1}+d_{2}\leq T_{\infty}$, wtedy $(B,t+d+d_{1},d_{2}) \in E $.
+		\item Dla każdego wyrażenia $(impossible \; (A, d) \; at\;  t )$ mamy $(A,t,d) \notin E $
+		\item Dla każdego wyrażenia $(impossible \; (A, d) \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, wtedy $(A,t,d) \notin E $.
+   \end{itemize}
+   \begin{definition}
+   Niech $S = (H,O,E,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem, oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
+   		\begin{itemize} 
+     		\item Dla każdej obserwacji $(\alpha,t )\in OBS$ mamy $H(\alpha,t )=1$
+     		\item $ACS \subseteq E$ 
+     		\item Dla każdej akcji $ {A \in Ac}$ oraz dla każdego czasu rozpoczęcia akcji i jej długości $t,d \in \mathbb{N}$, jeżeli $(A,t,d) \in E $, to $t+d \leq T_{\infty}$. 
+    		\end{itemize} 
+   \end{definition}
+   \begin{definition}
+   Niech $O_{1}$,$O_{2}$: $X \longrightarrow 2^{Y}$. Mówimy, że $O_{1} \prec O_{2}$ jeżeli $\forall x\in X$ $O_{1}(x)\subseteq O_{2}(x)$ oraz $O_{1}\neq O_{2}$.
+   \end{definition}
+   
+   \begin{definition}
+   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny $D$. Mówimy, że $S$ jest $O$-minimalną strukturą, jeżeli nie istnieje struktura \\$S'=(H',O',E',T_{\infty}')$ dla tego samego scenariusza i domeny taka, że $O'\prec O$.  
+   \end{definition}
+   \begin{definition}
+   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny $D$. $S$ będziemy nazywać modelem $Sc$ zgodnym z opisem $D$ jeżeli:
+   \begin{itemize}
+		\item $S$ jest $O$-minimalny
+		\item Dla każdego momentu w czasie $t,d\in \mathbb{N}$,  \{$f\in F$: $H(f,t)\neq H(f,t+d) $\} $\subseteq O(A,t+d)$ dla pewnej akcji $A$.
+		\item Nie istnieje, żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$, która spełnia poprzednie warunki oraz taka, że $E'\subset E$. 
+   \end{itemize}
+\end{definition}
+
+\begin{remark}
+Nie dla każdego scenariusza można ułożyć model. Mówimy, że scenariusz $Sc$ jest \textit{zgodny} jeśli istnieje do niego model zgodny z dziedziną $D$.
+\end{remark}
 
 \section{Język zapytań}
 Zdefiniowany język akcji może być odpytywany przez poniższy język zapytań,
