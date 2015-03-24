@@ -11,12 +11,12 @@ Zadaniem projektu jest opracowanie i zaimplementowanie:
 \item języka akcji pewnej klasy systemów dynamicznych,
 \item języka kwerend, zapewniającego uzyskanie odpowiedzi na określone pytania.
 \end{itemize}
-Szczegółowy opis klasy systemów dynamicznych oraz języka akcji jest opisany w rozdziale 'Opis języka akcji',
-natomiast język kwerend oraz~zadawane pytania znajdują się w rozdziale 'Opis języka kwerend'.
+Szczegółowy opis klasy systemów dynamicznych oraz języka akcji jest opisany w rozdziale \ref{sc:jezyk_akcji},
+natomiast język kwerend oraz zadawane pytania znajdują się w rozdziale \ref{sc:kwerendy}.
 W tym dokumencie znajdują się również przykłady.
 Pokazują one konkretne przypadki użycia oraz oczekiwane wyniki działania programu.
 
-\section{Język akcji}
+\section{Język akcji}\label{sc:jezyk_akcji}
 
 Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 \begin{itemize}
@@ -27,19 +27,19 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 	\item Z każdą akcją związane są
 		\begin{itemize}
 			\item Warunki początkowe
-			\item Skutki
-				\begin{itemize}
-					\item[środowiskowe] 
-						\begin{itemize}
+			\item Skutki:
+				\begin{description}
+					\item[środowiskowe] występują natychmiast po zakończeniu akcji
+						\begin{description}
 							\item[pewne] występuje zawsze po zakończeniu akcji
 							\item[typowe] występują zazwyczaj po zakończeniu akcji
-						\end{itemize}
+						\end{description}
 					\item[dynamiczne] występują po czasie $d \geqslant 0$
-						\begin{itemize}
+						\begin{description}
 							\item[pewne] występuje zawsze po zakończeniu akcji
 							\item[typowe] występują zazwyczaj po zakończeniu akcji
-						\end{itemize}
-				\end{itemize}
+						\end{description}
+				\end{description}
 			\item Wykonawca (agent)
 			\item Czas trwania $t = 1$
 		\end{itemize}	
@@ -178,7 +178,7 @@ Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - będą formułami
 Nie dla każdego scenariusza można ułożyć model. Mówimy, że scenariusz $Sc$ jest \textit{zgodny} jeśli istnieje do niego model zgodny z dziedziną $D$.
 \end{remark}
 
-\section{Język zapytań}
+\section{Język zapytań}\label{sc:kwerendy}
 Zdefiniowany język akcji może być odpytywany przez poniższy język zapytań,
 który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 \begin{description}[style=nextline]
