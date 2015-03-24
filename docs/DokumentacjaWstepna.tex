@@ -26,10 +26,10 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 	\item Niedeterminizm
 	\item Z każdą akcją związane są
 		\begin{itemize}
-			\item Waruneki początkowe
+			\item Warunki początkowe
 			\item Skutki
 				\begin{itemize}
-					\item[środowskowe] 
+					\item[środowiskowe] 
 						\begin{itemize}
 							\item[pewne] występuje zawsze po zakończeniu akcji
 							\item[typowe] występują zazwyczaj po zakończeniu akcji
@@ -47,18 +47,19 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 	\item Agenci mogą nie potrafić wykonać akcji w pewnych stanach. Stany te są określone przez podanie
 	warunków lub konkretnych punktów czasowych.	
 \end{itemize}
-Językiem odpowiadającym powyższym warunkom jest jezyk $\mathcal{AL}$ 
+Językiem odpowiadającym powyższym warunkom jest język $\mathcal{AL}$ 
 opisujący domeny akcji z czasem liniowym.
 
 \subsection{Opis symboli języka}
 \begin{definition}
-Język definujemy jako trójkę
+Język definiujemy jako trójkę
 \begin{equation}
 \psi = \left( \mathcal{F}, \mathcal{A}, \mathcal{T} \right)
 \end{equation}
 \begin{itemize}
 \item[$\mathcal{F}$] niepusty zbiór inercji (dalej \emph{fluenty})
-\item[$\mathcal{A}$] niepusty zbiór akcji (dalej \emph{akcje})
+\item[$\mathcal{A}$] niepusty zbiór akcji (dalej \emph{akcje}), 
+$\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau \in \textbf{Tasks} \right\rbrace$
 \item[$\mathcal{T}$] niepusty zbiór punktów czasu, $\mathcal{T} = \mathbb{N}$
 \end{itemize}
 \end{definition}
@@ -69,7 +70,8 @@ Język definujemy jako trójkę
 	\item[$\texttt{initially } \alpha$]	
 	stan początkowy fluentów w formule $\alpha$
 	\item[$a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
-	akcja $a_i$ powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
+	akcja $a_i$\footnote{akcja $a_i$ złożona jest z agenta ($\Lambda$) i zadania ($\tau$), które wykonuje}
+	powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
 	\item[$\texttt{typically } a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
 	zazwyczaj akcja $a_i$ powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
 	\item[$a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$] 
@@ -94,50 +96,67 @@ Język definujemy jako trójkę
 	każdy stan spełnia warunek $\pi$
 \end{description}
 
-\begin{example}
+\begin{example}\label{przyk:syntaktyka_jezyka_akcji}
 	Rozważmy przykład studenta Janka. Janek mieszka w akademiku.
 	Przed wyjściem zazwyczaj bierze ze sobą kartę do wstępu do akademika i zamyka pokój.
 	W chwili 10 cieć zamyka akademik i można wejść tylko z kartą.
 	\begin{align*}
 	&\texttt{initially } \neg roomClosed, \neg hostelClosed, inHostel, \neg hasCard \\
-	&\texttt{typically } \neq hasCard \texttt{ triggers } TakeCard \\
+	&closeDoor \texttt{ causes } hostelClosed \\
+	&\texttt{typically } \neg hasCard \texttt{ triggers } TakeCard \\
 	&\texttt{typically } Leave \texttt{ invokes } LookTheDoor \\
-	&TakeCard \texttt{ causes } hasCard \\
-	&Leave \texttt{ causes } \neg inHostel \\
+	&\textsc{Janek } TakeCard \texttt{ causes } hasCard \\
+	&\textsc{Janek } Leave \texttt{ causes } \neg inHostel \\
 	&Comeback \texttt{ causes } inHostel \texttt{ after } 10 \texttt{ if } hasCard \\
-	&hostelClosed \texttt{ occures at } 10
+	&\texttt{typically } \textsc{DoorKepper } closeDoor \texttt{ occures at } 10
 	\end{align*}
 \end{example}
 
 
 \subsection{Scenariusze działań}
 \begin{definition}
-Scenariusze działań definujemy jako zbiór obserwacji i akcji:
+Scenariusze działań definiujemy jako zbiór obserwacji i akcji:
 \begin{equation}
 	Sc = (OBS, ACS)\\
 \end{equation}
 \begin{description}
 	\item[$OBS = \lbrace(\gamma_1, t_1), \dots, (\gamma_m, t_m)\rbrace$]
-	obserwacja, każda obserwacja jest stanme spełniającym warunek $\gamma$ w pewnej chwili $t$
+	obserwacja, każda obserwacja jest stanem spełniającym warunek $\gamma$ w pewnej chwili $t$
 	\item[$ACS = \lbrace(a_1, t_1), \dots, (a_n, t_n) \rbrace$]
 	gdzie $a_i$ -- akcje, $t_i$ -- punkt w czasie rozpoczęcia akcji
 \end{description}
 \end{definition}
 
 \subsection{Semantyka}
-\todo{Przpisać}
+\todo{Przepisać}
 
 \section{Język zapytań}
-Zdefiniowany język akcji może być odpytywany przez poniższy język zapytan,
+Zdefiniowany język akcji może być odpytywany przez poniższy język zapytań,
 który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 \begin{description}[style=nextline]
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ warunek $\gamma$ zachodzi zawsze/kiedykolwiek/na ogół?]
 	$\texttt{always/ever/generally } \gamma \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ akcja $a$ wykonywana jest zawsze/kiedykolwiek?]
 	$\texttt{always/ever/generally performed } a \texttt{ at } t \texttt{ when } Sc$
-	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agnetów $Ag$ zawsze/kiedykolwiek?]
-	$\texttt{always/ever involed } Ag \texttt{ when } Sc$	
+	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agentów $Ag$ zawsze/kiedykolwiek?]
+	$\texttt{always/ever involved } Ag \texttt{ when } Sc$	
 \end{description}
+
+\subsection{Przykłady}
+Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
+\begin{example}[Czy Cieć jest zawsze zaangażowany w realizację scenariusza]
+	$$
+	\texttt{always involved } \textsc{DoorKepper} \texttt{ when } Sc
+	$$
+	$\texttt{FALSE}$ -- Cieć zazwyczaj zamyka akademik ale nie zawsze.
+\end{example}
+\begin{example}[Czy w chwili 11 realizacji scenariusza $Sc$ Janek zawsze jest w akademiku]
+	$$
+	\texttt{always } inHostel \texttt{ at } 11 \texttt{ when } Sc
+	$$
+	$\texttt{FALSE}$ -- Janek zazwyczaj ma klucz który umożliwia wejście do akademika ale nie zawsze.
+\end{example}
+
 
 \subsection{Semantyka}
 \todo{Przepisać}
