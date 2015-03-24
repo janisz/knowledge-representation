@@ -228,5 +228,15 @@ Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwere
 \end{remark}
 \section{Przykłady}
 \todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
+\begin{example}
+	\begin{align*}
+		&\texttt{initially} \neg hasMoney, \neg hasBread \\
+	 	&\neg hasMoney &\texttt{triggers}, UseATM \\
+		&UseATM &\texttt{typically triggers} BuyBread \\
+		&BuyBread &\texttt{causes} hasBread, \neg hasMoney \\
+		&hasBread &\texttt{typically invokes} EatBread \\
+ 		&EatBread &\texttt{causes} \neg hasBread \\
+	\end{align*}
+\end{example}
 
 \end{document}
