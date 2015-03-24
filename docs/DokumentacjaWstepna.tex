@@ -207,8 +207,25 @@ Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
 
 
 \subsection{Semantyka}
-\todo{Przepisać}
+\todo{Czy to co skopiowałem ma u nas sens?}
+Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
+\begin{itemize}
+	\item zapytanie kwerendą $Q$ postaci $executable\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdej ścieżki wykonania istnieje model $S=(H,O,E,T_{\infty})$ zgodny z $D$ dla scenariusza $Sc$.
+
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $H(\gamma,t)=1$
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{t \in N}\ H(\gamma,t)=1$.
+
+	\item zapytanie kwerendą $Q$ postaci $performing\ A\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{d \in N}\ (A,t,d) \in E$.
+	\item zapytanie kwerendą $Q$ postaci $performing\ A\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{t \in N}\ \exists_{d \in N}\ (A,t,d) \in E$.
+	\item zapytanie kwerendą $Q$ postaci $performing\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{A \in Ac}\ \exists_{d \in N}\ (A,t,d) \in E$.
+
+	\item zapytanie kwerendą $Q$ postaci $accesible\ \gamma\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists(A_{0},...,A_{n} \in ACS, n \geqslant 0)\  \exists_{t \in N}\ H(\gamma,t)=1$.
+\end{itemize}
+
+\begin{remark}
+   Jeśli warunek nie zajdzie program zwróci wartość $FALSE$.
+\end{remark}
 \section{Przykłady}
 \todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
 
