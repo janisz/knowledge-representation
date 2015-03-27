@@ -216,19 +216,19 @@ Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
 Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
-	\item zapytanie kwerendą $Q$ postaci $\gamma\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
 	\begin{description}
 		\item[always] $\forall_{t \in \mathcal{T}}\ H(\gamma,t)=1$ 
 		\item[ever] $\exists_{t \in \mathcal{T}}\ H(\gamma,t)=1$
 		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} H(\gamma,t)=1$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $performed\ a_i\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\item zapytanie kwerendą $Q$ postaci $\texttt{performed}\ a_i\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
 	\begin{description}
 		\item[always] $\forall_{t \in \mathcal{T}} (a_i,t) \in E$
 		\item[ever] $\exists_{t \in \mathcal{T}} (a_i,t) \in E$
 		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} (a_i,t) \in E$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $involved\ Ag\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
+	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ Ag\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
 	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
 \end{itemize}
 
@@ -239,13 +239,12 @@ Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwere
 \todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
 \begin{example}
 	\begin{align*}
-		&\texttt{initially} \neg hasMoney, \neg hasBread \\
-	 	&\neg hasMoney &\texttt{triggers}, UseATM \\
-		&UseATM &\texttt{typically triggers} BuyBread \\
-		&BuyBread &\texttt{causes} hasBread, \neg hasMoney \\
-		&hasBread &\texttt{typically invokes} EatBread \\
- 		&EatBread &\texttt{causes} \neg hasBread \\
+	&\texttt{initially } \neg hasMoney, \neg hasBread \\
+	&\neg hasMoney \texttt{ triggers } UseATM \\
+	&UseATM \texttt{ typically triggers } BuyBread \\
+	&BuyBread \texttt{ causes } hasBread, \neg hasMoney \\
+	&hasBread \texttt{ typically invokes } EatBread \\
+ 	&EatBread \texttt{ causes } \neg hasBread
 	\end{align*}
 \end{example}
-
 \end{document}
