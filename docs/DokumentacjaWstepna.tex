@@ -155,11 +155,11 @@ Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl
    		\begin{itemize} 
      		\item Dla każdej obserwacji $(\alpha,t )\in OBS$ mamy $H(\alpha,t )=1$
      		\item $ACS \subseteq E$ 
-     		\item Dla każdej akcji $ {A \in Ac}$ oraz dla każdego czasu rozpoczęcia akcji i jej długości $t,d \in \mathbb{N}$, jeżeli $(A,t,d) \in E $, to $t+d \leq T_{\infty}$. 
+     		\item Dla każdej akcji $ {A \in Ac}$ oraz dla każdego czasu rozpoczęcia akcji $t \in \mathbb{N}$, jeżeli $(A,t) \in E $, to $t+1 \leq T_{\infty}$. 
     		\end{itemize} 
    \end{definition}
    \begin{definition}
-   Niech $O_{1}$,$O_{2}$: $X \longrightarrow 2^{Y}$. Mówimy, że $O_{1} \prec O_{2}$ jeżeli $\forall x\in X$ $O_{1}(x)\subseteq O_{2}(x)$ oraz $O_{1}\neq O_{2}$.
+	   Niech $O_{1}$,$O_{2}$: $X \longrightarrow 2^{Y}$. Mówimy, że $O_{1} \prec O_{2}$ jeżeli $\forall x\in X$ $O_{1}(x)\subseteq O_{2}(x)$ oraz $O_{1}\neq O_{2}$.
    \end{definition}
    
    \begin{definition}
@@ -169,8 +169,8 @@ Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl
    Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny $D$. $S$ będziemy nazywać modelem $Sc$ zgodnym z opisem $D$ jeżeli:
    \begin{itemize}
 		\item $S$ jest $O$-minimalny
-		\item Dla każdego momentu w czasie $t,d\in \mathbb{N}$,  \{$f\in F$: $H(f,t)\neq H(f,t+d) $\} $\subseteq O(A,t+d)$ dla pewnej akcji $A$.
-		\item Nie istnieje, żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$, która spełnia poprzednie warunki oraz taka, że $E'\subset E$. 
+		\item Dla każdego momentu w czasie $t \in \mathbb{N}$,  \{$f\in F$: $H(f,t)\neq H(f,t+1) $\} $\subseteq O(A,t+1)$ dla pewnej akcji $A$.
+		\item Nie istnieje żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$, która spełnia poprzednie warunki oraz taka, że $E'\subset E$. 
    \end{itemize}
 \end{definition}
 
