@@ -131,37 +131,37 @@ Scenariusze działań definiujemy jako zbiór obserwacji i akcji:
 \begin{definition}
 Semantyczną strukturą języka $\mathcal{AL}$ nazywamy system $ S=(H,O,E,N,T_{\infty }) $ taki, że:
 	\begin{itemize}
-		\item $ H: Forms(F) $ $\times$ $ \mathbb{N}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii, pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
-		\item $ O: Ac$ $\times$ $ \mathbb{N}$ $\longrightarrow$ $2^{F}$ jest funkcją okluzji. Dla pewnej ustalonej akcji $A \in Ac$, chwili czasu $t\in\mathbb{N}$, funkcja $O(A,t) $ zwraca zbiór fluentów, na który akcja $A$ ma wpływ, jeśli będzie ona trwała w chwili $t$. 
+		\item $ H: Forms(\mathcal{F}) $ $\times$ $ \mathcal{T}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii, pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
+		\item $ O: \mathcal{A}$ $\times$ $ \mathcal{T}$ $\longrightarrow$ $2^{\mathcal{F}}$ jest funkcją okluzji. Dla pewnej ustalonej akcji $a_i \in \mathcal{A}$, chwili czasu $t\in\mathbb{N}$, funkcja $O(a_i,t) $ zwraca zbiór fluentów, na który akcja $a_i$ ma wpływ, jeśli będzie ona trwała w chwili $t$. 
 Wartość funkcji okluzji będziemy nazywać regionem okluzji. 
-		\item $E\subseteq Ac \times \mathbb{N}$ jest relacją wykonań akcji. Dwójka $(A,t)$ należy do relacji $E$ jeśli akcja $A$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli $(A, t_1) \in E \land (B, t_2) \in E \implies t_1 \neq t_2 \lor A = B$.
-		\item $N\subseteq Ac \times \mathbb{N}$ jest relacją typowości. 
+		\item $E\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją wykonań akcji. Dwójka $(a_i,t)$ należy do relacji $E$ jeśli akcja $a_i$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli $(a_i, t_1) \in E \land (a_j, t_2) \in E \implies t_1 \neq t_2 \lor a_i = a_j$.
+		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości. 
 				\todo{nie mam pojęcia czy ten punkt dobrze prztłumaczyłem, ktoś ma lepsze pomysły?}
-		Dwójka $(A,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $A$. 
-		\item $T_{\infty } \in \mathbb{N} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna. 
+		Dwójka $(a_i,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $a_i$. 
+		\item $T_{\infty } \in \mathcal{T} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna. 
 		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu. Stąd scenariusze nieskończone nie będą rozpatrywane. 
 	\end{itemize}
 \end{definition}
 
-Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
+Niech: $a_i,a_j$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
    \begin{itemize} 
-   		\item Dla każdego wyrażenia $ ( A\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(A,t + 1)$.
-		\item Dla każdego wyrażenia $ ( typically\; A\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathbb{N}$, jeżeli $(A,t) \in N$, to $(A,t) \in E$.
- 		\item Dla każdego wyrażenia $( A\;invokes\;B\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(B,t+1+d) \in E $.
-	 	\item Dla każdego wyrażenia $( typically\; A\;invokes\;B\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t)\in E$, $(B, t + d)\in N $ oraz $t+1+d\leq T_{\infty}$, wtedy $(B,t+1+d) \in E $.
-   		\item Dla każdego wyrażenia $( A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in E$, wtedy mamy $f\in O(A,t+1)$.
- 		\item Dla każdego wyrażenia $( typically\; A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in E$ i $(A,t)\in N$, wtedy mamy $f\in O(A,t+1)$.
-   		\item Dla każdego wyrażenia $(\pi\;triggers\; A)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(A,t)\in E$.
-		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; A)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(A,t)\in E$.
-		\item Dla każdego wyrażenia $(impossible \; A \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, wtedy $(A,t) \notin E $.
-		\item Dla każdego wyrażenia $(always \; \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, $H(\pi,t)=1$.
+   		\item Dla każdego wyrażenia $ ( a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
+		\item Dla każdego wyrażenia $ ( typically\; a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathcal{T}$, jeżeli $(a_i,t) \in N$, to $(a_i,t) \in E$.
+ 		\item Dla każdego wyrażenia $( a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
+	 	\item Dla każdego wyrażenia $( typically\; a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E$, $(a_j, t + d)\in N $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
+   		\item Dla każdego wyrażenia $( a_i\;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$, wtedy mamy $f\in O(a_i,t+1)$.
+ 		\item Dla każdego wyrażenia $( typically\; a_i \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$ i $(a_i,t)\in N$, wtedy mamy $f\in O(a_i,t+1)$.
+   		\item Dla każdego wyrażenia $(\pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
+		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
+		\item Dla każdego wyrażenia $(impossible \; a_i \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, wtedy $(a_i,t) \notin E $.
+		\item Dla każdego wyrażenia $(always \; \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$, $H(\pi,t)=1$.
    \end{itemize}
    \begin{definition}
    Niech $S = (H,O,E,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem, oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
    		\begin{itemize} 
      		\item Dla każdej obserwacji $(\alpha,t )\in OBS$ mamy $H(\alpha,t )=1$
      		\item $ACS \subseteq E$ 
-     		\item Dla każdej akcji $ {A \in Ac}$ oraz dla każdego czasu rozpoczęcia akcji $t \in \mathbb{N}$, jeżeli $(A,t) \in E $, to $t+1 \leq T_{\infty}$. 
+     		\item Dla każdej akcji $ {a_i \in \mathcal{A}}$ oraz dla każdego czasu rozpoczęcia akcji $t \in \mathcal{T}$, jeżeli $(a_i,t) \in E $, to $t+1 \leq T_{\infty}$. 
     		\end{itemize} 
    \end{definition}
    \begin{definition}
@@ -175,7 +175,7 @@ Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl
    Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny $D$. $S$ będziemy nazywać modelem $Sc$ zgodnym z opisem $D$ jeżeli:
    \begin{itemize}
 		\item $S$ jest $O$-minimalny
-		\item Dla każdego momentu w czasie $t \in \mathbb{N}$,  \{$f\in F$: $H(f,t)\neq H(f,t+1) $\} $\subseteq O(A,t+1)$ dla pewnej akcji $A$.
+		\item Dla każdego momentu w czasie $t \in \mathcal{T}$,  \{$f\in F$: $H(f,t)\neq H(f,t+1) $\} $\subseteq O(a_i,t+1)$ dla pewnej akcji $a_i$.
 		\item Nie istnieje żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$, która spełnia poprzednie warunki oraz taka, że $E'\subset E$. 
    \end{itemize}
 \end{definition}
@@ -191,7 +191,7 @@ który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ warunek $\gamma$ zachodzi zawsze/kiedykolwiek/na ogół?]
 	$\texttt{always/ever/generally } \gamma \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ akcja $a$ wykonywana jest zawsze/kiedykolwiek?]
-	$\texttt{always/ever/generally performed } a \texttt{ at } t \texttt{ when } Sc$
+	$\texttt{always/ever/generally performed } a_i \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agentów $Ag$ zawsze/kiedykolwiek?]
 	$\texttt{always/ever involved } Ag \texttt{ when } Sc$	
 \end{description}
@@ -218,15 +218,15 @@ Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwere
 \begin{itemize}
 	\item zapytanie kwerendą $Q$ postaci $\gamma\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
 	\begin{description}
-		\item[always] $\forall_{t \in N}\ H(\gamma,t)=1$ 
-		\item[ever] $\exists_{t \in N}\ H(\gamma,t)=1$
-		\item[generally] $\forall_{(A,t)\in N} H(\gamma,t)=1$
+		\item[always] $\forall_{t \in \mathcal{T}}\ H(\gamma,t)=1$ 
+		\item[ever] $\exists_{t \in \mathcal{T}}\ H(\gamma,t)=1$
+		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} H(\gamma,t)=1$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $performed\ A\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\item zapytanie kwerendą $Q$ postaci $performed\ a_i\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
 	\begin{description}
-		\item[always] $\forall_{t \in N} (A,t) \in E$
-		\item[ever] $\exists_{t \in N} (A,t) \in E$
-		\item[generally] $\forall_{(A,t)\in N} (A,t) \in E$
+		\item[always] $\forall_{t \in \mathcal{T}} (a_i,t) \in E$
+		\item[ever] $\exists_{t \in \mathcal{T}} (a_i,t) \in E$
+		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} (a_i,t) \in E$
 	\end{description}
 	\item zapytanie kwerendą $Q$ postaci $involved\ Ag\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
 	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
