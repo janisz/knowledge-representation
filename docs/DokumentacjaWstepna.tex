@@ -150,7 +150,7 @@ Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl
  		\item Dla każdego wyrażenia $( A\;invokes\;B\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(B,t+1+d) \in E $.
 	 	\item Dla każdego wyrażenia $( typically\; A\;invokes\;B\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t)\in E$, $(B, t + d)\in N $ oraz $t+1+d\leq T_{\infty}$, wtedy $(B,t+1+d) \in E $.
    		\item Dla każdego wyrażenia $( A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in E$, wtedy mamy $f\in O(A,t+1)$.
- 		\item Dla każdego wyrażenia $( typically\; A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in N$, wtedy mamy $f\in O(A,t+1)$.
+ 		\item Dla każdego wyrażenia $( typically\; A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in E$ i $(A,t)\in N$, wtedy mamy $f\in O(A,t+1)$.
    		\item Dla każdego wyrażenia $(\pi\;triggers\; A)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(A,t)\in E$.
 		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; A)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(A,t)\in E$.
 		\item Dla każdego wyrażenia $(impossible \; A \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, wtedy $(A,t) \notin E $.
@@ -216,16 +216,20 @@ Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
 Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
-	\item zapytanie kwerendą $Q$ postaci $executable\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdej ścieżki wykonania istnieje model $S=(H,O,E,T_{\infty})$ zgodny z $D$ dla scenariusza $Sc$.
-
-	\item zapytanie kwerendą $Q$ postaci $\gamma\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $H(\gamma,t)=1$
-	\item zapytanie kwerendą $Q$ postaci $\gamma\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{t \in N}\ H(\gamma,t)=1$.
-
-	\item zapytanie kwerendą $Q$ postaci $performing\ A\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{d \in N}\ (A,t,d) \in E$.
-	\item zapytanie kwerendą $Q$ postaci $performing\ A\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{t \in N}\ \exists_{d \in N}\ (A,t,d) \in E$.
-	\item zapytanie kwerendą $Q$ postaci $performing\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists_{A \in Ac}\ \exists_{d \in N}\ (A,t,d) \in E$.
-
-	\item zapytanie kwerendą $Q$ postaci $accesible\ \gamma\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie $\exists(A_{0},...,A_{n} \in ACS, n \geqslant 0)\  \exists_{t \in N}\ H(\gamma,t)=1$.
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
+	\begin{description}
+		\item[always] $\forall_{t \in N}\ H(\gamma,t)=1$ 
+		\item[ever] $\exists_{t \in N}\ H(\gamma,t)=1$
+		\item[generally] $\forall_{(A,t)\in N} H(\gamma,t)=1$
+	\end{description}
+	\item zapytanie kwerendą $Q$ postaci $performed\ A\ at\ t\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\begin{description}
+		\item[always] $\forall_{t \in N} (A,t) \in E$
+		\item[ever] $\exists_{t \in N} (A,t) \in E$
+		\item[generally] $\forall_{(A,t)\in N} (A,t) \in E$
+	\end{description}
+	\item zapytanie kwerendą $Q$ postaci $involved\ Ag\ when\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
+	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
 \end{itemize}
 
 \begin{remark}
