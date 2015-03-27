@@ -134,21 +134,21 @@ Semantyczną strukturą języka $\mathcal{AL}$ nazywamy system $ S=(H,O,E,T_{\in
 		\item $ H: Forms(F) $ $\times$ $ \mathbb{N}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii, pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
 		\item $ O: Ac$ $\times$ $ \mathbb{N}$ $\longrightarrow$ $2^{F}$ jest funkcją okluzji. Dla pewnej ustalonej akcji $A \in Ac$, chwili czasu $t\in\mathbb{N}$, funkcja $O(A,t) $ zwraca zbiór fluentów, na który akcja $A$ ma wpływ, jeśli będzie ona trwała w chwili $t$. 
 Wartość funkcji okluzji będziemy nazywać regionem okluzji. 
-		\item $E\subseteq Ac \times \mathbb{N} \times \mathbb{N}$ jest relacją wykonań akcji. Trójka $(A,t,d)$ należy do relacji $E$ jeśli akcja $A$ trwająca d jednostek czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że tylko jedną akcje możemy wykonać w danym czasie tak, więc jeśli $(t_{1},t_{1}+d_{1}) \subseteq (t_{2},t_{2}+d_{2} )$ lub $(t_{2},t_{2}+d_{2} ) \subseteq (t_{1},t_{1}+d_{1}) $ oraz $(A,t_{1},d_{1})\in E$ i $(B,t_{2},d_{2})\in E$, to $A=B$, $t_{1}=t_{2}$, $d_{1}=d_{2} $. Natomiast jeżeli $(t_{1},t_{1}+d_{1}) \nsubseteq (t_{2},t_{2}+d_{2} )$, $(t_{2},t_{2}+d_{2} ) \nsubseteq (t_{1},t_{1}+d_{1}) $ oraz $(A,t_{1},d_{1})\in E$ i $(B,t_{2},d_{2})\in E$, to $t_{1}+d_{1}<t_{2}$ lub $t_{2}+d_{2}<t_{1}$.
+		\item $E\subseteq Ac \times \mathbb{N} \times \mathbb{N}$ jest relacją wykonań akcji. Dwójka $(A,t)$ należy do relacji $E$ jeśli akcja $A$ trwająca jedną jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli $(t_{1},t_{1} + 1) \subseteq (t_{2},t_{2}+1)$, lub $(t_{2},t_{2}+1 ) \subseteq (t_{1},t_{1}+1) $ oraz $(A,t_{1})\in E$ i $(B,t_{2})\in E$, to $A=B$, $t_{1}=t_{2}$. Natomiast jeżeli $(t_{1},t_{1}+1 \nsubseteq (t_{2},t_{2}+1 )$, $(t_{2},t_{2}+1 ) \nsubseteq (t_{1},t_{1}+1) $ oraz $(A,t_{1})\in E$ i $(B,t_{2})\in E$, to $t_{1}+1<t_{2}$ lub $t_{2}+1<t_{1}$.
 		\item $T_{\infty } \in \mathbb{N} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna. 
-		Mówi ona do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu. 
-		Oznacza to, że nie będziemy rozpatrywać nieskończonych scenariuszy. 
+		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu. Stąd scenariusze nieskończone nie będą rozpatrywane. 
 	\end{itemize}
 \end{definition}
 
-Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - będą formułami, $d,d_{2},d_{3} $ - liczbami naturalnymi (oznaczającymi czas trwania akcji) oraz $fl(\alpha)$ będzie zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
+Niech: $A,B$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
+\todo[inline]{dodać typically}
    \begin{itemize} 
-   		\item Dla każdego wyrażenia $ ( (A,d)\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t,d) \in E$, wtedy $H(\alpha,t+d)=1$ oraz dla każdego momentu w czasie $ d' \in \mathbb{N}$ takiego, że $1\leq d'\leq d$ mamy $fl(\alpha)\subseteq O(A,t+d')$.
-   		\item Dla każdego wyrażenia $( (A,d) \;release\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t,d)\in E$, wtedy dla każdego momentu w czasie $ d' \in \mathbb{N}$ takiego, że $1\leq d'\leq d$ mamy $f\in O(A,t+d')$.
-   		\item Dla każdego wyrażenia $(\pi\;triggers\; (A,d))\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $t+d\leq T_{\infty}$, wtedy $(A,t,d)\in E$.
-		\item Dla każdego wyrażenia $( (A,d_{1})\;invokes\;(B,d_{2})\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t,d_{1})\in E $ oraz $t+d+d_{1}+d_{2}\leq T_{\infty}$, wtedy $(B,t+d+d_{1},d_{2}) \in E $.
-		\item Dla każdego wyrażenia $(impossible \; (A, d) \; at\;  t )$ mamy $(A,t,d) \notin E $
-		\item Dla każdego wyrażenia $(impossible \; (A, d) \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, wtedy $(A,t,d) \notin E $.
+   		\item Dla każdego wyrażenia $ ( A\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(A,t + 1)$.
+ 		\item Dla każdego wyrażenia $( A\;invokes\;B\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, $(A,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(B,t+1+d) \in E $.
+   		\item Dla każdego wyrażenia $( A \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $(A,t)\in E$, wtedy mamy $f\in O(A,t+1)$.
+   		\item Dla każdego wyrażenia $(\pi\;triggers\; A)\in D$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(A,t)\in E$.
+		\item Dla każdego wyrażenia $(impossible \; A \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, jeżeli $H(\pi,t)=1$, wtedy $(A,t) \notin E $.
+		\item Dla każdego wyrażenia $(always \; \pi )$ i dla każdego momentu czasu $t \in \mathbb{N}$, $H(\pi,t)=1$.
    \end{itemize}
    \begin{definition}
    Niech $S = (H,O,E,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem, oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
@@ -207,7 +207,6 @@ Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
 
 
 \subsection{Semantyka}
-\todo{Czy to co skopiowałem ma u nas sens?}
 Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
