@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: 'antlr'
+
+sourceCompatibility = 1.8
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    antlr 'org.antlr:antlr4:4.5'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
