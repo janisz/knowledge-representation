@@ -11,8 +11,11 @@ all: DokumentacjaWstepna.pdf
 # # -interactive=nonstopmode keeps the pdflatex backend from stopping at a
 # # missing file reference and interactively asking you for an alternative.
 
+gradle:
+	./gradlew build
+
 DokumentacjaWstepna.pdf: ./docs/DokumentacjaWstepna.tex
 	cd docs; latexmk -f -pdf -pdflatex="pdflatex -interactive=nonstopmode" -use-make DokumentacjaWstepna.tex
 
 clean:
-	cd docs; latexmk -CA
+	cd docs; latexmk -CA; ./gradlew clean	
