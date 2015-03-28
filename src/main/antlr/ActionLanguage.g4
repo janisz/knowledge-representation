@@ -20,11 +20,22 @@ TRIGGERS: 'triggers';
 TYPICALLY: 'typically';
 WHEN: 'when';
 
+programm: actionLanguage '\n' scenariosList '\n' queries;
 
-typicallyCauses: TYPICALLY causes;
-typicallyInvokes: TYPICALLY invokes;
-typicallyReleases: TYPICALLY releases;
-typicallyTriggers: TYPICALLY triggers;
+actionLanguage: initiallisation '\n' entriesList;
+entriesList: entry | entriesList '\n' entry;
+entry
+  : causes
+  | invokes
+  | releases
+  | triggers
+  | TYPICALLY causes
+  | TYPICALLY invokes
+  | TYPICALLY releases
+  | TYPICALLY triggers
+  | impossible
+  | always
+  ;
 
 initiallisation: INITIALLY fluentsList;
 causes: action CAUSES fluentsList underCondition;
@@ -39,7 +50,7 @@ afterTime: AFTER time | ;
 action: actor task;
 fluentsList: fluent | fluentsList ',' fluent;
 
-
+scenariosList: scenario | scenariosList '\n' scenario;
 scenario: id '{' actions ',' observations '}';
 
 actions: ACS '=' '{' eventsList '}';
@@ -50,7 +61,7 @@ observations: '{' observationsList '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluent ',' time ')';
 
-
+queries: query | queries '\n' query;
 query
   : question fluent AT time WHEN scenarioId
   | question PERFORMED action AT time WHEN scenarioId
