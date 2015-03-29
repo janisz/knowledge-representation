@@ -97,18 +97,22 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \end{description}
 
 \begin{example}\label{przyk:syntaktyka_jezyka_akcji}
-	Rozważmy przykład studenta Janka. Janek mieszka w akademiku.
-	Przed wyjściem zazwyczaj bierze ze sobą kartę do wstępu do akademika i zamyka pokój.
-	W chwili 10 cieć zamyka akademik i można wejść tylko z kartą.
+Na początku Adam jest głodny, nie ma biletu do kina, jest w domu (zatem nie jest w kinie) i seans kinowy nie jest gotowy (nie można jeszcze wchodzić na salę kinową). Warto zwrócić uwagę na fakt, iż zazwyczaj Adam nie mając biletu i będąc w domu, kupi go poprzez internet. Jednakże będąc głodnym w czasie 0 zje posiłek, zaś na czas 1 przypada mycie zębów. W czasie 2 z kolei Adam musi wyjść do kina. Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0 ,1 i 2 są spełnione. Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo, zacznie oglądać film.
+
 	\begin{align*}
-	&\texttt{initially } \neg roomClosed, \neg hostelClosed, inHostel, \neg hasCard \\
-	&closeDoor \texttt{ causes } hostelClosed \\
-	&\texttt{typically } \neg hasCard \texttt{ triggers } TakeCard \\
-	&\texttt{typically } Leave \texttt{ invokes } LockTheDoor \\
-	&\textsc{Janek } TakeCard \texttt{ causes } hasCard \\
-	&\textsc{Janek } Leave \texttt{ causes } \neg inHostel \\
-	&Comeback \texttt{ causes } inHostel \texttt{ after } 10 \texttt{ if } hasCard \\
-	&\texttt{typically } \textsc{DoorKepper } closeDoor \texttt{ occures at } 10
+	&initially hungry, \neg hasTicket, atHome, \neg atCinema, \neg isMovieAvailable \\
+	&hungry triggers Adam Eat \\
+	&Adam Eat causes \neg hungry \\
+	&Adam WashTeeth at 1 \\
+	&typically \neg hasTicket and atHome triggers Adam BuyTicketByTheInternet \\
+	&Adam BuyTicketByTheInternet causes hasTicket if atHome \\
+	&Adam GoToTheCinema at 2 \\
+	&Adam GoToTheCinema causes \neg atHome, atCinema \\
+	&typically atCinema and \neg hasTicket triggers Adam BuyTicketAtTheCinema \\
+	&Adam BuyTicketAtTheCinema causes hasTicket if atCinema, \neg hasTicket \\
+	&isMovieAvailable at 3 \\
+	&\neg isMovieAvailable at 5 \\
+	&hasTicket and isMovieAvailable typically causes Adam WatchMovie
 	\end{align*}
 \end{example}
 
@@ -198,19 +202,76 @@ który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 
 \subsection{Przykłady}
 Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
-\begin{example}[Czy Cieć jest zawsze zaangażowany w realizację scenariusza]
-	$$
-	\texttt{always involved } \textsc{DoorKepper} \texttt{ when } Sc
-	$$
-	$\texttt{FALSE}$ -- Cieć zazwyczaj zamyka akademik ale nie zawsze.
-\end{example}
-\begin{example}[Czy w chwili 11 realizacji scenariusza $Sc$ Janek zawsze jest w akademiku]
-	$$
-	\texttt{always } inHostel \texttt{ at } 11 \texttt{ when } Sc
-	$$
-	$\texttt{FALSE}$ -- Janek zazwyczaj ma klucz który umożliwia wejście do akademika ale nie zawsze.
-\end{example}
+Oznaczenia fluentów: hungry (h), hasTicket (t), atHome (ah), atCinema (ac), isMovieAvailable (m)
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example1_1}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC1}
+\end{figure}
+
+Rozważmy, co będzie, gdy z powyższego opisu języka akcji i scenariusza usuniemy dwa zdania:
+
+	\begin{align*}
+	&hungry triggers Adam Eat \\
+	&Adam WashTeeth at 1
+	\end{align*}
+	
+a zamiast nich wstawimy
+
+	\begin{align*}
+	&typically hungry triggers Adam Eat \\
+	&typically Adam Eat invokes Adam WashTeeth in 1
+	\end{align*}
+	
+Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż w obu przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example1_2model1}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC2}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example1_2model2}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC3}
+\end{figure}
+
+Przykładowe kwerendy dla ostatniego przykładu
+	
+	\begin{align*}
+	&always hasTicket at 1 – FAŁSZ \\
+	&ever hasTicket at 1 - PRAWDA
+	\end{align*}
+	
+Rozważmy przykład studenta Janka. Janek mieszka w akademiku. Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
+Oznaczenia fluentów: roomClosed(r) , hostelClosed(h), inRoom(i), hasCard(c)
+
+	\begin{align*}
+	&initially \neg roomClosed, \neg hostelClosed, inRoom, \neg hasCard \\
+	&DoorKeeper closeDoor causes hostelClosed \\
+	&typically \neg hasCard triggers Janek TakeCard if inRoom \\
+	&typically Janek Leave invokes Janek LockTheRoom \\
+	&Janek LockTheRoom causes roomClosed \\
+	&Janek TakeCard causes hasCard \\
+	&Janek Leave causes \neg inRoom \\
+	&Janek Comeback causes inRoom, \neg roomClosed if hasCard, roomClosed, \neg inRoom, \neg hostelClosed \\
+	&Janek Comeback causes inRoom if \neg inHostel, \neg hostelClosed \\
+	&typically DoorKepper CloseDoor occurs at 3 \\
+	&Leave occurs at 1 \\
+	&Janek Comeback at 2
+	\end{align*}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example2}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC4}
+\end{figure}
 
 \subsection{Semantyka}
 Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
