@@ -39,15 +39,15 @@ actions: ACS '=' '{' eventsList '}';
 eventsList: event | eventsList ',' event;
 event: '(' action ',' time ')';
 
-observations: '{' observationsList '}';
+observations: OBS '=' '{' observationsList '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluent ',' time ')';
 
 queries: query | queries query;
 query
-  : question fluent AT time WHEN scenarioId
+  : question fluentsList AT time WHEN scenarioId
   | question PERFORMED action AT time WHEN scenarioId
-  | basicQuestion INVOLVED actor WHEN scenarioId
+  | basicQuestion INVOLVED actorsList WHEN scenarioId
   ;
 question
   : basicQuestion
@@ -58,6 +58,9 @@ basicQuestion
   | 'ever'
   ;
 
+
+actorsList: '[' actors ']';
+actors: actor | actors ',' actor;
 
 fluent: IDENTIFIER | NOT IDENTIFIER;
 actor: IDENTIFIER;
