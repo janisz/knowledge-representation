@@ -1,4 +1,7 @@
 grammar ActionLanguage;
+@header {
+    package pl.edu.pw.mini.msi.knowledgerepresentation;
+}
 
 programm: actionLanguage scenariosList queries;
 
