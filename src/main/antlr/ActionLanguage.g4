@@ -1,29 +1,9 @@
 grammar ActionLanguage;
 
-ACS: 'ACS';
-AFTER: 'after';
-ALWAYS: 'always';
-AT: 'at';
-CAUSES: 'causes';
-EVER: 'ever';
-GENERALLY: 'generally';
-IF: 'if';
-IMPOSSIBLE: 'imnposible';
-INITIALLY: 'initially';
-INVOKES: 'invokes';
-INVOLVED: 'involved';
-NOT: 'not';
-OBS: 'OBS';
-PERFORMED: 'perfomed';
-RELEASES: 'releases';
-TRIGGERS: 'triggers';
-TYPICALLY: 'typically';
-WHEN: 'when';
+programm: actionLanguage scenariosList queries;
 
-programm: actionLanguage '\n' scenariosList '\n' queries;
-
-actionLanguage: initiallisation '\n' entriesList;
-entriesList: entry | entriesList '\n' entry;
+actionLanguage: initiallisation entriesList;
+entriesList: entry | entriesList entry;
 entry
   : causes
   | invokes
@@ -38,20 +18,22 @@ entry
   ;
 
 initiallisation: INITIALLY fluentsList;
-causes: action CAUSES fluentsList underCondition;
-invokes: action INVOKES action afterTime underCondition;
-releases: action RELEASES fluentsList afterTime underCondition;
+causes: action CAUSES fluentsList afterTime? underCondition?;
+invokes: action INVOKES action afterTime? underCondition?;
+releases: action RELEASES fluentsList afterTime? underCondition?;
 triggers: fluentsList TRIGGERS action;
-impossible: IMPOSSIBLE action AT time underCondition;
+impossible: IMPOSSIBLE action AT time underCondition?;
 always: ALWAYS fluent;
 
-underCondition: IF fluentsList | ;
-afterTime: AFTER time | ;
-action: actor task;
-fluentsList: fluent | fluentsList ',' fluent;
+underCondition: IF fluentsList;
+afterTime: AFTER time;
+action: '('actor ',' task ')';
 
-scenariosList: scenario | scenariosList '\n' scenario;
-scenario: id '{' actions ',' observations '}';
+fluentsList: '[' fluents ']';
+fluents: fluent | fluents ',' fluent;
+
+scenariosList: scenario | scenariosList scenario;
+scenario: IDENTIFIER '{' actions ',' observations '}';
 
 actions: ACS '=' '{' eventsList '}';
 eventsList: event | eventsList ',' event;
@@ -61,7 +43,7 @@ observations: '{' observationsList '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluent ',' time ')';
 
-queries: query | queries '\n' query;
+queries: query | queries query;
 query
   : question fluent AT time WHEN scenarioId
   | question PERFORMED action AT time WHEN scenarioId
@@ -77,14 +59,32 @@ basicQuestion
   ;
 
 
-fluent: id | NOT id;
-actor: id;
-task: id;
+fluent: IDENTIFIER | NOT IDENTIFIER;
+actor: IDENTIFIER;
+task: IDENTIFIER;
 time: DecimalConstant;
-scenarioId: id;
-id: Nondigit+;
+scenarioId: IDENTIFIER;
 
-fragment Nondigit: [a-zA-Z_];
-fragment DecimalConstant: NonzeroDigit Digit*;
-fragment NonzeroDigit: [1-9];
-fragment Digit: [0-9];
+WS: [ \n\t\r]+ -> skip;
+
+ACS: 'ACS';
+AFTER: 'after';
+ALWAYS: 'always';
+AT: 'at';
+CAUSES: 'causes';
+EVER: 'ever';
+GENERALLY: 'generally';
+IF: 'if';
+IMPOSSIBLE: 'imposible';
+INITIALLY: 'initially';
+INVOKES: 'invokes';
+INVOLVED: 'involved';
+NOT: '-';
+OBS: 'OBS';
+PERFORMED: 'perfomed';
+RELEASES: 'releases';
+TRIGGERS: 'triggers';
+TYPICALLY: 'typically';
+WHEN: 'when';
+IDENTIFIER : [a-zA-Z]+;
+DecimalConstant: [1-9] [0-9]*;
