@@ -22,7 +22,7 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 \begin{itemize}
 	\item Prawo inercji
 	\item Linowy model czasu (czas dyskretny)
-	\item Skewencyjność działań
+	\item Sekwencyjność działań
 	\item Niedeterminizm
 	\item Z każdą akcją związane są
 		\begin{itemize}
@@ -65,7 +65,6 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \end{definition}
 
 \subsection{Syntaktyka języka}
-\todo[inline]{nie jestem pewien czy tak to powinno wyglądać}
 \begin{description}[style=nextline]
 	\item[$\texttt{initially } \alpha$]
 	stan początkowy fluentów w formule $\alpha$
@@ -97,13 +96,12 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \end{description}
 
 \begin{example}\label{przyk:syntaktyka_jezyka_akcji}
-Na początku Adam jest głodny, nie ma biletu do kina, jest w domu (zatem nie jest w kinie)
-i seans kinowy nie jest gotowy (nie można jeszcze wchodzić na salę kinową).
-Warto zwrócić uwagę na fakt, iż zazwyczaj Adam nie mając biletu i będąc w domu, kupi go poprzez internet.
-Jednakże będąc głodnym w czasie 0 zje posiłek, zaś na czas 1 przypada mycie zębów. W czasie 2 z kolei
-Adam musi wyjść do kina. Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0 ,1 i 2
-są spełnione. Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo,
-zacznie oglądać film.
+Na początku Adam jest głodny, nie ma biletu do kina, jest w domu (zatem nie jest w kinie) i seans kinowy nie jest gotowy (nie można jeszcze wchodzić na salę kinową). 
+Warto zwrócić uwagę na fakt, iż zazwyczaj Adam nie mając biletu i będąc w domu, kupi go poprzez internet. 
+Jednakże będąc głodnym w czasie 0 zje posiłek, zaś na czas 1 przypada mycie zębów. 
+W czasie 2 z kolei Adam musi wyjść do kina. 
+Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0, 1 i 2 są spełnione. 
+Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo, zacznie oglądać film.
 
 	\begin{lstlisting}
 initially hungry, -hasTicket, atHome, -atCinema, -isMovieAvailable
@@ -151,8 +149,7 @@ Wartość funkcji okluzji będziemy nazywać regionem okluzji.
 		$E$ jeśli akcja $a_i$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek
 		sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli
 		$(a_i, t_1) \in E \land (a_j, t_2) \in E \implies t_1 \neq t_2 \lor a_i = a_j$.
-		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości.
-				\todo{nie mam pojęcia czy ten punkt dobrze prztłumaczyłem, ktoś ma lepsze pomysły?}
+		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości\footnote{ang. \emph{normality relation}}.
 		Dwójka $(a_i,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $a_i$.
 		\item $T_{\infty } \in \mathcal{T} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna.
 		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu.
@@ -233,6 +230,8 @@ który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 \end{description}
 
 \subsection{Przykłady}
+
+\begin{example}
 Rozważmy system opisany w przykładzie \ref{przyk:syntaktyka_jezyka_akcji}.
 Oznaczenia fluentów: hungry (h), hasTicket (t), atHome (ah), atCinema (ac), isMovieAvailable (m)
 
@@ -254,12 +253,14 @@ a zamiast nich wstawimy
 
 	\begin{lstlisting}
 typically hungry triggers Adam Eat
-typically Adam Eat invokes Adam WashTeeth in 1
+typically Adam Eat invokes Adam WashTeeth in 1 
+BuyPopcorn occurs at 3
 	\end{lstlisting}
-
-Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym.
-Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż w obu przypadkach
-Adam ma czas na kupienie biletu z domu przez internet.
+	
+Wówczas otrzymamy trzy modele. 
+Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. 
+Albo Adam nie zje, co również będzie zachowaniem nietypowym. 
+Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
 
 \begin{figure}[h!]
 	\centering
@@ -275,16 +276,30 @@ Adam ma czas na kupienie biletu z domu przez internet.
 	\label{PicSC3}
 \end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example1_2model3}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC4}
+\end{figure}
+
 Przykładowe kwerendy dla ostatniego przykładu
 
 	\begin{lstlisting}
 always hasTicket at 1
 ever hasTicket at 1
-	\end{lstlisting}
+	\end{lstlisting}	
+powinno zwrócić
+	\begin{lstlisting}
+FALSE
+TRUE
+	\end{lstlisting}		
+\end{example}	
 
-Rozważmy przykład studenta Janka. Janek mieszka w akademiku. Przed wyjściem zazwyczaj
-bierze ze sobą kartę wstępu do pokoju i zamyka pokój. Janek w chwili 2 wraca do akademika.
-W chwili 3 dozorca zamyka akademik i nie można do niego wejść.
+\begin{example}
+Rozważmy przykład studenta Janka. Janek mieszka w akademiku. 
+Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. 
+Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
 Oznaczenia fluentów: roomClosed(r) , hostelClosed(h), inRoom(i), hasCard(c)
 
 	\begin{lstlisting}
@@ -297,17 +312,18 @@ Janek TakeCard causes hasCard
 Janek Leave causes -inRoom
 Janek Comeback causes inRoom, -roomClosed if hasCard, roomClosed, -inRoom, -hostelClosed
 Janek Comeback causes inRoom if -inHostel, -hostelClosed
-typically DoorKepper CloseDoor occurs at 3
-Leave occurs at 1
-Janek Comeback at 2
+typically DoorKepper CloseDoor occurs at 4
+Janek Leave occurs at 1
+Janek Comeback occurs at 3
 	\end{lstlisting}
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=1\textwidth]{example2}
 	\caption{Diagram dla scenariusza $Sc$}
-	\label{PicSC4}
+	\label{PicSC5}
 \end{figure}
+\end{example}
 
 \subsection{Semantyka}
 Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją
@@ -315,40 +331,30 @@ $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
 	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik
-	$TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
+	$TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$\\
 	\begin{description}
-		\item[always] $\forall_{t \in \mathcal{T}}\ H(\gamma,t)=1$
-		\item[ever] $\exists_{t \in \mathcal{T}}\ H(\gamma,t)=1$
-		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} H(\gamma,t)=1$
+		\item[always] $H(\gamma,t)=1$
+		\item[ever] $H(\gamma,t)=1$
+		\item[generally] $(a_i, t) \in N \implies H(\gamma,t)=1$
 	\end{description}
 	\item zapytanie kwerendą $Q$ postaci $\texttt{performed}\ a_i\ \texttt{at}\ t\ \texttt{when}\ Sc$\\
-	zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$
 	\begin{description}
-		\item[always] $\forall_{t \in \mathcal{T}} (a_i,t) \in E$
-		\item[ever] $\exists_{t \in \mathcal{T}} (a_i,t) \in E$
-		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} (a_i,t) \in E$
+		\item[always] $(a_i,t) \in E$
+		\item[ever] $(a_i,t) \in E$
+		\item[generally] $(a_i,t) \in N \implies (a_i,t) \in E$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ Ag\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
-	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
-	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
+	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ \Lambda \; \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
+	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\begin{description}
+		\item[always] $\exists_{((\Lambda', \tau), time) \in N} ((\Lambda', \tau),t) \in E, \Lambda' = \Lambda$
+		\item[ever] $\exists_{((\Lambda', \tau),t) \in E} \Lambda' = \Lambda$
+	\end{description}
 \end{itemize}
 
 \begin{remark}
    Jeśli warunek nie zajdzie program zwróci wartość $FALSE$.
 \end{remark}
-\section{Przykłady}
-\todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
-\begin{example}
-	\begin{lstlisting}
-initially hasMoney, hasBread
-hasMoney triggers UseATM
-UseATM typically triggers BuyBread
-BuyBread causes hasBread, hasMoney
-hasBread typically invokes EatBread
-EatBread causes hasBread
-	\end{lstlisting}
-\end{example}
-
 \section{Gramatyka}
 \lstinputlisting{../src/main/antlr/ActionLanguage.g4}
 
