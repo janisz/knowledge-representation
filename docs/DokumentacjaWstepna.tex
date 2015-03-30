@@ -22,7 +22,7 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 \begin{itemize}
 	\item Prawo inercji
 	\item Linowy model czasu (czas dyskretny)
-	\item Skewencyjność działań
+	\item Sekwencyjność działań
 	\item Niedeterminizm
 	\item Z każdą akcją związane są
 		\begin{itemize}
@@ -97,22 +97,27 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \end{description}
 
 \begin{example}\label{przyk:syntaktyka_jezyka_akcji}
-Na początku Adam jest głodny, nie ma biletu do kina, jest w domu (zatem nie jest w kinie) i seans kinowy nie jest gotowy (nie można jeszcze wchodzić na salę kinową). Warto zwrócić uwagę na fakt, iż zazwyczaj Adam nie mając biletu i będąc w domu, kupi go poprzez internet. Jednakże będąc głodnym w czasie 0 zje posiłek, zaś na czas 1 przypada mycie zębów. W czasie 2 z kolei Adam musi wyjść do kina. Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0 ,1 i 2 są spełnione. Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo, zacznie oglądać film.
+Na początku Adam jest głodny, nie ma biletu do kina, jest w domu (zatem nie jest w kinie) i seans kinowy nie jest gotowy (nie można jeszcze wchodzić na salę kinową). 
+Warto zwrócić uwagę na fakt, iż zazwyczaj Adam nie mając biletu i będąc w domu, kupi go poprzez internet. 
+Jednakże będąc głodnym w czasie 0 zje posiłek, zaś na czas 1 przypada mycie zębów. 
+W czasie 2 z kolei Adam musi wyjść do kina. 
+Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0, 1 i 2 są spełnione. 
+Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo, zacznie oglądać film.
 
 	\begin{align*}
-	&initially hungry, \neg hasTicket, atHome, \neg atCinema, \neg isMovieAvailable \\
-	&hungry triggers Adam Eat \\
-	&Adam Eat causes \neg hungry \\
-	&Adam WashTeeth at 1 \\
-	&typically \neg hasTicket and atHome triggers Adam BuyTicketByTheInternet \\
-	&Adam BuyTicketByTheInternet causes hasTicket if atHome \\
-	&Adam GoToTheCinema at 2 \\
-	&Adam GoToTheCinema causes \neg atHome, atCinema \\
-	&typically atCinema and \neg hasTicket triggers Adam BuyTicketAtTheCinema \\
-	&Adam BuyTicketAtTheCinema causes hasTicket if atCinema, \neg hasTicket \\
-	&isMovieAvailable at 3 \\
-	&\neg isMovieAvailable at 5 \\
-	&hasTicket and isMovieAvailable typically causes Adam WatchMovie
+	&\texttt{initially } hungry, \neg hasTicket, atHome, \neg atCinema, \neg isMovieAvailable \\
+	&hungry \texttt{ triggers } Adam Eat \\
+	&Adam Eat \texttt{ causes } \neg hungry \\
+	&Adam WashTeeth \texttt{ at } 1 \\
+	&\texttt{typically } \neg hasTicket, atHome \texttt{ triggers } Adam BuyTicketByTheInternet \\
+	&Adam BuyTicketByTheInternet \texttt{ causes } hasTicket \texttt{ if } atHome \\
+	&Adam GoToTheCinema \texttt{ at } 2 \\
+	&Adam GoToTheCinema \texttt{ causes } \neg atHome, atCinema \\
+	&\texttt{typically } atCinema, \neg hasTicket \texttt{ triggers } Adam BuyTicketAtTheCinema \\
+	&Adam BuyTicketAtTheCinema \texttt{ causes } hasTicket \texttt{ if } atCinema, \neg hasTicket \\
+	&isMovieAvailable \texttt{ at } 3 \\
+	&\neg isMovieAvailable \texttt{ at } 5 \\
+	&hasTicket, isMovieAvailable \texttt{ typically causes } Adam WatchMovie
 	\end{align*}
 \end{example}
 
@@ -214,19 +219,22 @@ Oznaczenia fluentów: hungry (h), hasTicket (t), atHome (ah), atCinema (ac), isM
 Rozważmy, co będzie, gdy z powyższego opisu języka akcji i scenariusza usuniemy dwa zdania:
 
 	\begin{align*}
-	&hungry triggers Adam Eat \\
-	&Adam WashTeeth at 1
+	&hungry \texttt{ triggers } Adam Eat \\
+	&Adam WashTeeth \texttt{ at } 1
 	\end{align*}
 	
 a zamiast nich wstawimy
 
 	\begin{align*}
-	&typically hungry triggers Adam Eat \\
-	&typically Adam Eat invokes Adam WashTeeth in 1 \\
-	&Adam BuyPopcorn at 3
+	&\texttt{typically } hungry \texttt{ triggers } Adam Eat \\
+	&\texttt{typically } Adam Eat \texttt{ invokes } Adam WashTeeth \texttt{ in } 1 \\
+	&Adam BuyPopcorn \texttt{ occurs at } 3
 	\end{align*}
 	
-Wówczas otrzymamy trzy modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
+Wówczas otrzymamy trzy modele. 
+Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. 
+Albo Adam nie zje, co również będzie zachowaniem nietypowym. 
+Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
 
 \begin{figure}[h!]
 	\centering
@@ -252,26 +260,28 @@ Wówczas otrzymamy trzy modele. Adam albo zje, ale nie zdąży umyć zębów, co
 Przykładowe kwerendy dla ostatniego przykładu
 	
 	\begin{align*}
-	&always hasTicket at 1 – FALSE \\
-	&ever hasTicket at 1 - TRUE
+	&\texttt{always } hasTicket \texttt{ at } 1 \texttt{ - FALSE } \\
+	&\texttt{ever } hasTicket \texttt{ at } 1 \texttt{ - TRUE }
 	\end{align*}
 	
-Rozważmy przykład studenta Janka. Janek mieszka w akademiku. Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
+Rozważmy przykład studenta Janka. Janek mieszka w akademiku. 
+Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. 
+Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
 Oznaczenia fluentów: roomClosed(r) , hostelClosed(h), inRoom(i), hasCard(c)
 
 	\begin{align*}
-	&initially \neg roomClosed, \neg hostelClosed, inRoom, \neg hasCard \\
-	&DoorKeeper closeDoor causes hostelClosed \\
-	&typically \neg hasCard triggers Janek TakeCard if inRoom \\
-	&typically Janek Leave invokes Janek LockTheRoom \\
-	&Janek LockTheRoom causes roomClosed \\
-	&Janek TakeCard causes hasCard \\
-	&Janek Leave causes \neg inRoom \\
-	&Janek Comeback causes inRoom, \neg roomClosed if hasCard, roomClosed, \neg inRoom, \neg hostelClosed \\
-	&Janek Comeback causes inRoom if \neg inHostel, \neg hostelClosed \\
-	&typically DoorKepper CloseDoor occurs at 3 \\
-	&Leave occurs at 1 \\
-	&Janek Comeback at 2
+	&\texttt{initially } \neg roomClosed, \neg hostelClosed, inRoom, \neg hasCard \\
+	&DoorKeeper closeDoor \texttt{ causes } hostelClosed \\
+	&\texttt{typically } \neg hasCard \texttt{ triggers } Janek TakeCard \texttt{ if } inRoom \\
+	&\texttt{typically } Janek Leave \texttt{ invokes } Janek LockTheRoom \\
+	&Janek LockTheRoom \texttt{ causes } roomClosed \\
+	&Janek TakeCard \texttt{ causes } hasCard \\
+	&Janek Leave \texttt{ causes } \neg inRoom \\
+	&Janek Comeback \texttt{ causes } inRoom, \neg roomClosed \texttt{ if } hasCard, roomClosed, \neg inRoom, \neg hostelClosed \\
+	&Janek Comeback \texttt{ causes } inRoom \texttt{ if } \neg inHostel, \neg hostelClosed \\
+	&\texttt{typically } DoorKepper CloseDoor \texttt{ occurs at } 4 \\
+	&Janek Leave \texttt{ occurs at } 1 \\
+	&Janek Comeback \texttt{ occurs at } 3
 	\end{align*}
 
 \begin{figure}[h!]
