@@ -1,6 +1,6 @@
-.PHONY: DokumentacjaWstepna.pdf all clean
+.PHONY: DokumentacjaWstepna.pdf all clean gradle
 
-all: DokumentacjaWstepna.pdf
+all: DokumentacjaWstepna.pdf gradle
 
 # MAIN LATEXMK RULE
 #
@@ -18,4 +18,4 @@ DokumentacjaWstepna.pdf: ./docs/DokumentacjaWstepna.tex
 	cd docs; latexmk -f -pdf -pdflatex="pdflatex -interactive=nonstopmode" -use-make DokumentacjaWstepna.tex
 
 clean:
-	cd docs; latexmk -CA; ./gradlew clean	
+	./gradlew clean; cd docs; latexmk -CA;
