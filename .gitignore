@@ -25,6 +25,7 @@ gradle-app.setting
 *.fls
 *.out
 *.toc
+*.bak
 
 ## Intermediate documents:
 *.dvi
