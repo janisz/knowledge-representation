@@ -150,8 +150,7 @@ Wartość funkcji okluzji będziemy nazywać regionem okluzji.
 		$E$ jeśli akcja $a_i$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek
 		sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli
 		$(a_i, t_1) \in E \land (a_j, t_2) \in E \implies t_1 \neq t_2 \lor a_i = a_j$.
-		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości.
-				\todo{nie mam pojęcia czy ten punkt dobrze prztłumaczyłem, ktoś ma lepsze pomysły?}
+		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości\footnote{ang. \emph{normality relation}}.
 		Dwójka $(a_i,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $a_i$.
 		\item $T_{\infty } \in \mathcal{T} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna.
 		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu.
@@ -336,8 +335,12 @@ $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 		\item[ever] $\exists_{t \in \mathcal{T}} (a_i,t) \in E$
 		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} (a_i,t) \in E$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ Ag\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
-	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
+	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ \Lambda \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
+	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\begin{description}
+		\item[always] $\exists_{((actor, task), time) \in N} ((actor, task),t) \in E, actor = \Lambda$
+		\item[ever] $\exists_{((actor, task),t) \in E} actor = \Lambda$
+	\end{description}
 	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
 \end{itemize}
 
