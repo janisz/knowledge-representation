@@ -1,4 +1,4 @@
-\input{header.tex}
+\sqrt{}\input{header.tex}
 \begin{document}
 \maketitle
 \tableofcontents
@@ -251,20 +251,16 @@ Adam WashTeeth at 1
 
 a zamiast nich wstawimy
 
-	\begin{align*}
-	&\texttt{typically } hungry \texttt{ triggers } Adam Eat \\
-	&\texttt{typically } Adam Eat \texttt{ invokes } Adam WashTeeth \texttt{ in } 1 \\
-	&Adam BuyPopcorn \texttt{ occurs at } 3
-	\end{align*}
+	\begin{lstlisting}
+typically hungry triggers Adam Eat
+typically Adam Eat invokes Adam WashTeeth in 1 
+BuyPopcorn occurs at 3
+	\end{lstlisting}
 	
 Wówczas otrzymamy trzy modele. 
 Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. 
 Albo Adam nie zje, co również będzie zachowaniem nietypowym. 
 Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
-
-Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym.
-Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż w obu przypadkach
-Adam ma czas na kupienie biletu z domu przez internet.
 
 \begin{figure}[h!]
 	\centering
@@ -289,10 +285,10 @@ Adam ma czas na kupienie biletu z domu przez internet.
 
 Przykładowe kwerendy dla ostatniego przykładu
 	
-	\begin{align*}
-	&\texttt{always } hasTicket \texttt{ at } 1 \texttt{ - FALSE } \\
-	&\texttt{ever } hasTicket \texttt{ at } 1 \texttt{ - TRUE }
-	\end{align*}
+	\begin{lstlisting}
+always hasTicket at 1 - FALSE
+ever hasTicket at 1 - TRUE
+	\end{lstlisting}	
 	
 Rozważmy przykład studenta Janka. Janek mieszka w akademiku. 
 Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. 
@@ -309,16 +305,16 @@ Janek TakeCard causes hasCard
 Janek Leave causes -inRoom
 Janek Comeback causes inRoom, -roomClosed if hasCard, roomClosed, -inRoom, -hostelClosed
 Janek Comeback causes inRoom if -inHostel, -hostelClosed
-typically DoorKepper CloseDoor occurs at 3
-Leave occurs at 1
-Janek Comeback at 2
+typically DoorKepper CloseDoor occurs at 4
+Janek Leave occurs at 1
+Janek Comeback occurs at 3
 	\end{lstlisting}
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[width=1\textwidth]{example2}
 	\caption{Diagram dla scenariusza $Sc$}
-	\label{PicSC4}
+	\label{PicSC5}
 \end{figure}
 
 \subsection{Semantyka}
