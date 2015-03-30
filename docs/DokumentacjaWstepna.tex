@@ -222,10 +222,11 @@ a zamiast nich wstawimy
 
 	\begin{align*}
 	&typically hungry triggers Adam Eat \\
-	&typically Adam Eat invokes Adam WashTeeth in 1
+	&typically Adam Eat invokes Adam WashTeeth in 1 \\
+	&Adam BuyPopcorn at 3
 	\end{align*}
 	
-Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż w obu przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
+Wówczas otrzymamy trzy modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
 
 \begin{figure}[h!]
 	\centering
@@ -241,11 +242,18 @@ Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co 
 	\label{PicSC3}
 \end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=1\textwidth]{example1_2model3}
+	\caption{Diagram dla scenariusza $Sc$}
+	\label{PicSC4}
+\end{figure}
+
 Przykładowe kwerendy dla ostatniego przykładu
 	
 	\begin{align*}
-	&always hasTicket at 1 – FAŁSZ \\
-	&ever hasTicket at 1 - PRAWDA
+	&always hasTicket at 1 – FALSE \\
+	&ever hasTicket at 1 - TRUE
 	\end{align*}
 	
 Rozważmy przykład studenta Janka. Janek mieszka w akademiku. Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pokój. Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
