@@ -284,7 +284,7 @@ Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie
 \end{figure}
 
 Przykładowe kwerendy dla ostatniego przykładu
-	
+
 	\begin{lstlisting}
 always hasTicket at 1
 ever hasTicket at 1
@@ -355,4 +355,11 @@ $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 \begin{remark}
    Jeśli warunek nie zajdzie program zwróci wartość $FALSE$.
 \end{remark}
+\section{Gramatyka}
+\lstinputlisting{../src/main/antlr/ActionLanguage.g4}
+
+\begin{example}~\\
+\lstinputlisting{../src/test/resources/example_2.1.al}
+\end{example}
+
 \end{document}
