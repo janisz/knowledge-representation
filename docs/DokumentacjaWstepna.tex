@@ -42,12 +42,12 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 				\end{description}
 			\item Wykonawca (agent)
 			\item Czas trwania $t = 1$
-		\end{itemize}	
+		\end{itemize}
 	\item Pewne stany mogą rozpoczynać wykonywanie pewnych akcji
 	\item Agenci mogą nie potrafić wykonać akcji w pewnych stanach. Stany te są określone przez podanie
-	warunków lub konkretnych punktów czasowych.	
+	warunków lub konkretnych punktów czasowych.
 \end{itemize}
-Językiem odpowiadającym powyższym warunkom jest język $\mathcal{AL}$ 
+Językiem odpowiadającym powyższym warunkom jest język $\mathcal{AL}$
 opisujący domeny akcji z czasem liniowym.
 
 \subsection{Opis symboli języka}
@@ -58,7 +58,7 @@ Język definiujemy jako trójkę
 \end{equation}
 \begin{itemize}
 \item[$\mathcal{F}$] niepusty zbiór inercji (dalej \emph{fluenty})
-\item[$\mathcal{A}$] niepusty zbiór akcji (dalej \emph{akcje}), 
+\item[$\mathcal{A}$] niepusty zbiór akcji (dalej \emph{akcje}),
 $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau \in \textbf{Tasks} \right\rbrace$
 \item[$\mathcal{T}$] niepusty zbiór punktów czasu, $\mathcal{T} = \mathbb{N}$
 \end{itemize}
@@ -67,32 +67,32 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \subsection{Syntaktyka języka}
 \todo[inline]{nie jestem pewien czy tak to powinno wyglądać}
 \begin{description}[style=nextline]
-	\item[$\texttt{initially } \alpha$]	
+	\item[$\texttt{initially } \alpha$]
 	stan początkowy fluentów w formule $\alpha$
 	\item[$a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
 	akcja $a_i$\footnote{akcja $a_i$ złożona jest z agenta ($\Lambda$) i zadania ($\tau$), które wykonuje}
 	powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
 	\item[$\texttt{typically } a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
 	zazwyczaj akcja $a_i$ powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
-	\item[$a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$] 
+	\item[$a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$]
 	akcja $a_i$ powoduje wykonanie akcji $a_j$ po $d$ chwilach od zakończenia akcji $a_i$,
 	jeśli zachodzi warunek $\pi$
-	\item[$\texttt{typically } a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$] 
+	\item[$\texttt{typically } a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$]
 	zazwyczaj akcja $a_i$ powoduje wykonanie akcji $a_j$ po $d$ chwilach od zakończenia akcji $a_i$,
 	jeśli zachodzi warunek $\pi$
-	\item[$a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$] 
+	\item[$a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$]
 	akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
-	jeśli zachodzi warunek $\pi$	
-	\item[$\texttt{typically } a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$] 
+	jeśli zachodzi warunek $\pi$
+	\item[$\texttt{typically } a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$]
 	zazwyczaj akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
-	jeśli zachodzi warunek $\pi$	
-	\item[$\pi \texttt{ triggers } a_i$] 
+	jeśli zachodzi warunek $\pi$
+	\item[$\pi \texttt{ triggers } a_i$]
 	jeśli zachodzi warunek $\pi$	to wykonywana jest akcja $a_i$
-	\item[$\texttt{typically }\pi \texttt{ triggers } a_i$] 
+	\item[$\texttt{typically }\pi \texttt{ triggers } a_i$]
 	zazwyczaj jeśli zachodzi warunek $\pi$ to wykonywana jest akcja $a_i$
-	\item[$\texttt{impossible } a_i \texttt{ at } t \texttt{ if } \pi$] 
-	akcja $a_i$ jest niemożliwa  w chwili $t$, jeśli zachodzi warunek $\pi$	
-	\item[$\texttt{always } \pi$] 
+	\item[$\texttt{impossible } a_i \texttt{ at } t \texttt{ if } \pi$]
+	akcja $a_i$ jest niemożliwa  w chwili $t$, jeśli zachodzi warunek $\pi$
+	\item[$\texttt{always } \pi$]
 	każdy stan spełnia warunek $\pi$
 \end{description}
 
@@ -104,21 +104,21 @@ W czasie 2 z kolei Adam musi wyjść do kina.
 Zatem akcja typowa nie wykona się ani razu, mimo iż wszelkie jej warunki w czasie 0, 1 i 2 są spełnione. 
 Następnie w czasie 3 Adam typowo kupi bilet będąc w kinie, po czym w czasie 4, również typowo, zacznie oglądać film.
 
-	\begin{align*}
-	&\texttt{initially } hungry, \neg hasTicket, atHome, \neg atCinema, \neg isMovieAvailable \\
-	&hungry \texttt{ triggers } Adam Eat \\
-	&Adam Eat \texttt{ causes } \neg hungry \\
-	&Adam WashTeeth \texttt{ at } 1 \\
-	&\texttt{typically } \neg hasTicket, atHome \texttt{ triggers } Adam BuyTicketByTheInternet \\
-	&Adam BuyTicketByTheInternet \texttt{ causes } hasTicket \texttt{ if } atHome \\
-	&Adam GoToTheCinema \texttt{ at } 2 \\
-	&Adam GoToTheCinema \texttt{ causes } \neg atHome, atCinema \\
-	&\texttt{typically } atCinema, \neg hasTicket \texttt{ triggers } Adam BuyTicketAtTheCinema \\
-	&Adam BuyTicketAtTheCinema \texttt{ causes } hasTicket \texttt{ if } atCinema, \neg hasTicket \\
-	&isMovieAvailable \texttt{ at } 3 \\
-	&\neg isMovieAvailable \texttt{ at } 5 \\
-	&hasTicket, isMovieAvailable \texttt{ typically causes } Adam WatchMovie
-	\end{align*}
+	\begin{lstlisting}
+initially hungry, -hasTicket, atHome, -atCinema, -isMovieAvailable
+hungry triggers Adam Eat
+Adam Eat causes -hungry
+Adam WashTeeth at 1
+typically -hasTicket and atHome triggers Adam BuyTicketByTheInternet
+Adam BuyTicketByTheInternet causes hasTicket if atHome
+Adam GoToTheCinema at 2
+Adam GoToTheCinema causes -atHome, atCinema
+typically atCinema and -hasTicket triggers Adam BuyTicketAtTheCinema
+Adam BuyTicketAtTheCinema causes hasTicket if atCinema, -hasTicket
+isMovieAvailable at 3
+-isMovieAvailable at 5
+hasTicket and isMovieAvailable typically causes Adam WatchMovie
+	\end{lstlisting}
 \end{example}
 
 
@@ -140,57 +140,83 @@ Scenariusze działań definiujemy jako zbiór obserwacji i akcji:
 \begin{definition}
 Semantyczną strukturą języka $\mathcal{AL}$ nazywamy system $ S=(H,O,E,N,T_{\infty }) $ taki, że:
 	\begin{itemize}
-		\item $ H: Forms(\mathcal{F}) $ $\times$ $ \mathcal{T}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii, pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
-		\item $ O: \mathcal{A}$ $\times$ $ \mathcal{T}$ $\longrightarrow$ $2^{\mathcal{F}}$ jest funkcją okluzji. Dla pewnej ustalonej akcji $a_i \in \mathcal{A}$, chwili czasu $t\in\mathbb{N}$, funkcja $O(a_i,t) $ zwraca zbiór fluentów, na który akcja $a_i$ ma wpływ, jeśli będzie ona trwała w chwili $t$. 
-Wartość funkcji okluzji będziemy nazywać regionem okluzji. 
-		\item $E\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją wykonań akcji. Dwójka $(a_i,t)$ należy do relacji $E$ jeśli akcja $a_i$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli $(a_i, t_1) \in E \land (a_j, t_2) \in E \implies t_1 \neq t_2 \lor a_i = a_j$.
-		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości. 
+		\item $ H: Forms(\mathcal{F}) $ $\times$ $ \mathcal{T}$ $\longrightarrow$ $\{0,1\}$ jest funkcją historii,
+		pozwala ona stwierdzić, jaki stan ma pewny fluent lub czy dana formuła jest spełniona, dla określonej chwili czasu $t$.
+		\item $ O: \mathcal{A}$ $\times$ $ \mathcal{T}$ $\longrightarrow$ $2^{\mathcal{F}}$ jest funkcją okluzji.
+		Dla pewnej ustalonej akcji $a_i \in \mathcal{A}$, chwili czasu $t\in\mathbb{N}$, funkcja $O(a_i,t) $ zwraca zbiór
+		fluentów, na który akcja $a_i$ ma wpływ, jeśli będzie ona trwała w chwili $t$.
+Wartość funkcji okluzji będziemy nazywać regionem okluzji.
+		\item $E\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją wykonań akcji. Dwójka $(a_i,t)$ należy do relacji
+		$E$ jeśli akcja $a_i$ trwająca jednostkę czasu jest rozpoczęta w czasie t. W naszym modelu zakładamy warunek
+		sekwencyjności działań. Oznacza on, że w danym czasie możemy wykonać tylko jedną akcje, tak więc jeśli
+		$(a_i, t_1) \in E \land (a_j, t_2) \in E \implies t_1 \neq t_2 \lor a_i = a_j$.
+		\item $N\subseteq \mathcal{A} \times \mathcal{T}$ jest relacją typowości.
 				\todo{nie mam pojęcia czy ten punkt dobrze prztłumaczyłem, ktoś ma lepsze pomysły?}
-		Dwójka $(a_i,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $a_i$. 
-		\item $T_{\infty } \in \mathcal{T} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna. 
-		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu. Stąd scenariusze nieskończone nie będą rozpatrywane. 
+		Dwójka $(a_i,t)$ należy do relacji $N$, jeśli w chwili $t$ dany stan jest typowy dla akcji $a_i$.
+		\item $T_{\infty } \in \mathcal{T} $ jest czasem zakończenia scenariusza, może to być dowolnie duża ustalona liczba naturalna.
+		Wielkość ta informuje o tym, do kiedy powinny być zakończone wszystkie akcje w danym scenariuszu.
+		Stąd scenariusze nieskończone nie będą rozpatrywane.
 	\end{itemize}
 \end{definition}
 
-Niech: $a_i,a_j$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki: 
-   \begin{itemize} 
-   		\item Dla każdego wyrażenia $ ( a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
-		\item Dla każdego wyrażenia $ ( typically\; a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie $t \in \mathcal{T}$, jeżeli $(a_i,t) \in N$, to $(a_i,t) \in E$.
- 		\item Dla każdego wyrażenia $( a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
-	 	\item Dla każdego wyrażenia $( typically\; a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E$, $(a_j, t + d)\in N $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
-   		\item Dla każdego wyrażenia $( a_i\;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$, wtedy mamy $f\in O(a_i,t+1)$.
- 		\item Dla każdego wyrażenia $( typically\; a_i \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$ i $(a_i,t)\in N$, wtedy mamy $f\in O(a_i,t+1)$.
-   		\item Dla każdego wyrażenia $(\pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
-		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
-		\item Dla każdego wyrażenia $(impossible \; a_i \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, wtedy $(a_i,t) \notin E $.
+Niech: $a_i,a_j$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów
+występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki:
+   \begin{itemize}
+   		\item Dla każdego wyrażenia $ ( a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
+   		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
+		\item Dla każdego wyrażenia $ ( typically\; a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
+		 $t \in \mathcal{T}$, jeżeli $(a_i,t) \in N$, to $(a_i,t) \in E$.
+ 		\item Dla każdego wyrażenia $( a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
+ 		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
+	 	\item Dla każdego wyrażenia $( typically\; a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
+	 	$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E$, $(a_j, t + d)\in N $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
+   		\item Dla każdego wyrażenia $( a_i\;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu
+   		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$, wtedy mamy $f\in O(a_i,t+1)$.
+ 		\item Dla każdego wyrażenia $( typically\; a_i \;releases\;f\;if\;\pi)\in D $ i dla każdego momentu czasu
+ 		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t)\in E$ i $(a_i,t)\in N$, wtedy mamy $f\in O(a_i,t+1)$.
+   		\item Dla każdego wyrażenia $(\pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu $t \in \mathcal{T}$,
+   		jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
+		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu
+		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
+		\item Dla każdego wyrażenia $(impossible \; a_i \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$,
+		jeżeli $H(\pi,t)=1$, wtedy $(a_i,t) \notin E $.
 		\item Dla każdego wyrażenia $(always \; \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$, $H(\pi,t)=1$.
    \end{itemize}
    \begin{definition}
-   Niech $S = (H,O,E,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem, oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
-   		\begin{itemize} 
+   Niech $S = (H,O,E,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem,
+    oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
+   		\begin{itemize}
      		\item Dla każdej obserwacji $(\alpha,t )\in OBS$ mamy $H(\alpha,t )=1$
-     		\item $ACS \subseteq E$ 
-     		\item Dla każdej akcji $ {a_i \in \mathcal{A}}$ oraz dla każdego czasu rozpoczęcia akcji $t \in \mathcal{T}$, jeżeli $(a_i,t) \in E $, to $t+1 \leq T_{\infty}$. 
-    		\end{itemize} 
+     		\item $ACS \subseteq E$
+     		\item Dla każdej akcji $ {a_i \in \mathcal{A}}$ oraz dla każdego czasu rozpoczęcia akcji
+     		$t \in \mathcal{T}$, jeżeli $(a_i,t) \in E $, to $t+1 \leq T_{\infty}$.
+    		\end{itemize}
    \end{definition}
    \begin{definition}
-	   Niech $O_{1}$,$O_{2}$: $X \longrightarrow 2^{Y}$. Mówimy, że $O_{1} \prec O_{2}$ jeżeli $\forall x\in X$ $O_{1}(x)\subseteq O_{2}(x)$ oraz $O_{1}\neq O_{2}$.
+	   Niech $O_{1}$,$O_{2}$: $X \longrightarrow 2^{Y}$. Mówimy, że $O_{1} \prec O_{2}$ jeżeli
+	   $\forall x\in X$ $O_{1}(x)\subseteq O_{2}(x)$ oraz $O_{1}\neq O_{2}$.
    \end{definition}
-   
+
    \begin{definition}
-   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny $D$. Mówimy, że $S$ jest $O$-minimalną strukturą, jeżeli nie istnieje struktura \\$S'=(H',O',E',T_{\infty}')$ dla tego samego scenariusza i domeny taka, że $O'\prec O$.  
+   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny
+   $D$. Mówimy, że $S$ jest $O$-minimalną strukturą, jeżeli nie istnieje struktura \\$S'=(H',O',E',T_{\infty}')$
+   dla tego samego scenariusza i domeny taka, że $O'\prec O$.
    \end{definition}
    \begin{definition}
-   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny $D$. $S$ będziemy nazywać modelem $Sc$ zgodnym z opisem $D$ jeżeli:
+   Niech $S=(H,O,E,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny
+   $D$. $S$ będziemy nazywać modelem $Sc$ zgodnym z opisem $D$ jeżeli:
    \begin{itemize}
 		\item $S$ jest $O$-minimalny
-		\item Dla każdego momentu w czasie $t \in \mathcal{T}$,  \{$f\in F$: $H(f,t)\neq H(f,t+1) $\} $\subseteq O(a_i,t+1)$ dla pewnej akcji $a_i$.
-		\item Nie istnieje żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$, która spełnia poprzednie warunki oraz taka, że $E'\subset E$. 
+		\item Dla każdego momentu w czasie $t \in \mathcal{T}$,  \{$f\in F$: $H(f,t)\neq H(f,t+1) $\}
+		$\subseteq O(a_i,t+1)$ dla pewnej akcji $a_i$.
+		\item Nie istnieje żadna struktura $S'=(H',O',E')$ dla $Sc$ zgodna z opisem $D$,
+		która spełnia poprzednie warunki oraz taka, że $E'\subset E$.
    \end{itemize}
 \end{definition}
 
 \begin{remark}
-Nie dla każdego scenariusza można ułożyć model. Mówimy, że scenariusz $Sc$ jest \textit{zgodny} jeśli istnieje do niego model zgodny z dziedziną $D$.
+Nie dla każdego scenariusza można ułożyć model. Mówimy, że scenariusz $Sc$ jest \textit{zgodny}
+jeśli istnieje do niego model zgodny z dziedziną $D$.
 \end{remark}
 
 \section{Język zapytań}\label{sc:kwerendy}
@@ -202,7 +228,7 @@ który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ akcja $a$ wykonywana jest zawsze/kiedykolwiek?]
 	$\texttt{always/ever/generally performed } a_i \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agentów $Ag$ zawsze/kiedykolwiek?]
-	$\texttt{always/ever involved } Ag \texttt{ when } Sc$	
+	$\texttt{always/ever involved } Ag \texttt{ when } Sc$
 \end{description}
 
 \subsection{Przykłady}
@@ -218,11 +244,11 @@ Oznaczenia fluentów: hungry (h), hasTicket (t), atHome (ah), atCinema (ac), isM
 
 Rozważmy, co będzie, gdy z powyższego opisu języka akcji i scenariusza usuniemy dwa zdania:
 
-	\begin{align*}
-	&hungry \texttt{ triggers } Adam Eat \\
-	&Adam WashTeeth \texttt{ at } 1
-	\end{align*}
-	
+	\begin{lstlisting}
+hungry triggers Adam Eat
+Adam WashTeeth at 1
+	\end{lstlisting}
+
 a zamiast nich wstawimy
 
 	\begin{align*}
@@ -235,6 +261,10 @@ Wówczas otrzymamy trzy modele.
 Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym. 
 Albo Adam nie zje, co również będzie zachowaniem nietypowym. 
 Należy zwrócić uwagę, iż we wszystkich przypadkach Adam ma czas na kupienie biletu z domu przez internet. 
+
+Wówczas otrzymamy dwa modele. Adam albo zje, ale nie zdąży umyć zębów, co będzie zachowaniem nietypowym.
+Albo Adam nie zje, co również będzie zachowaniem nietypowym. Należy zwrócić uwagę, iż w obu przypadkach
+Adam ma czas na kupienie biletu z domu przez internet.
 
 \begin{figure}[h!]
 	\centering
@@ -269,20 +299,20 @@ Przed wyjściem zazwyczaj bierze ze sobą kartę wstępu do pokoju i zamyka pok�
 Janek w chwili 2 wraca do akademika. W chwili 3 dozorca zamyka akademik i nie można do niego wejść. 
 Oznaczenia fluentów: roomClosed(r) , hostelClosed(h), inRoom(i), hasCard(c)
 
-	\begin{align*}
-	&\texttt{initially } \neg roomClosed, \neg hostelClosed, inRoom, \neg hasCard \\
-	&DoorKeeper closeDoor \texttt{ causes } hostelClosed \\
-	&\texttt{typically } \neg hasCard \texttt{ triggers } Janek TakeCard \texttt{ if } inRoom \\
-	&\texttt{typically } Janek Leave \texttt{ invokes } Janek LockTheRoom \\
-	&Janek LockTheRoom \texttt{ causes } roomClosed \\
-	&Janek TakeCard \texttt{ causes } hasCard \\
-	&Janek Leave \texttt{ causes } \neg inRoom \\
-	&Janek Comeback \texttt{ causes } inRoom, \neg roomClosed \texttt{ if } hasCard, roomClosed, \neg inRoom, \neg hostelClosed \\
-	&Janek Comeback \texttt{ causes } inRoom \texttt{ if } \neg inHostel, \neg hostelClosed \\
-	&\texttt{typically } DoorKepper CloseDoor \texttt{ occurs at } 4 \\
-	&Janek Leave \texttt{ occurs at } 1 \\
-	&Janek Comeback \texttt{ occurs at } 3
-	\end{align*}
+	\begin{lstlisting}
+initially -roomClosed, -hostelClosed, inRoom, -hasCard
+DoorKeeper closeDoor causes hostelClosed
+typically -hasCard triggers Janek TakeCard if inRoom
+typically Janek Leave invokes Janek LockTheRoom
+Janek LockTheRoom causes roomClosed
+Janek TakeCard causes hasCard
+Janek Leave causes -inRoom
+Janek Comeback causes inRoom, -roomClosed if hasCard, roomClosed, -inRoom, -hostelClosed
+Janek Comeback causes inRoom if -inHostel, -hostelClosed
+typically DoorKepper CloseDoor occurs at 3
+Leave occurs at 1
+Janek Comeback at 2
+	\end{lstlisting}
 
 \begin{figure}[h!]
 	\centering
@@ -292,22 +322,26 @@ Oznaczenia fluentów: roomClosed(r) , hostelClosed(h), inRoom(i), hasCard(c)
 \end{figure}
 
 \subsection{Semantyka}
-Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
+Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją
+$Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
-	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik
+	$TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie\\
 	\begin{description}
-		\item[always] $\forall_{t \in \mathcal{T}}\ H(\gamma,t)=1$ 
+		\item[always] $\forall_{t \in \mathcal{T}}\ H(\gamma,t)=1$
 		\item[ever] $\exists_{t \in \mathcal{T}}\ H(\gamma,t)=1$
 		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} H(\gamma,t)=1$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $\texttt{performed}\ a_i\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\item zapytanie kwerendą $Q$ postaci $\texttt{performed}\ a_i\ \texttt{at}\ t\ \texttt{when}\ Sc$\\
+	zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
 	\begin{description}
 		\item[always] $\forall_{t \in \mathcal{T}} (a_i,t) \in E$
 		\item[ever] $\exists_{t \in \mathcal{T}} (a_i,t) \in E$
 		\item[generally] $\forall_{(a_i,t)\in \mathcal{T}} (a_i,t) \in E$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ Ag\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
+	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ Ag\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
+	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie ...
 	\todo[inline] {nie wiem jak tu tego agenta włączyć.}
 \end{itemize}
 
@@ -317,13 +351,13 @@ Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwere
 \section{Przykłady}
 \todo{Dodać kilka przykładów z scenariuszem (+ ilustracja), kwerendą i wyjaśnieniem dlaczego tak}
 \begin{example}
-	\begin{align*}
-	&\texttt{initially } \neg hasMoney, \neg hasBread \\
-	&\neg hasMoney \texttt{ triggers } UseATM \\
-	&UseATM \texttt{ typically triggers } BuyBread \\
-	&BuyBread \texttt{ causes } hasBread, \neg hasMoney \\
-	&hasBread \texttt{ typically invokes } EatBread \\
- 	&EatBread \texttt{ causes } \neg hasBread
-	\end{align*}
+	\begin{lstlisting}
+initially hasMoney, hasBread
+hasMoney triggers UseATM
+UseATM typically triggers BuyBread
+BuyBread causes hasBread, hasMoney
+hasBread typically invokes EatBread
+EatBread causes hasBread
+	\end{lstlisting}
 \end{example}
 \end{document}
