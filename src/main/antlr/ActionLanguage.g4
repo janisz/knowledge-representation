@@ -3,19 +3,21 @@ grammar ActionLanguage;
     package pl.edu.pw.mini.msi.knowledgerepresentation;
 }
 
-programm: actionLanguage scenariosList queries;
+programm: instruction* EOF;
 
-actionLanguage: initiallisation entriesList;
-entriesList: entry | entriesList entry;
+instruction
+  : initiallisation
+  | entry
+  | scenario
+  | query
+  ;
+
 entry
-  : causes
-  | invokes
-  | releases
-  | triggers
-  | TYPICALLY causes
-  | TYPICALLY invokes
-  | TYPICALLY releases
-  | TYPICALLY triggers
+  : TYPICALLY? causes
+  | TYPICALLY? invokes
+  | TYPICALLY? releases
+  | TYPICALLY? triggers
+  | TYPICALLY? occurs
   | impossible
   | always
   ;
@@ -25,6 +27,7 @@ causes: action CAUSES fluentsList afterTime? underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
 releases: action RELEASES fluentsList afterTime? underCondition?;
 triggers: fluentsList TRIGGERS action;
+occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
 always: ALWAYS fluent;
 
@@ -46,7 +49,6 @@ observations: OBS '=' '{' observationsList '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluent ',' time ')';
 
-queries: query | queries query;
 query
   : question fluentsList AT time WHEN scenarioId
   | question PERFORMED action AT time WHEN scenarioId
@@ -87,6 +89,7 @@ INVOKES: 'invokes';
 INVOLVED: 'involved';
 NOT: '-';
 OBS: 'OBS';
+OCCURS: 'occurs';
 PERFORMED: 'perfomed';
 RELEASES: 'releases';
 TRIGGERS: 'triggers';
