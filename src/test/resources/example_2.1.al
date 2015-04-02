@@ -5,7 +5,7 @@ typically (Janek, leaves) invokes (Janek, locksTheDoor)
 (Janek, takesCard) causes [hasCard]
 (Janek, leaves) causes [-inHostel]
 (Janek, comeback) causes [inHostel] after 10 if [hasCard]
-typically (DoorKepper, lockThDoor) occurs at 10
+typically (DoorKeeper, lockTheDoor) occurs at 10
 
 
 scenarioOne {

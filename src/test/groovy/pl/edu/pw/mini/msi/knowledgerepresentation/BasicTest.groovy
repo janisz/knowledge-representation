@@ -1,8 +1,9 @@
-package pl.edu.pw.mini.msi.knowledgerepresentation;
+package pl.edu.pw.mini.msi.knowledgerepresentation
 
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
+import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.*
 import spock.lang.Specification
 import spock.lang.Unroll
 

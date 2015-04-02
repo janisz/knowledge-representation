@@ -1,6 +1,6 @@
 grammar ActionLanguage;
 @header {
-    package pl.edu.pw.mini.msi.knowledgerepresentation;
+    package pl.edu.pw.mini.msi.knowledgerepresentation.grammar;
 }
 
 programm: instruction* EOF;
