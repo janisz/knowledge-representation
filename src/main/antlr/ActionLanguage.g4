@@ -46,7 +46,7 @@ event: '(' action ',' time ')';
 
 observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
-observation: '(' fluent ',' time ')';
+observation: '(' fluentsList ',' time ')';
 
 query
   : question fluentsList AT time WHEN scenarioId

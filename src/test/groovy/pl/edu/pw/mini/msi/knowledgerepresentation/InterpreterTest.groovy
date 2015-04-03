@@ -92,9 +92,9 @@ class InterpreterTest extends Specification {
                 ((Janek, comeback), 10)
             },
             OBS = {
-                (-hasCard, 4),
-                (hasCard, 5),
-                (inHostel, 4)
+                ([-hasCard, inHostel], 4),
+                ([hasCard], 5),
+                ([inHostel], 4)
             }
         }'''
         when:
@@ -120,15 +120,14 @@ class InterpreterTest extends Specification {
                 ((Janek, comeback), 10)
             },
             OBS = {
-                (-hasCard, 4),
-                (hasCard, 5),
-                (inHostel, 4)
+                ([-hasCard, inHostel], 4),
+                ([hasCard], 5)
             }
         }
         scenarioTwo { ACS = {}, OBS = {} }
         scenarioThree {
             ACS = { ((DoorKeeper, locksTheDoor), 1) },
-            OBS = { (-doorAreLocked, 4), (doorAreLocked, 2) }
+            OBS = { ([-doorAreLocked], 4), ([doorAreLocked], 2) }
         }'''
         when:
         interpreter.eval(scenarionDefinition)

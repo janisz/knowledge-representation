@@ -1,11 +1,11 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -32,6 +32,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private final Context context;
     private final Collection<Event> events = Lists.newArrayList();
     private final Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
+    private final Collection<Fluent> lastFluentsList = Sets.newHashSet();
 
     private Action lastAction;
     private Actor lastActor;
@@ -63,12 +64,18 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void enterFluent(ActionLanguageParser.FluentContext ctx) {
         lastFluent = new Fluent(ctx.IDENTIFIER().getText(), ctx.NOT() == null);
+        lastFluentsList.add(lastFluent);
         context.fluents.add(new Fluent(ctx.IDENTIFIER().getText(), true));
     }
 
     @Override
     public void enterTime(ActionLanguageParser.TimeContext ctx) {
         lastTime = new Time(Integer.parseInt(ctx.DecimalConstant().getText()));
+    }
+
+    @Override
+    public void enterFluentsList(ActionLanguageParser.FluentsListContext ctx) {
+        lastFluentsList.clear();
     }
 
     @Override
@@ -93,7 +100,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void exitObservation(ActionLanguageParser.ObservationContext ctx) {
-        observations.put(lastTime, lastFluent);
+        for (Fluent fluent : lastFluentsList) {
+            observations.put(lastTime, fluent);
+        }
     }
 
     @Override

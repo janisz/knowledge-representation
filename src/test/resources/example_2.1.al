@@ -15,9 +15,8 @@ scenarioOne {
       ((Janek, comeback), 10)
     },
   OBS = {
-      (hasCard, 4),
-      (inHostel, 4),
-      (-hasCard, 10)
+      ([hasCard, inHostel], 4),
+      ([-hasCard], 10)
   }
 }
 
@@ -29,9 +28,9 @@ scenarioTwo {
       ((Janek, comeback), 10)
     },
   OBS = {
-      (-hasCard, 4),
-      (inHostel, 4),
-      (hasCard, 10)
+      ([-hasCard], 4),
+      ([inHostel], 4),
+      ([hasCard], 10)
   }
 }
 
