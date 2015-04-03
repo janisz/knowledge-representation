@@ -3,9 +3,7 @@ package pl.edu.pw.mini.msi.knowledgerepresentation
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time
 import spock.lang.Specification
@@ -13,12 +11,14 @@ import spock.lang.Unroll
 
 class InterpreterTest extends Specification {
 
+    def errorListener = new ErrorListener()
+
     Context context
     Interpreter interpreter
 
     def setup() {
         context = new Context()
-        interpreter = new Interpreter(context)
+        interpreter = new Interpreter(context, errorListener)
     }
 
     @Unroll
