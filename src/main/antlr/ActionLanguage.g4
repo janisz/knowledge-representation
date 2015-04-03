@@ -38,14 +38,13 @@ action: '('actor ',' task ')';
 fluentsList: '[' fluents ']';
 fluents: fluent | fluents ',' fluent;
 
-scenariosList: scenario | scenariosList scenario;
 scenario: IDENTIFIER '{' actions ',' observations '}';
 
-actions: ACS '=' '{' eventsList '}';
+actions: ACS '=' '{' eventsList? '}';
 eventsList: event | eventsList ',' event;
 event: '(' action ',' time ')';
 
-observations: OBS '=' '{' observationsList '}';
+observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluent ',' time ')';
 

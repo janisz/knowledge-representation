@@ -1,236 +1,113 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
+import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 
-public class ActionLanguageListener extends pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener {
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-    Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
+public class ActionLanguageListener extends ActionLanguageBaseListener {
 
-    @Override
-    public void enterProgramm(ActionLanguageParser.ProgrammContext ctx) {
-        super.enterProgramm(ctx);
-        log.debug("Enter program");
+    private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
+
+    private final Context context;
+    private final Collection<Event> events = Lists.newArrayList();
+    private final Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
+
+    private Action lastAction;
+    private Actor lastActor;
+    private Time lastTime;
+    private Task lastTask;
+    private Fluent lastFluent;
+
+    public ActionLanguageListener(Context context) {
+        this.context = context;
     }
-
-
-    @Override
-    public void enterInstruction(ActionLanguageParser.InstructionContext ctx) {
-        super.enterInstruction(ctx);
-        log.debug("Enter program");
-    }
-
-
-    @Override
-    public void enterEntry(ActionLanguageParser.EntryContext ctx) {
-        super.enterEntry(ctx);
-    }
-
-
-    @Override
-    public void enterInitiallisation(ActionLanguageParser.InitiallisationContext ctx) {
-        super.enterInitiallisation(ctx);
-    }
-
-
-    @Override
-    public void enterCauses(ActionLanguageParser.CausesContext ctx) {
-        super.enterCauses(ctx);
-    }
-
-
-    @Override
-    public void enterInvokes(ActionLanguageParser.InvokesContext ctx) {
-        super.enterInvokes(ctx);
-    }
-
-
-    @Override
-    public void enterReleases(ActionLanguageParser.ReleasesContext ctx) {
-        super.enterReleases(ctx);
-    }
-
-
-    @Override
-    public void enterTriggers(ActionLanguageParser.TriggersContext ctx) {
-        super.enterTriggers(ctx);
-    }
-
-
-    @Override
-    public void enterOccurs(ActionLanguageParser.OccursContext ctx) {
-        super.enterOccurs(ctx);
-    }
-
-
-    @Override
-    public void enterImpossible(ActionLanguageParser.ImpossibleContext ctx) {
-        super.enterImpossible(ctx);
-    }
-
-
-    @Override
-    public void enterAlways(ActionLanguageParser.AlwaysContext ctx) {
-        super.enterAlways(ctx);
-    }
-
-
-    @Override
-    public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
-        super.enterUnderCondition(ctx);
-    }
-
-
-    @Override
-    public void enterAfterTime(ActionLanguageParser.AfterTimeContext ctx) {
-        super.enterAfterTime(ctx);
-    }
-
-
-    @Override
-    public void enterAction(ActionLanguageParser.ActionContext ctx) {
-        super.enterAction(ctx);
-    }
-
-
-    @Override
-    public void enterFluentsList(ActionLanguageParser.FluentsListContext ctx) {
-        super.enterFluentsList(ctx);
-    }
-
-
-    @Override
-    public void enterFluents(ActionLanguageParser.FluentsContext ctx) {
-        super.enterFluents(ctx);
-    }
-
-
-    @Override
-    public void enterScenariosList(ActionLanguageParser.ScenariosListContext ctx) {
-        super.enterScenariosList(ctx);
-    }
-
-
-    @Override
-    public void enterScenario(ActionLanguageParser.ScenarioContext ctx) {
-        super.enterScenario(ctx);
-    }
-
-
-    @Override
-    public void enterActions(ActionLanguageParser.ActionsContext ctx) {
-        super.enterActions(ctx);
-    }
-
-
-    @Override
-    public void enterEventsList(ActionLanguageParser.EventsListContext ctx) {
-        super.enterEventsList(ctx);
-    }
-
-
-    @Override
-    public void enterEvent(ActionLanguageParser.EventContext ctx) {
-        super.enterEvent(ctx);
-    }
-
-
-    @Override
-    public void enterObservations(ActionLanguageParser.ObservationsContext ctx) {
-        super.enterObservations(ctx);
-    }
-
-
-    @Override
-    public void enterObservationsList(ActionLanguageParser.ObservationsListContext ctx) {
-        super.enterObservationsList(ctx);
-    }
-
-
-    @Override
-    public void enterObservation(ActionLanguageParser.ObservationContext ctx) {
-        super.enterObservation(ctx);
-    }
-
-
-    @Override
-    public void enterQuery(ActionLanguageParser.QueryContext ctx) {
-        super.enterQuery(ctx);
-    }
-
-
-    @Override
-    public void enterQuestion(ActionLanguageParser.QuestionContext ctx) {
-        super.enterQuestion(ctx);
-    }
-
-
-    @Override
-    public void enterBasicQuestion(ActionLanguageParser.BasicQuestionContext ctx) {
-        super.enterBasicQuestion(ctx);
-    }
-
-
-    @Override
-    public void enterActorsList(ActionLanguageParser.ActorsListContext ctx) {
-        super.enterActorsList(ctx);
-    }
-
-
-    @Override
-    public void enterActors(ActionLanguageParser.ActorsContext ctx) {
-        super.enterActors(ctx);
-    }
-
-
-    @Override
-    public void enterFluent(ActionLanguageParser.FluentContext ctx) {
-        super.enterFluent(ctx);
-    }
-
 
     @Override
     public void enterActor(ActionLanguageParser.ActorContext ctx) {
-        super.enterActor(ctx);
+        Actor actor = new Actor(ctx.IDENTIFIER().getText());
+        lastActor = actor;
+        context.actors.add(actor);
     }
-
 
     @Override
     public void enterTask(ActionLanguageParser.TaskContext ctx) {
-        super.enterTask(ctx);
+        lastTask = new Task(ctx.IDENTIFIER().getText());
     }
 
+    @Override
+    public void exitAction(ActionLanguageParser.ActionContext ctx) {
+        lastAction = new Action(lastActor, lastTask);
+    }
+
+    @Override
+    public void enterFluent(ActionLanguageParser.FluentContext ctx) {
+        lastFluent = new Fluent(ctx.IDENTIFIER().getText(), ctx.NOT() == null);
+        context.fluents.add(new Fluent(ctx.IDENTIFIER().getText(), true));
+    }
 
     @Override
     public void enterTime(ActionLanguageParser.TimeContext ctx) {
-        super.enterTime(ctx);
+        lastTime = new Time(Integer.parseInt(ctx.DecimalConstant().getText()));
     }
-
 
     @Override
-    public void enterScenarioId(ActionLanguageParser.ScenarioIdContext ctx) {
-        super.enterScenarioId(ctx);
+    public void enterScenario(ActionLanguageParser.ScenarioContext ctx) {
+        log.debug("Clean last events and observations");
+        events.clear();
+        observations.clear();
     }
 
+    @Override
+    public void exitScenario(ActionLanguageParser.ScenarioContext ctx) {
+        String name = ctx.IDENTIFIER().getText();
+        Map<Time, Action> actions = events.stream().collect(Collectors.toMap(Event::getTime, Event::getAction));
+        Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
+        context.scenarios.put(name, scenario);
+    }
+
+    @Override
+    public void exitEvent(ActionLanguageParser.EventContext ctx) {
+        events.add(new Event(lastAction, lastTime));
+    }
+
+    @Override
+    public void exitObservation(ActionLanguageParser.ObservationContext ctx) {
+        observations.put(lastTime, lastFluent);
+    }
 
     @Override
     public void enterEveryRule(ParserRuleContext ctx) {
-        log.debug(String.format("Entered %s..%s (%s)", ctx.getStart(), ctx.getStop(), ctx.getText()));
-        super.enterEveryRule(ctx);
+        log.debug("Enter " + ctx.getText());
     }
-
 
     @Override
     public void visitTerminal(TerminalNode node) {
-        super.visitTerminal(node);
+        log.debug("Visit terminal: " + node.getText());
     }
 
     @Override
     public void visitErrorNode(ErrorNode node) {
-        super.visitErrorNode(node);
+        log.error("Visit error node: " + node.getText());
     }
 }
