@@ -1,6 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
 import org.antlr.v4.runtime.misc.ParseCancellationException
+import org.antlr.v4.runtime.tree.ParseTreeListener
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
@@ -15,10 +16,12 @@ class InterpreterTest extends Specification {
 
     Context context
     Interpreter interpreter
+    ActionLanguageListener parseTreeListener
 
     def setup() {
         context = new Context()
-        interpreter = new Interpreter(context, errorListener)
+        parseTreeListener = new ActionLanguageListener(context)
+        interpreter = new Interpreter(errorListener, parseTreeListener)
     }
 
     @Unroll
@@ -139,5 +142,18 @@ class InterpreterTest extends Specification {
         context.scenarios['scenarioTwo'].observations.size() == 0
         context.scenarios['scenarioThree'].actions.size() == 1
         context.scenarios['scenarioThree'].observations.size() == 2
+    }
+
+    @Unroll
+    def "should set typically to #typically for #instruction"() {
+        when:
+        interpreter.eval(instruction)
+        then:
+        parseTreeListener.typically == typically
+        where:
+        instruction | typically
+        'initially [hasBook]' | false
+        '(DoorKeeper, lockTheDoor) occurs at 10' | false
+        'typically (Janek, takesCard) causes [hasCard] after 11 if [-weekend]' | true
     }
 }

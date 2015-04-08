@@ -3,6 +3,7 @@ package pl.edu.pw.mini.msi.knowledgerepresentation;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,12 +14,12 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 public class Interpreter {
 
     private static final Logger log = LoggerFactory.getLogger(Interpreter.class);
-    private final Context context;
     private final ANTLRErrorListener errorListener;
+    private final ParseTreeListener parseTreeListener;
 
-    public Interpreter(Context context, ANTLRErrorListener errorListener) {
-        this.context = context;
+    public Interpreter(ANTLRErrorListener errorListener, ParseTreeListener parseTreeListener) {
         this.errorListener = errorListener;
+        this.parseTreeListener = parseTreeListener;
     }
 
     public void eval(String input) {
@@ -27,6 +28,6 @@ public class Interpreter {
         ActionLanguageParser parser = new ActionLanguageParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
-        ParseTreeWalker.DEFAULT.walk(new ActionLanguageListener(context), parser.programm());
+        ParseTreeWalker.DEFAULT.walk(parseTreeListener, parser.programm());
     }
 }

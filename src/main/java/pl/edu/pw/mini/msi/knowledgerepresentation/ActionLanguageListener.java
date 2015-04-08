@@ -30,18 +30,58 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
 
     private final Context context;
-    private final Collection<Event> events = Lists.newArrayList();
-    private final Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
-    private final Collection<Fluent> lastFluentsList = Sets.newHashSet();
+    private Collection<Event> events = Lists.newArrayList();
+    private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
+    private Collection<Fluent> lastFluentsList = Sets.newHashSet();
+    private Collection<Fluent> underConditionFluentList = Sets.newHashSet();
 
     private Action lastAction;
     private Actor lastActor;
     private Time lastTime;
     private Task lastTask;
     private Fluent lastFluent;
+    private boolean typically;
 
     public ActionLanguageListener(Context context) {
         this.context = context;
+    }
+
+    @Override
+    public void exitInitiallisation(ActionLanguageParser.InitiallisationContext ctx) {
+        log.debug("Set initial state: %s", lastFluentsList);
+        //TODO: Implement me
+    }
+
+    @Override
+    public void exitCauses(ActionLanguageParser.CausesContext ctx) {
+    /*TODO: Implement me*/
+        log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s",
+                typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
+    }
+
+    @Override public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { /*TODO: Implement me*/ }
+
+    @Override public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { /*TODO: Implement me*/ }
+
+    @Override public void exitTriggers(ActionLanguageParser.TriggersContext ctx) { /*TODO: Implement me*/ }
+
+    @Override public void exitOccurs(ActionLanguageParser.OccursContext ctx) { /*TODO: Implement me*/ }
+
+    @Override public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) { /*TODO: Implement me*/ }
+
+    @Override public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { /*TODO: Implement me*/ }
+
+
+    @Override
+    public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
+        underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
+    }
+
+    @Override
+    public void exitUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
+        Collection<Fluent> fluents = ImmutableList.copyOf(underConditionFluentList);
+        underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
+        lastFluentsList = fluents;
     }
 
     @Override
@@ -69,20 +109,28 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     }
 
     @Override
+    public void enterInstruction(ActionLanguageParser.InstructionContext ctx) {
+        log.debug("Enter " + ctx.getText());
+        log.debug("Clean previous instruction context");
+        events.clear();
+        observations.clear();
+        lastFluentsList.clear();
+    }
+
+    @Override
+    public void enterEntry(ActionLanguageParser.EntryContext ctx) {
+        typically = ctx.TYPICALLY() != null;
+    }
+
+    @Override
     public void enterTime(ActionLanguageParser.TimeContext ctx) {
         lastTime = new Time(Integer.parseInt(ctx.DecimalConstant().getText()));
     }
 
     @Override
     public void enterFluentsList(ActionLanguageParser.FluentsListContext ctx) {
+        log.debug("Clean previously parsed fluent list data");
         lastFluentsList.clear();
-    }
-
-    @Override
-    public void enterScenario(ActionLanguageParser.ScenarioContext ctx) {
-        log.debug("Clean last events and observations");
-        events.clear();
-        observations.clear();
     }
 
     @Override
@@ -90,6 +138,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         String name = ctx.IDENTIFIER().getText();
         Map<Time, Action> actions = events.stream().collect(Collectors.toMap(Event::getTime, Event::getAction));
         Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
+        log.debug("Create scenario: ", scenario);
         context.scenarios.put(name, scenario);
     }
 
@@ -103,16 +152,6 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         for (Fluent fluent : lastFluentsList) {
             observations.put(lastTime, fluent);
         }
-    }
-
-    @Override
-    public void enterEveryRule(ParserRuleContext ctx) {
-        log.debug("Enter " + ctx.getText());
-    }
-
-    @Override
-    public void visitTerminal(TerminalNode node) {
-        log.debug("Visit terminal: " + node.getText());
     }
 
     @Override
