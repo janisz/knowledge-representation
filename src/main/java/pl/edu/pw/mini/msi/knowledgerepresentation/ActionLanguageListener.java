@@ -6,9 +6,7 @@ import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
@@ -27,6 +25,10 @@ import java.util.stream.Collectors;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
+    private enum QueryType {
+        GENERALLY, ALWAYS, EVER, NONE
+    }
+
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
 
     private final Context context;
@@ -34,12 +36,15 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
     private Collection<Fluent> lastFluentsList = Sets.newHashSet();
     private Collection<Fluent> underConditionFluentList = Sets.newHashSet();
+    private Collection<Actor> lastActorsList = Sets.newHashSet();
 
     private Action lastAction;
     private Actor lastActor;
     private Time lastTime;
     private Task lastTask;
     private Fluent lastFluent;
+    private String lastScenarioId;
+    private QueryType lastQueryType;
     private boolean typically;
 
     public ActionLanguageListener(Context context) {
@@ -59,18 +64,58 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
                 typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
     }
 
-    @Override public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { /*TODO: Implement me*/ }
 
-    @Override public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { /*TODO: Implement me*/ }
 
-    @Override public void exitTriggers(ActionLanguageParser.TriggersContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitTriggers(ActionLanguageParser.TriggersContext ctx) { /*TODO: Implement me*/ }
 
-    @Override public void exitOccurs(ActionLanguageParser.OccursContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitOccurs(ActionLanguageParser.OccursContext ctx) { /*TODO: Implement me*/ }
 
-    @Override public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) { /*TODO: Implement me*/ }
 
-    @Override public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { /*TODO: Implement me*/ }
+    @Override
+    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { /*TODO: Implement me*/ }
 
+    @Override
+    public void exitState(ActionLanguageParser.StateContext ctx) { /*TODO: Implement me*/ }
+
+    @Override
+    public void exitPerformed(ActionLanguageParser.PerformedContext ctx) { /*TODO: Implement me*/ }
+
+    @Override
+    public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
+    /*TODO: Implement me*/
+        Scenario scenario = context.scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+        log.debug(String.format("%s INVOLVED %s WHEN %s",
+                lastQueryType, lastActorsList, scenario));
+    }
+
+    @Override
+    public void enterQuery(ActionLanguageParser.QueryContext ctx) {
+        lastQueryType = QueryType.NONE;
+    }
+
+    @Override
+    public void exitQuestion(ActionLanguageParser.QuestionContext ctx) {
+        if (ctx.GENERALLY() != null) {
+            lastQueryType = QueryType.GENERALLY;
+        }
+    }
+
+    @Override
+    public void exitBasicQuestion(ActionLanguageParser.BasicQuestionContext ctx) {
+        if (ctx.ALWAYS() != null) {
+            lastQueryType = QueryType.ALWAYS;
+        } else if (ctx.EVER() != null) {
+            lastQueryType = QueryType.EVER;
+        }
+    }
 
     @Override
     public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
@@ -88,6 +133,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterActor(ActionLanguageParser.ActorContext ctx) {
         Actor actor = new Actor(ctx.IDENTIFIER().getText());
         lastActor = actor;
+        lastActorsList.add(actor);
         context.actors.add(actor);
     }
 
@@ -115,6 +161,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         events.clear();
         observations.clear();
         lastFluentsList.clear();
+        lastActorsList.clear();
     }
 
     @Override

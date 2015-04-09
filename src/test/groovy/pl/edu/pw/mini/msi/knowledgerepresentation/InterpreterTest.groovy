@@ -1,10 +1,14 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
+import com.google.common.collect.HashMultimap
+import com.google.common.collect.Maps
+import com.google.common.collect.Multimaps
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import org.antlr.v4.runtime.tree.ParseTreeListener
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time
 import spock.lang.Specification
@@ -66,6 +70,8 @@ class InterpreterTest extends Specification {
 
     @Unroll
     def "should count actors (#actors)"() {
+        given:
+        context.scenarios.put("scenarioOne", new Scenario("scenarioOne", HashMultimap.create(), Maps.newHashMap()))
         when:
         interpreter.eval(instruction)
         then:
@@ -73,10 +79,10 @@ class InterpreterTest extends Specification {
         where:
         instruction | actors
         'initially [hasBook]' | []
-        'typically (DoorKeeper, lockTheDoor) occurs at 10' | [new Actor('DoorKeeper')]
-        'typically (DoorKeeper, lockTheDoor) occurs at 10 (KeyMaker, makeKey) occurs at 11' | [new Actor('DoorKeeper'), new Actor('KeyMaker')]
-        'always involved [DoorKeeper, KeyMaker] when scenarioOne' | [new Actor('DoorKeeper'), new Actor('KeyMaker')]
-        'always involved [DoorKeeper, DoorKeeper] when scenarioOne' | [new Actor('DoorKeeper')]
+        'typically (DoorKeeper, lockTheDoor) occurs at 10' | [actor('DoorKeeper')]
+        'typically (DoorKeeper, lockTheDoor) occurs at 10 (KeyMaker, makeKey) occurs at 11' | [actor('DoorKeeper'), actor('KeyMaker')]
+        'always involved [DoorKeeper, KeyMaker] when scenarioOne' | [actor('DoorKeeper'), actor('KeyMaker')]
+        'always involved [DoorKeeper, DoorKeeper] when scenarioOne' | [actor('DoorKeeper')]
     }
 
     def "should create empty scenario"() {
@@ -103,15 +109,15 @@ class InterpreterTest extends Specification {
         when:
         interpreter.eval(scenarionDefinition)
         then:
-        context.actors.toList() == [new Actor('Janek')]
+        context.actors.toList() == [actor('Janek')]
         context.scenarios.size() == 1
         context.scenarios['scenario'].actions.size() == 3
-        context.scenarios['scenario'].actions[new Time(3)] == new Action(new Actor('Janek'), new Task('takesCard'))
-        context.scenarios['scenario'].actions[new Time(4)] == new Action(new Actor('Janek'), new Task('locksTheDoor'))
-        context.scenarios['scenario'].actions[new Time(10)] == new Action(new Actor('Janek'), new Task('comeback'))
+        context.scenarios['scenario'].actions[time(3)] == action('Janek', 'takesCard')
+        context.scenarios['scenario'].actions[time(4)] == action('Janek', 'locksTheDoor')
+        context.scenarios['scenario'].actions[time(10)] == action('Janek', 'comeback')
         context.scenarios['scenario'].observations.size() == 3
-        context.scenarios['scenario'].observations.get(new Time(5)).toList() == [new Fluent('hasCard', true)]
-        context.scenarios['scenario'].observations.get(new Time(4)).toList() == [new Fluent('hasCard', false), new Fluent('inHostel', true)]
+        context.scenarios['scenario'].observations.get(time(5)).toList() == [fluent('hasCard')]
+        context.scenarios['scenario'].observations.get(time(4)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
     }
 
     def "should create multiple scenarios"() {
@@ -155,5 +161,25 @@ class InterpreterTest extends Specification {
         'initially [hasBook]' | false
         '(DoorKeeper, lockTheDoor) occurs at 10' | false
         'typically (Janek, takesCard) causes [hasCard] after 11 if [-weekend]' | true
+    }
+
+    Actor actor(String name) {
+        return new Actor(name)
+    }
+
+    Task task(String name) {
+        return new Task(name)
+    }
+
+    Time time(int time) {
+        return new Time(time)
+    }
+
+    Fluent fluent(String name) {
+        return new Fluent(name, true)
+    }
+
+    Action action(String actorName, String taskName) {
+        return new Action(actor(actorName), task(taskName))
     }
 }

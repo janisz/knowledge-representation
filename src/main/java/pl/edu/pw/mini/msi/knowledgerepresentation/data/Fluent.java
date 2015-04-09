@@ -6,4 +6,8 @@ import lombok.Value;
 public class Fluent {
     String name;
     boolean value;
+
+    public Fluent not() {
+        return new Fluent(name, !value);
+    }
 }

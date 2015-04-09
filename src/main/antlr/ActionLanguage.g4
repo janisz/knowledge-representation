@@ -49,17 +49,22 @@ observationsList: observation | observationsList ',' observation;
 observation: '(' fluentsList ',' time ')';
 
 query
-  : question fluentsList AT time WHEN scenarioId
-  | question PERFORMED action AT time WHEN scenarioId
-  | basicQuestion INVOLVED actorsList WHEN scenarioId
+  : state
+  | performed
+  | involved
   ;
+
+state: question fluentsList AT time WHEN scenarioId;
+performed: question PERFORMED action AT time WHEN scenarioId;
+involved: basicQuestion INVOLVED actorsList WHEN scenarioId;
+
 question
   : basicQuestion
-  | 'generally'
+  | GENERALLY
   ;
 basicQuestion
-  : 'always'
-  | 'ever'
+  : ALWAYS
+  | EVER
   ;
 
 
