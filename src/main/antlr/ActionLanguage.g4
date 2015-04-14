@@ -1,21 +1,23 @@
 grammar ActionLanguage;
 @header {
-    package pl.edu.pw.mini.msi.knowledgerepresentation;
+    package pl.edu.pw.mini.msi.knowledgerepresentation.grammar;
 }
 
-programm: actionLanguage scenariosList queries;
+programm: instruction* EOF;
 
-actionLanguage: initiallisation entriesList;
-entriesList: entry | entriesList entry;
+instruction
+  : initiallisation
+  | entry
+  | scenario
+  | query
+  ;
+
 entry
-  : causes
-  | invokes
-  | releases
-  | triggers
-  | TYPICALLY causes
-  | TYPICALLY invokes
-  | TYPICALLY releases
-  | TYPICALLY triggers
+  : TYPICALLY? causes
+  | TYPICALLY? invokes
+  | TYPICALLY? releases
+  | TYPICALLY? triggers
+  | TYPICALLY? occurs
   | impossible
   | always
   ;
@@ -25,6 +27,7 @@ causes: action CAUSES fluentsList afterTime? underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
 releases: action RELEASES fluentsList afterTime? underCondition?;
 triggers: fluentsList TRIGGERS action;
+occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
 always: ALWAYS fluent;
 
@@ -35,30 +38,33 @@ action: '('actor ',' task ')';
 fluentsList: '[' fluents ']';
 fluents: fluent | fluents ',' fluent;
 
-scenariosList: scenario | scenariosList scenario;
 scenario: IDENTIFIER '{' actions ',' observations '}';
 
-actions: ACS '=' '{' eventsList '}';
+actions: ACS '=' '{' eventsList? '}';
 eventsList: event | eventsList ',' event;
 event: '(' action ',' time ')';
 
-observations: OBS '=' '{' observationsList '}';
+observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
-observation: '(' fluent ',' time ')';
+observation: '(' fluentsList ',' time ')';
 
-queries: query | queries query;
 query
-  : question fluentsList AT time WHEN scenarioId
-  | question PERFORMED action AT time WHEN scenarioId
-  | basicQuestion INVOLVED actorsList WHEN scenarioId
+  : state
+  | performed
+  | involved
   ;
+
+state: question fluentsList AT time WHEN scenarioId;
+performed: question PERFORMED action AT time WHEN scenarioId;
+involved: basicQuestion INVOLVED actorsList WHEN scenarioId;
+
 question
   : basicQuestion
-  | 'generally'
+  | TYPICALLY
   ;
 basicQuestion
-  : 'always'
-  | 'ever'
+  : ALWAYS
+  | EVER
   ;
 
 
@@ -79,7 +85,6 @@ ALWAYS: 'always';
 AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';
-GENERALLY: 'generally';
 IF: 'if';
 IMPOSSIBLE: 'imposible';
 INITIALLY: 'initially';
@@ -87,6 +92,7 @@ INVOKES: 'invokes';
 INVOLVED: 'involved';
 NOT: '-';
 OBS: 'OBS';
+OCCURS: 'occurs';
 PERFORMED: 'perfomed';
 RELEASES: 'releases';
 TRIGGERS: 'triggers';

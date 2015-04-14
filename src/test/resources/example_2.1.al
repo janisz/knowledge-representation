@@ -5,6 +5,7 @@ typically (Janek, leaves) invokes (Janek, locksTheDoor)
 (Janek, takesCard) causes [hasCard]
 (Janek, leaves) causes [-inHostel]
 (Janek, comeback) causes [inHostel] after 10 if [hasCard]
+typically (DoorKeeper, lockTheDoor) occurs at 10
 
 
 scenarioOne {
@@ -14,9 +15,8 @@ scenarioOne {
       ((Janek, comeback), 10)
     },
   OBS = {
-      (hasCard, 4),
-      (inHostel, 4),
-      (-hasCard, 10)
+      ([hasCard, inHostel], 4),
+      ([-hasCard], 10)
   }
 }
 
@@ -28,13 +28,13 @@ scenarioTwo {
       ((Janek, comeback), 10)
     },
   OBS = {
-      (-hasCard, 4),
-      (inHostel, 4),
-      (hasCard, 10)
+      ([-hasCard], 4),
+      ([inHostel], 4),
+      ([hasCard], 10)
   }
 }
 
 always involved [DoorKepper] when scenarioOne
-generally [inHostel, -hasCard] at 11 when scenarioTwo
+typically [inHostel, -hasCard] at 11 when scenarioTwo
 ever involved [Janek, DoorKepper] when scenarioOne
 
