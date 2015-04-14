@@ -35,6 +35,6 @@ scenarioTwo {
 }
 
 always involved [DoorKepper] when scenarioOne
-generally [inHostel, -hasCard] at 11 when scenarioTwo
+typically [inHostel, -hasCard] at 11 when scenarioTwo
 ever involved [Janek, DoorKepper] when scenarioOne
 

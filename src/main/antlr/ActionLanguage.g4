@@ -60,7 +60,7 @@ involved: basicQuestion INVOLVED actorsList WHEN scenarioId;
 
 question
   : basicQuestion
-  | GENERALLY
+  | TYPICALLY
   ;
 basicQuestion
   : ALWAYS
@@ -85,7 +85,6 @@ ALWAYS: 'always';
 AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';
-GENERALLY: 'generally';
 IF: 'if';
 IMPOSSIBLE: 'imposible';
 INITIALLY: 'initially';

@@ -103,7 +103,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void exitQuestion(ActionLanguageParser.QuestionContext ctx) {
-        if (ctx.GENERALLY() != null) {
+        if (ctx.TYPICALLY() != null) {
             lastQueryType = QueryType.GENERALLY;
         }
     }
