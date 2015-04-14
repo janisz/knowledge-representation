@@ -163,7 +163,7 @@ występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być 
    		\item Dla każdego wyrażenia $ ( a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
    		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
 		\item Dla każdego wyrażenia $ ( typically\; a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
-		 $t \in \mathcal{T}$, jeżeli $(a_i,t) \in N$, to $(a_i,t) \in E$.
+		 $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, $(a_i,t) \in N$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
  		\item Dla każdego wyrażenia $( a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
  		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
 	 	\item Dla każdego wyrażenia $( typically\; a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
@@ -222,9 +222,9 @@ Zdefiniowany język akcji może być odpytywany przez poniższy język zapytań,
 który zwraca odpowiedzi \texttt{TRUE/FALSE} na następujące pytania
 \begin{description}[style=nextline]
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ warunek $\gamma$ zachodzi zawsze/kiedykolwiek/na ogół?]
-	$\texttt{always/ever/generally } \gamma \texttt{ at } t \texttt{ when } Sc$
+	$\texttt{always/ever/typically } \gamma \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy w chwili $t$ realizacji scenariusza $Sc$ akcja $a$ wykonywana jest zawsze/kiedykolwiek?]
-	$\texttt{always/ever/generally performed } a_i \texttt{ at } t \texttt{ when } Sc$
+	$\texttt{always/ever/typically performed } a_i \texttt{ at } t \texttt{ when } Sc$
 	\item[Czy realizacji scenariusza $Sc$ zaangażowana jest grupa agentów $Ag$ zawsze/kiedykolwiek?]
 	$\texttt{always/ever involved } Ag \texttt{ when } Sc$
 \end{description}
@@ -330,25 +330,23 @@ Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwere
 $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
-	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik
-	$TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$\\
+	\item zapytanie kwerendą $Q$ postaci $\gamma\ \texttt{at}\ t\ \texttt{when}\ Sc$\\ zwróci wynik $TRUE$, jeśli\\
 	\begin{description}
-		\item[always] $H(\gamma,t)=1$
-		\item[ever] $H(\gamma,t)=1$
-		\item[generally] $(a_i, t) \in N \implies H(\gamma,t)=1$
+		\item[always] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; H(\gamma,t)=1$
+		\item[ever] $\exists_{S=(H,O,E,N,T_{\infty}) \in S_c}\; H(\gamma,t)=1$
+		\item[typically] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; (a_i, t) \in N \implies H(\gamma,t)=1$
 	\end{description}
 	\item zapytanie kwerendą $Q$ postaci $\texttt{performed}\ a_i\ \texttt{at}\ t\ \texttt{when}\ Sc$\\
-	zwróci wynik $TRUE$ jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$
+	zwróci wynik $TRUE$, jeśli
 	\begin{description}
-		\item[always] $(a_i,t) \in E$
-		\item[ever] $(a_i,t) \in E$
-		\item[generally] $(a_i,t) \in N \implies (a_i,t) \in E$
+		\item[always] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; (a_i,t) \in E$
+		\item[ever] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; (a_i,t) \in E$
+		\item[typically] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; (a_i,t) \in N \implies (a_i,t) \in E$
 	\end{description}
-	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ \Lambda \; \texttt{when}\ Sc$\\ zwróci wynik $TRUE$
-	jeśli dla każdego modelu $S=(H,O,E,N,T_{\infty})$ scenariusza $Sc$ zgodnego z $D$ zajdzie
+	\item zapytanie kwerendą $Q$ postaci $\texttt{involved}\ \Lambda \; \texttt{when}\ Sc$\\ zwróci wynik $TRUE$, jeśli
 	\begin{description}
-		\item[always] $\exists_{((\Lambda', \tau), time) \in N} ((\Lambda', \tau),t) \in E, \Lambda' = \Lambda$
-		\item[ever] $\exists_{((\Lambda', \tau),t) \in E} \Lambda' = \Lambda$
+		\item[always] $\forall_{S=(H,O,E,N,T_{\infty}) \in Sc}\; \exists_{((\Lambda', \tau), time) \in N} ((\Lambda', \tau),t) \in E, \Lambda' = \Lambda$
+		\item[ever] $\exists_{S=(H,O,E,N,T_{\infty}) \in Sc}\; \exists_{((\Lambda', \tau),t) \in E} \Lambda' = \Lambda$
 	\end{description}
 \end{itemize}
 
