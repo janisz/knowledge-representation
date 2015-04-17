@@ -48,7 +48,7 @@ Poniższy język został zaprojektowany tak aby spełnić następujące warunki:
 	warunków lub konkretnych punktów czasowych.
 \end{itemize}
 Językiem odpowiadającym powyższym warunkom jest język $\mathcal{AL}$
-opisujący domeny akcji z czasem liniowym.
+opisujący dziedzinę akcji z czasem liniowym.
 
 \subsection{Opis symboli języka}
 \begin{definition}
@@ -182,7 +182,7 @@ występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być 
    \end{itemize}
    \begin{definition}
    Niech $S = (H,O,E,N,T_{\infty})$ będzie strukturą języka $\mathcal{AL}$ , $ Sc=(OBS,ACS) $ będzie scenariuszem,
-    oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem domeny $D$, jeśli:
+    oraz $ D $ dziedziną. Powiemy, że $ S $ jest strukturą dla $Sc$ zgodną z opisem dziedziny $D$, jeśli:
    		\begin{itemize}
      		\item Dla każdej obserwacji $(\alpha,t )\in OBS$ mamy $H(\alpha,t )=1$
      		\item $ACS \subseteq E$
@@ -198,10 +198,10 @@ występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być 
    \begin{definition}
    Niech $S=(H,O,E,N,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny
    $D$. Mówimy, że $S$ jest $O$-minimalną strukturą, jeżeli nie istnieje struktura \\$S'=(H',O',E',N',T_{\infty}')$
-   dla tego samego scenariusza i domeny taka, że $O'\prec O$.
+   dla tego samego scenariusza i dziedziny taka, że $O'\prec O$.
    \end{definition}
    \begin{definition}
-   Niech $S=(H,O,E,N,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny
+   Niech $S=(H,O,E,N,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny
    $D$. $S$ będziemy nazywać modelem typu 1 dla scenariusza $Sc$ zgodnym z opisem $D$ jeżeli:
    \begin{itemize}
 		\item $S$ jest $O$-minimalny
@@ -212,7 +212,7 @@ występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być 
 	\end{itemize}
 \end{definition}
 \begin{definition}
-   Niech $S=(H,O,E,N,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem domeny
+   Niech $S=(H,O,E,N,T_{\infty})$ będzie strukturą dla scenariusza $Sc=(OBS,ACS)$ zgodną z opisem dziedziny
    $D$. $S$ będziemy nazywać modelem typu 2 dla scenariusza $Sc$ zgodnym z opisem $D$ jeżeli:
    \begin{itemize}
 		\item $S$ jest modelem typu 1 dla scenariusza $Sc$
@@ -338,7 +338,7 @@ Janek Comeback occurs at 3
 \end{example}
 
 \subsection{Semantyka}
-Niech $Sc$ będzie scenariuszem, a $D$ opisem domeny języka. Powiemy, że kwerenda $Q$ jest konsekwencją
+Niech $Sc$ będzie scenariuszem, a $D$ opisem dziedziny języka. Powiemy, że kwerenda $Q$ jest konsekwencją
 $Sc$ zgodnie z $D$ (ozn. $Sc,\ D\ |\approx\ Q $)
 
 \begin{itemize}
