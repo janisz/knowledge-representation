@@ -30,9 +30,13 @@ dependencies {
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
 }
 
+generateGrammarSource {
+    outputDirectory = file("$buildDir/generated-src/antlr/main/pl/edu/pw/mini/msi/knowledgerepresentation/grammar")
+}
+
 idea {
     module {
-        generatedSourceDirs += file('build/generated-src/antlr/main/')
+        generatedSourceDirs += file("$buildDir/generated-src/antlr/main/")
         jdkName = '1.8'
     }
 }
