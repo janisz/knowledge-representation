@@ -1,10 +1,9 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
+import alice.tuprolog.Prolog
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Maps
-import com.google.common.collect.Multimaps
 import org.antlr.v4.runtime.misc.ParseCancellationException
-import org.antlr.v4.runtime.tree.ParseTreeListener
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
@@ -19,12 +18,14 @@ class InterpreterTest extends Specification {
     def errorListener = new ErrorListener()
 
     Context context
+    Prolog engine
     Interpreter interpreter
     ActionLanguageListener parseTreeListener
 
     def setup() {
         context = new Context()
-        parseTreeListener = new ActionLanguageListener(context)
+        engine = new Prolog()
+        parseTreeListener = new ActionLanguageListener(context, engine)
         interpreter = new Interpreter(errorListener, parseTreeListener)
     }
 
@@ -109,6 +110,10 @@ class InterpreterTest extends Specification {
         when:
         interpreter.eval(scenarionDefinition)
         then:
+        engine.solve("actor('Janek').").success
+        !engine.solve("actor('DoorKeeper').").success
+        "[scenario]" == engine.solve('findall(X, scenario(X), S).').getTerm('S').toString()
+        "[hasCard,inHostel,hasCard,inHostel]" == engine.solve('findall(X, fluent(X), F).').getTerm('F').toString()
         context.actors.toList() == [actor('Janek')]
         context.scenarios.size() == 1
         context.scenarios['scenario'].actions.size() == 3
@@ -141,6 +146,8 @@ class InterpreterTest extends Specification {
         when:
         interpreter.eval(scenarionDefinition)
         then:
+        engine.solve("actor('DoorKeeper').").success
+        "[scenario,scenarioTwo,scenarioThree]" == engine.solve('findall(X, scenario(X), S).').getTerm('S').toString()
         context.scenarios.size() == 3
         context.scenarios['scenario'].actions.size() == 3
         context.scenarios['scenario'].observations.size() == 3

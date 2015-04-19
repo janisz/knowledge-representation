@@ -1,5 +1,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
+import alice.tuprolog.Engine;
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
@@ -32,6 +37,8 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
 
     private final Context context;
+    private final Prolog engine;
+
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
     private Collection<Fluent> lastFluentsList = Sets.newHashSet();
@@ -47,8 +54,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private QueryType lastQueryType;
     private boolean typically;
 
-    public ActionLanguageListener(Context context) {
+    public ActionLanguageListener(Context context, Prolog engine) {
         this.context = context;
+        this.engine = engine;
     }
 
     @Override
@@ -135,6 +143,15 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         lastActor = actor;
         lastActorsList.add(actor);
         context.actors.add(actor);
+        addTheory(actor.theory());
+    }
+
+    private void addTheory(Theory theory) {
+        try {
+            engine.addTheory(theory);
+        } catch (InvalidTheoryException e) {
+            Throwables.propagate(e);
+        }
     }
 
     @Override
@@ -152,6 +169,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         lastFluent = new Fluent(ctx.IDENTIFIER().getText(), ctx.NOT() == null);
         lastFluentsList.add(lastFluent);
         context.fluents.add(new Fluent(ctx.IDENTIFIER().getText(), true));
+        addTheory(lastFluent.theory());
     }
 
     @Override
@@ -187,6 +205,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
         log.debug("Create scenario: ", scenario);
         context.scenarios.put(name, scenario);
+        addTheory(scenario.theory());
     }
 
     @Override

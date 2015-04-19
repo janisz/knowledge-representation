@@ -1,5 +1,6 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
+import alice.tuprolog.Prolog;
 import com.google.common.collect.ImmutableSet;
 import jline.console.ConsoleReader;
 import jline.console.completer.StringsCompleter;
@@ -23,7 +24,8 @@ public class Repl {
     private final static Logger log = LoggerFactory.getLogger(Repl.class);
     private final static ANTLRErrorListener errorListener = new ErrorListener();
     private final static Context context = new Context();
-    private final static ParseTreeListener parseTreeListener = new ActionLanguageListener(context);
+    private final static Prolog engine = new Prolog();
+    private final static ParseTreeListener parseTreeListener = new ActionLanguageListener(context, engine);
     private final static Interpreter interpreter = new Interpreter(errorListener, parseTreeListener);
 
     public static void main(String[] args) throws IOException {
