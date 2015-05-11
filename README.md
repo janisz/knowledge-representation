@@ -1,4 +1,4 @@
-# knowledge-representation
+# knowledge-representation [![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg)](https://raw.githubusercontent.com/janisz/knowledge-representation/master/LICENSE) [![Build Status](https://travis-ci.org/janisz/knowledge-representation.svg?branch=master)](https://travis-ci.org/janisz/knowledge-representation)
 ##Scenariusze działań z projektami domyślymi
 
 ### Harmonogram
@@ -16,10 +16,33 @@
 
 ### Budowanie projektu
 	make
+	
+### Uruchamianie
+
+- dev `./gradlew run`
+- prod - zip z aplikacją znajduje się w `build/distributions`, należy go rozpakować. Skrypt wykonywalny znajduje się 
+w wewnątrz katalogu `bin`.
 
 #### Zależności
 
 1. Dokumentacja
 	- Latex (`sudo apt-get install latexmk texlive-full`)
+2. Kod
+	- Java 8 (http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+### Użyte narzędzia
+- [make](http://en.wikipedia.org/wiki/Make_%28software%29)
+- [Gradle](https://gradle.org/)
+- [LaTex](http://www.latex-project.org/)
+- [Java](http://www.oracle.com/pl/java/overview/index.html)
+- [ANTLR](http://www.antlr.org/)
+- [jline](http://jline.github.io/jline2/)
+- [tuprolog](http://apice.unibo.it/xwiki/bin/view/Tuprolog/)
+- [Groovy](http://www.groovy-lang.org/)
+- [Spock](http://spockframework.org/)
+- [Guava](https://github.com/google/guava)
+- [slf4j/logback](http://logback.qos.ch/index.html)
+- [lombok](https://projectlombok.org/)
+	
 
 		
