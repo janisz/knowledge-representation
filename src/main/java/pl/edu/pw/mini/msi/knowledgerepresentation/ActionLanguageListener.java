@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import alice.tuprolog.Engine;
 import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Prolog;
 import alice.tuprolog.Theory;
