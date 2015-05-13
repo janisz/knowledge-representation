@@ -11,14 +11,14 @@ public class Scenario {
     String name;
     Multimap<Time, Fluent> observations;
     Map<Time, Action> actions;
-
+    
     @java.beans.ConstructorProperties({"name", "observations", "actions"})
     public Scenario(String name, Multimap<Time, Fluent> observations, Map<Time, Action> actions) {
         this.name = name;
         this.observations = observations;
         this.actions = actions;
     }
-
+    
     public Theory theory() {
         //TODO: Save all information with scenario
         try {
