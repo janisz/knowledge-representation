@@ -1,13 +1,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.Theory;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -20,10 +17,12 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
+import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,8 +34,8 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
 
-    private final Context context;
-    private final Prolog engine;
+    private final Knowledge knowledge;
+    private final HashMap<String, Scenario> scenarios = Maps.newLinkedHashMap();
 
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
@@ -53,15 +52,24 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private QueryType lastQueryType;
     private boolean typically;
 
-    public ActionLanguageListener(Context context, Prolog engine) {
-        this.context = context;
-        this.engine = engine;
+    public ActionLanguageListener(Knowledge knowledge) {
+        this.knowledge = knowledge;
+    }
+
+    public Knowledge getKnowledge() {
+        return knowledge;
+    }
+
+    public HashMap<String, Scenario> getScenarios() {
+        return scenarios;
     }
 
     @Override
     public void exitInitiallisation(ActionLanguageParser.InitiallisationContext ctx) {
         log.debug("Set initial state: %s", lastFluentsList);
-        //TODO: Implement me
+        for (Fluent fluent : lastFluentsList) {
+            knowledge._Initially.add(fluent);
+        }
     }
 
     @Override
@@ -98,7 +106,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
     /*TODO: Implement me*/
-        Scenario scenario = context.scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+        Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
         log.debug(String.format("%s INVOLVED %s WHEN %s",
                 lastQueryType, lastActorsList, scenario));
     }
@@ -141,16 +149,6 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         Actor actor = new Actor(ctx.IDENTIFIER().getText());
         lastActor = actor;
         lastActorsList.add(actor);
-        context.actors.add(actor);
-        addTheory(actor.theory());
-    }
-
-    private void addTheory(Theory theory) {
-        try {
-            engine.addTheory(theory);
-        } catch (InvalidTheoryException e) {
-            Throwables.propagate(e);
-        }
     }
 
     @Override
@@ -167,8 +165,6 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterFluent(ActionLanguageParser.FluentContext ctx) {
         lastFluent = new Fluent(ctx.IDENTIFIER().getText(), ctx.NOT() == null);
         lastFluentsList.add(lastFluent);
-        context.fluents.add(new Fluent(ctx.IDENTIFIER().getText(), true));
-        addTheory(lastFluent.theory());
     }
 
     @Override
@@ -203,8 +199,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         Map<Time, Action> actions = events.stream().collect(Collectors.toMap(Event::getTime, Event::getAction));
         Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
         log.debug("Create scenario: ", scenario);
-        context.scenarios.put(name, scenario);
-        addTheory(scenario.theory());
+        scenarios.put(name, scenario);
     }
 
     @Override

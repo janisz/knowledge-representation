@@ -1,25 +1,11 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Theory;
-import com.google.common.base.Throwables;
-
 public class Actor {
     String name;
 
     @java.beans.ConstructorProperties({"name"})
     public Actor(String name) {
         this.name = name;
-    }
-
-    public Theory theory() {
-        Theory theory = null;
-        try {
-            theory = new Theory(String.format("actor('%s').", name));
-        } catch (InvalidTheoryException e) {
-            Throwables.propagate(e);
-        }
-        return theory;
     }
 
     public String getName() {

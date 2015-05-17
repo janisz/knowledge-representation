@@ -1,15 +1,8 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
-import alice.tuprolog.Prolog
-import com.google.common.collect.HashMultimap
-import com.google.common.collect.Maps
 import org.antlr.v4.runtime.misc.ParseCancellationException
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*
+import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -17,15 +10,13 @@ class InterpreterTest extends Specification {
 
     def errorListener = new ErrorListener()
 
-    Context context
-    Prolog engine
+    Knowledge knowledge
     Interpreter interpreter
     ActionLanguageListener parseTreeListener
 
     def setup() {
-        context = new Context()
-        engine = new Prolog()
-        parseTreeListener = new ActionLanguageListener(context, engine)
+        knowledge = new Knowledge()
+        parseTreeListener = new ActionLanguageListener(knowledge)
         interpreter = new Interpreter(errorListener, parseTreeListener)
     }
 
@@ -70,32 +61,27 @@ class InterpreterTest extends Specification {
     }
 
     @Unroll
-    def "should count actors (#actors)"() {
-        given:
-        context.scenarios.put("scenarioOne", new Scenario("scenarioOne", HashMultimap.create(), Maps.newHashMap()))
+    def "should populate fluents (#fluents)"() {
         when:
         interpreter.eval(instruction)
         then:
-        context.actors.toList() == actors
+        knowledge._Initially.list.containsAll(fluents)
         where:
-        instruction | actors
-        'initially [hasBook]' | []
-        'typically (DoorKeeper, lockTheDoor) occurs at 10' | [actor('DoorKeeper')]
-        'typically (DoorKeeper, lockTheDoor) occurs at 10 (KeyMaker, makeKey) occurs at 11' | [actor('DoorKeeper'), actor('KeyMaker')]
-        'always involved [DoorKeeper, KeyMaker] when scenarioOne' | [actor('DoorKeeper'), actor('KeyMaker')]
-        'always involved [DoorKeeper, DoorKeeper] when scenarioOne' | [actor('DoorKeeper')]
+        instruction           | fluents
+        'initially [hasBook]' | [fluent('hasBook')]
+        'initially [hasBook,-empty]' | [fluent('hasBook'), fluent('empty').not()]
     }
 
     def "should create empty scenario"() {
         when:
         interpreter.eval('scenario { ACS = {}, OBS = {} }')
         then:
-        context.scenarios.size() == 1
+        parseTreeListener.scenarios.size() == 1
     }
 
     def "should create scenario"() {
         given:
-        def scenarionDefinition = '''scenario {
+        def scenarioDefinition = '''scenario {
             ACS = {
                 ((Janek, takesCard), 3),
                 ((Janek, locksTheDoor), 4),
@@ -108,26 +94,21 @@ class InterpreterTest extends Specification {
             }
         }'''
         when:
-        interpreter.eval(scenarionDefinition)
+        interpreter.eval(scenarioDefinition)
         then:
-        engine.solve("actor('Janek').").success
-        !engine.solve("actor('DoorKeeper').").success
-        "[scenario]" == engine.solve('findall(X, scenario(X), S).').getTerm('S').toString()
-        "[hasCard,inHostel,hasCard,inHostel]" == engine.solve('findall(X, fluent(X), F).').getTerm('F').toString()
-        context.actors.toList() == [actor('Janek')]
-        context.scenarios.size() == 1
-        context.scenarios['scenario'].actions.size() == 3
-        context.scenarios['scenario'].actions[time(3)] == action('Janek', 'takesCard')
-        context.scenarios['scenario'].actions[time(4)] == action('Janek', 'locksTheDoor')
-        context.scenarios['scenario'].actions[time(10)] == action('Janek', 'comeback')
-        context.scenarios['scenario'].observations.size() == 3
-        context.scenarios['scenario'].observations.get(time(5)).toList() == [fluent('hasCard')]
-        context.scenarios['scenario'].observations.get(time(4)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
+        parseTreeListener.scenarios.size() == 1
+        parseTreeListener.scenarios['scenario'].actions.size() == 3
+        parseTreeListener.scenarios['scenario'].actions[time(3)] == action('Janek', 'takesCard')
+        parseTreeListener.scenarios['scenario'].actions[time(4)] == action('Janek', 'locksTheDoor')
+        parseTreeListener.scenarios['scenario'].actions[time(10)] == action('Janek', 'comeback')
+        parseTreeListener.scenarios['scenario'].observations.size() == 3
+        parseTreeListener.scenarios['scenario'].observations.get(time(5)).toList() == [fluent('hasCard')]
+        parseTreeListener.scenarios['scenario'].observations.get(time(4)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
     }
 
     def "should create multiple scenarios"() {
         given:
-        def scenarionDefinition = '''scenario {
+        def scenarioDefinition = '''scenario {
             ACS = {
                 ((Janek, takesCard), 3),
                 ((Janek, locksTheDoor), 4),
@@ -144,17 +125,15 @@ class InterpreterTest extends Specification {
             OBS = { ([-doorAreLocked], 4), ([doorAreLocked], 2) }
         }'''
         when:
-        interpreter.eval(scenarionDefinition)
+        interpreter.eval(scenarioDefinition)
         then:
-        engine.solve("actor('DoorKeeper').").success
-        "[scenario,scenarioTwo,scenarioThree]" == engine.solve('findall(X, scenario(X), S).').getTerm('S').toString()
-        context.scenarios.size() == 3
-        context.scenarios['scenario'].actions.size() == 3
-        context.scenarios['scenario'].observations.size() == 3
-        context.scenarios['scenarioTwo'].actions.size() == 0
-        context.scenarios['scenarioTwo'].observations.size() == 0
-        context.scenarios['scenarioThree'].actions.size() == 1
-        context.scenarios['scenarioThree'].observations.size() == 2
+        parseTreeListener.scenarios.size() == 3
+        parseTreeListener.scenarios['scenario'].actions.size() == 3
+        parseTreeListener.scenarios['scenario'].observations.size() == 3
+        parseTreeListener.scenarios['scenarioTwo'].actions.size() == 0
+        parseTreeListener.scenarios['scenarioTwo'].observations.size() == 0
+        parseTreeListener.scenarios['scenarioThree'].actions.size() == 1
+        parseTreeListener.scenarios['scenarioThree'].observations.size() == 2
     }
 
     @Unroll
@@ -164,9 +143,9 @@ class InterpreterTest extends Specification {
         then:
         parseTreeListener.typically == typically
         where:
-        instruction | typically
-        'initially [hasBook]' | false
-        '(DoorKeeper, lockTheDoor) occurs at 10' | false
+        instruction                                                            | typically
+        'initially [hasBook]'                                                  | false
+        '(DoorKeeper, lockTheDoor) occurs at 10'                               | false
         'typically (Janek, takesCard) causes [hasCard] after 11 if [-weekend]' | true
     }
 

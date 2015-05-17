@@ -1,8 +1,5 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
-import alice.tuprolog.InvalidTheoryException;
-import alice.tuprolog.Theory;
-import com.google.common.base.Throwables;
 import com.google.common.collect.Multimap;
 
 import java.util.Map;
@@ -17,16 +14,6 @@ public class Scenario {
         this.name = name;
         this.observations = observations;
         this.actions = actions;
-    }
-
-    public Theory theory() {
-        //TODO: Save all information with scenario
-        try {
-            return new Theory(String.format("scenario('%s').", name));
-        } catch (InvalidTheoryException e) {
-            Throwables.propagate(e);
-        }
-        return null;
     }
 
     public String getName() {

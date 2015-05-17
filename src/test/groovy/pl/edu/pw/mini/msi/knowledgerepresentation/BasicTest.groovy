@@ -1,12 +1,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
-import alice.tuprolog.Prolog
-import alice.tuprolog.SolveInfo
-import alice.tuprolog.Theory
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
-import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.*
+import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageLexer
+import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -42,29 +40,5 @@ class BasicTest extends Specification {
         'entry '    | 7
         'scenario ' | 2
         'query '    | 3
-    }
-
-    def "should test if prolog engine is working"() {
-        given:
-        Prolog engine = new Prolog()
-
-        when:
-        SolveInfo info = engine.solve("append([1],[2,3],X).")
-
-        then:
-        '[1,2,3]' == info.getTerm('X').toString()
-    }
-
-    def "should test if prolog engine keep state"() {
-        given:
-        Prolog engine = new Prolog()
-        engine.addTheory(new Theory("actor('Ala')."))
-        engine.addTheory(new Theory("actor('Ola')."))
-
-        when:
-        SolveInfo info = engine.solve("findall(A, actor(A), X).")
-
-        then:
-        "['Ala','Ola']" == info.getTerm('X').toString()
     }
 }

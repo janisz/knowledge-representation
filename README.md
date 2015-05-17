@@ -37,12 +37,10 @@ w wewnątrz katalogu `bin`.
 - [Java](http://www.oracle.com/pl/java/overview/index.html)
 - [ANTLR](http://www.antlr.org/)
 - [jline](http://jline.github.io/jline2/)
-- [tuprolog](http://apice.unibo.it/xwiki/bin/view/Tuprolog/)
 - [Groovy](http://www.groovy-lang.org/)
 - [Spock](http://spockframework.org/)
 - [Guava](https://github.com/google/guava)
 - [slf4j/logback](http://logback.qos.ch/index.html)
-- [lombok](https://projectlombok.org/)
 	
 
 		
