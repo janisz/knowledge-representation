@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
 public class Engine {
     public static int _Number = 0;
     public int _EngineNumber = 0;
@@ -159,14 +161,14 @@ public class Engine {
 
 
     public void LoadInitially() {
-        for (Fluent x : _K._Initially.list) {
+        for (Fluent x : _K._Initially.getList()) {
             _H.Set(x, 0);
         }
     }
 
     public void LoadFluentsFromScenario() {
         for (ScenarioOBSPart x : _S.OBS) {
-            for (Fluent y : x._Fluents.list) {
+            for (Fluent y : x._Fluents.getList()) {
                 _H.Set(y, x._Time);
             }
         }
@@ -178,7 +180,7 @@ public class Engine {
                 boolean ok = _H.IsTrue(ec._Condition, t);
 
                 if (ok) {
-                    for (Fluent f : ec._Effect.list) {
+                    for (Fluent f : ec._Effect.getList()) {
                         _H.Set(f, t + 1);
                         System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
                     }
@@ -197,7 +199,7 @@ public class Engine {
 
             if (ok) {
                 _O.Add(ec._Effect, t + 1);
-                for (Fluent f : ec._Effect.list) {
+                for (Fluent f : ec._Effect.getList()) {
                     _H.Set(f, t + 1);
                     System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
                 }
@@ -232,7 +234,7 @@ public class Engine {
         EffectCauses ec = _K._TypicallyCouses.get(currentSubstep);
 
         _O.Add(ec._Effect, t + 1);
-        for (Fluent f : ec._Effect.list) {
+        for (Fluent f : ec._Effect.getList()) {
             _H.Set(f, t + 1);
             System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
         }

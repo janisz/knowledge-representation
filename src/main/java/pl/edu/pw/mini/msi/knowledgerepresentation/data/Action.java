@@ -10,6 +10,10 @@ public class Action {
         this.task = task;
     }
 
+    public Action(String actorName, String taskName) {
+        this(new Actor(actorName), new Task(taskName));
+    }
+
     public Actor getActor() {
         return this.actor;
     }

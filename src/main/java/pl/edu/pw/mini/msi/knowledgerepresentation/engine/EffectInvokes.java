@@ -1,6 +1,8 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+
 public class EffectInvokes {
     Action _Action;
     Action _InvokedAction;

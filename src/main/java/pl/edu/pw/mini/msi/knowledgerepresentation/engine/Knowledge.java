@@ -1,5 +1,8 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,10 +22,10 @@ public class Knowledge {
     public List<FluentList> _AlwaysList = new ArrayList<FluentList>();
 
     public Knowledge() {
-        /*_Initially.Add(new Fluent("roomClosed", false));
-        _Initially.Add(new Fluent("hostelClosed", false));
-        _Initially.Add(new Fluent("inHostel", true));
-        _Initially.Add(new Fluent("hasCard", false));
+        /*_Initially.add(new Fluent("roomClosed", false));
+        _Initially.add(new Fluent("hostelClosed", false));
+        _Initially.add(new Fluent("inHostel", true));
+        _Initially.add(new Fluent("hasCard", false));
 
         //Action Janek_closesDoor = new Action("Janek", "closesDoor");
         Action Janek_locksTheDoor = new Action("Janek", "locksTheDoor");
@@ -72,8 +75,8 @@ public class Knowledge {
         (owner, makeBowlFull) causes [bowlFull]
         */
 
-        _Initially.Add(new Fluent("dogHungry", true));
-        _Initially.Add(new Fluent("bowlFull", false));
+        _Initially.add(new Fluent("dogHungry", true));
+        _Initially.add(new Fluent("bowlFull", false));
         Action dog_eats = new Action("dog", "eats");
         Action dog_yelp = new Action("dog", "yelp");
         Action owner_makeBowlFull = new Action("owner", "makeBowlFull");

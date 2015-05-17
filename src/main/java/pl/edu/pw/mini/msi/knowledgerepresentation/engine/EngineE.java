@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +29,7 @@ public class EngineE {
     public boolean Set(Action a, int t) {
         boolean is = true;
         for (int i = 0; i < E.get(t).size(); i++) {
-            if (E.get(t).get(i).Compare(a)) {
+            if (E.get(t).get(i).equals(a)) {
                 return true;
             }
         }
@@ -44,7 +46,7 @@ public class EngineE {
 
     public boolean IsIn(Action a, int t) {
         for (int i = 0; i < E.get(t).size(); i++) {
-            if (E.get(t).get(i).Compare(a)) {
+            if (E.get(t).get(i).equals(a)) {
                 return true;
             }
         }

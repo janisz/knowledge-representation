@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +19,8 @@ public class EngineO {
     }
 
     public void Add(FluentList fl, int t) {
-        for (Fluent f : fl.list) {
-            O.get(t).Add(f);
+        for (Fluent f : fl.getList()) {
+            O.get(t).add(f);
         }
     }
 

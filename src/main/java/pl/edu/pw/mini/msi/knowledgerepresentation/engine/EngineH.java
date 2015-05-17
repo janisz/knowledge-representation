@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class EngineH {
     public boolean Set(Fluent f, int t) {
         boolean is = true;
         for (int i = 0; i < H.get(t).size(); i++) {
-            if (H.get(t).get(i).SameName(f)) {
+            if (H.get(t).get(i).sameName(f)) {
                 H.get(t).set(i, f);
                 return true;
             }
@@ -46,8 +48,8 @@ public class EngineH {
 
     private int hist(Fluent f, int t) {
         for (int i = 0; i < H.get(t).size(); i++) {
-            if (H.get(t).get(i).SameName(f)) {
-                if (H.get(t).get(i)._Value == f._Value)
+            if (H.get(t).get(i).sameName(f)) {
+                if (H.get(t).get(i).isPositive() == f.isPositive())
                     return 1;
                 else
                     return 0;
@@ -69,11 +71,11 @@ public class EngineH {
 
     public boolean IsTrue(FluentList fl, int t) {
         for (int i = 0; i < Hspecial.get(t).size(); i++) {
-            if (Hspecial.get(t).get(i).Same(fl))
+            if (Hspecial.get(t).get(i).equals(fl))
                 return true;
         }
 
-        for (Fluent f : fl.list) {
+        for (Fluent f : fl.getList()) {
             if (!Is(f, t))
                 return false;
         }

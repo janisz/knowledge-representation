@@ -1,62 +1,40 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class FluentList {
+public class FluentList implements Cloneable {
 
-    List<Fluent> list = new ArrayList<Fluent>();
+    private final Map<String, Fluent> map;
 
-    public FluentList() {
-
+    private FluentList(Map<String, Fluent> fluents) {
+        map = fluents;
     }
 
-    public FluentList(Fluent a) {
-        Add(a);
-    }
-
-    public FluentList(Fluent a, Fluent b) {
-        Add(a);
-        Add(b);
-    }
-
-    public FluentList(Fluent a, Fluent b, Fluent c) {
-        Add(a);
-        Add(b);
-        Add(c);
-    }
-
-    public void Add(Fluent F) {
-        for (Fluent f : list) {
-            if (f.SameName(F)) return;
+    public FluentList(Fluent... fluents) {
+        map = new HashMap<>();
+        for (Fluent fluent : fluents) {
+            add(fluent);
         }
-        list.add(F);
     }
 
-    public boolean Same(FluentList fl) {
-        if (fl.list.size() != list.size())
-            return false;
+    public Collection<Fluent> getList() {
+        return map.values();
+    }
 
-        int count = 0;
-        for (int i = 0; i < list.size(); i++) {
-            for (int j = 0; j < list.size(); j++)
-                if (!list.get(i).equals(fl.list.get(j))) {
-                    count++;
-                    if (list.get(i)._Value != fl.list.get(i)._Value)
-                        return false;
-                }
+    public void add(Fluent fluent) {
+        if (!map.containsKey(fluent.getName())) {
+            map.put(fluent.getName(), fluent);
         }
-
-        return count == list.size();
     }
 
+    @Override
     public FluentList clone() {
-        FluentList fl = new FluentList();
-        for (Fluent f : list) {
-            fl.Add(f.clone());
-        }
-        return fl;
+        return new FluentList(map);
     }
 }

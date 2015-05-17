@@ -4,7 +4,7 @@ import alice.tuprolog.InvalidTheoryException;
 import alice.tuprolog.Theory;
 import com.google.common.base.Throwables;
 
-public class Fluent {
+public class Fluent implements Cloneable {
     String name;
     boolean positive;
 
@@ -33,7 +33,11 @@ public class Fluent {
     }
 
     public boolean isPositive() {
-        return this.positive;
+        return positive;
+    }
+
+    public boolean sameName(Fluent fluent) {
+        return name.equals(fluent.getName());
     }
 
     public boolean equals(Object o) {
@@ -58,5 +62,10 @@ public class Fluent {
 
     public String toString() {
        return "Fluent(name=" + this.name + ", positive=" + this.positive + ")";
+    }
+
+    @Override
+    public Fluent clone() {
+        return new Fluent(name, positive);
     }
 }
