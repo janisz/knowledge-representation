@@ -1,8 +1,13 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 
 public class Engine {
+
+    private static final Logger log = LoggerFactory.getLogger(Engine.class);
+
     public static int _Number = 0;
     public int _EngineNumber = 0;
     Knowledge _K;
@@ -54,9 +59,9 @@ public class Engine {
     }
 
     public void Run() {
-        System.out.println(_H.toString());
-        System.out.println(_E.toString());
-        System.out.println("YY");
+        log.debug(_H.toString());
+        log.debug(_E.toString());
+        log.debug("YY");
 
         for (int t = 0; t < _TMax; t++) {
             UpdateCauses(t);
@@ -64,8 +69,8 @@ public class Engine {
             UpdateTriggers(t);
         }
 
-        System.out.println(_H.toString());
-        System.out.println(_E.toString());
+        log.debug(_H.toString());
+        log.debug(_E.toString());
     }
 
     public void StepRun() {
@@ -182,7 +187,7 @@ public class Engine {
                 if (ok) {
                     for (Fluent f : ec._Effect.getList()) {
                         _H.Set(f, t + 1);
-                        System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
+                        log.debug("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
                     }
                 }
 
@@ -201,7 +206,7 @@ public class Engine {
                 _O.Add(ec._Effect, t + 1);
                 for (Fluent f : ec._Effect.getList()) {
                     _H.Set(f, t + 1);
-                    System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
+                    log.debug("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
                 }
             }
 
@@ -236,7 +241,7 @@ public class Engine {
         _O.Add(ec._Effect, t + 1);
         for (Fluent f : ec._Effect.getList()) {
             _H.Set(f, t + 1);
-            System.out.println("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
+            log.debug("E(" + _EngineNumber + ") " + "F: " + t + ". action " + ec._Action + " changed fluent " + f.toString() + " at " + (t + 1));
         }
     }
 
@@ -248,9 +253,9 @@ public class Engine {
                 if (ok && t + ei._TimeDelay < _TMax) {
                     boolean res = _E.Set(ei._InvokedAction, t + ei._TimeDelay);
                     if (res)
-                        System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+                        log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
                     if (!res)
-                        System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+                        log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
                 }
 
             }
@@ -267,9 +272,9 @@ public class Engine {
             if (ok && t + ei._TimeDelay < _TMax) {
                 boolean res = _E.Set(ei._InvokedAction, t + ei._TimeDelay);
                 if (res)
-                    System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+                    log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
                 if (!res)
-                    System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+                    log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
             }
 
         }
@@ -301,9 +306,9 @@ public class Engine {
 
         boolean res = _E.Set(ei._InvokedAction, t + ei._TimeDelay);
         if (res)
-            System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+            log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action " + ei._Action + " invoked " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
         if (!res)
-            System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
+            log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action invoke omitted " + ei._InvokedAction.toString() + " after " + ei._TimeDelay + ", so at " + (t + ei._TimeDelay));
     }
 
 
@@ -314,9 +319,9 @@ public class Engine {
             if (ok && t + 1 < _TMax) {
                 boolean res = _E.Set(et._TriggeredAction, t + 1);
                 if (res)
-                    System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
+                    log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
                 if (!res)
-                    System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
+                    log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
             }
 
         }
@@ -331,9 +336,9 @@ public class Engine {
         if (ok && t + 1 < _TMax) {
             boolean res = _E.Set(et._TriggeredAction, t);
             if (res)
-                System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
+                log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
             if (!res)
-                System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
+                log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
         }
 
         return (currentSubstep + 1) % _K._Triggers.size();
@@ -361,9 +366,9 @@ public class Engine {
 
         boolean res = _E.Set(et._TriggeredAction, t);
         if (res)
-            System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
+            log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action triggered " + et._TriggeredAction.toString());
         if (!res)
-            System.out.println("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
+            log.debug("E(" + _EngineNumber + ") " + "A: " + t + ". action trigger omitted " + et._TriggeredAction.toString());
     }
 
     public void LoadActionCallsFromScenario() {
