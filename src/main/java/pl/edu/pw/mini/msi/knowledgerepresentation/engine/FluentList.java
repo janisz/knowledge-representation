@@ -1,11 +1,11 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 
 
 public class FluentList implements Cloneable {
@@ -22,7 +22,14 @@ public class FluentList implements Cloneable {
             add(fluent);
         }
     }
-
+    
+    public FluentList(Collection<Fluent> fluents){
+    	map = new HashMap<>();
+        for (Fluent fluent : fluents) {
+            add(fluent);
+        }
+    }
+    
     public Collection<Fluent> getList() {
         return map.values();
     }

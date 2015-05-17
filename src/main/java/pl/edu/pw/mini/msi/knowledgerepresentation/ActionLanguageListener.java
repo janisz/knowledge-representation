@@ -33,16 +33,17 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     }
 
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
-
+    
     private final Knowledge knowledge;
     private final HashMap<String, Scenario> scenarios = Maps.newLinkedHashMap();
-
+    
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
     private Collection<Fluent> lastFluentsList = Sets.newHashSet();
     private Collection<Fluent> underConditionFluentList = Sets.newHashSet();
     private Collection<Actor> lastActorsList = Sets.newHashSet();
-
+    
+    private Action previousLastAction;
     private Action lastAction;
     private Actor lastActor;
     private Time lastTime;
@@ -51,11 +52,11 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private String lastScenarioId;
     private QueryType lastQueryType;
     private boolean typically;
-
+    
     public ActionLanguageListener(Knowledge knowledge) {
         this.knowledge = knowledge;
     }
-
+    
     public Knowledge getKnowledge() {
         return knowledge;
     }
@@ -71,37 +72,56 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
             knowledge._Initially.add(fluent);
         }
     }
-
+    
     @Override
     public void exitCauses(ActionLanguageParser.CausesContext ctx) {
-    /*TODO: Implement me*/
-        log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s",
-                typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
+        log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
+        knowledge.addEffectCause(typically, lastAction, lastFluentsList, underConditionFluentList);
+    }
+    
+    @Override
+    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { 
+    	log.debug(String.format("(Typically=%s) %s INVOKES %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
+    	knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), underConditionFluentList);
+    }
+    
+    @Override
+    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { 
+    	//log.debug(String.format("(Typically=%s) %s TRIGGERS %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
+    	
     }
 
     @Override
-    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { /*TODO: Implement me*/ }
+    public void exitTriggers(ActionLanguageParser.TriggersContext ctx) {
+    	log.debug(String.format("(Typically=%s) %s TRIGGERS %s", typically, lastAction, underConditionFluentList));
+    	knowledge.addEffectTriggers(typically, lastAction, underConditionFluentList);
+    }
+    
+    @Override
+    public void exitOccurs(ActionLanguageParser.OccursContext ctx) {
+    	
+    }
 
     @Override
-    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { /*TODO: Implement me*/ }
+    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
+    	
+    }
 
     @Override
-    public void exitTriggers(ActionLanguageParser.TriggersContext ctx) { /*TODO: Implement me*/ }
+    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { 
+    	log.debug(String.format("ALWAYS %s", lastFluent));
+    	knowledge.addAlways(lastFluent);
+    }
+    
+    @Override
+    public void exitState(ActionLanguageParser.StateContext ctx) {
+    	
+    }
 
     @Override
-    public void exitOccurs(ActionLanguageParser.OccursContext ctx) { /*TODO: Implement me*/ }
-
-    @Override
-    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) { /*TODO: Implement me*/ }
-
-    @Override
-    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { /*TODO: Implement me*/ }
-
-    @Override
-    public void exitState(ActionLanguageParser.StateContext ctx) { /*TODO: Implement me*/ }
-
-    @Override
-    public void exitPerformed(ActionLanguageParser.PerformedContext ctx) { /*TODO: Implement me*/ }
+    public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
+    	
+    }
 
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
@@ -148,16 +168,21 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterActor(ActionLanguageParser.ActorContext ctx) {
         Actor actor = new Actor(ctx.IDENTIFIER().getText());
         lastActor = actor;
-        lastActorsList.add(actor);
+        
+        if(!lastActorsList.contains(actor)){
+        	lastActorsList.add(actor);
+        }
+        
     }
 
     @Override
     public void enterTask(ActionLanguageParser.TaskContext ctx) {
         lastTask = new Task(ctx.IDENTIFIER().getText());
     }
-
+    
     @Override
     public void exitAction(ActionLanguageParser.ActionContext ctx) {
+    	previousLastAction = lastAction;
         lastAction = new Action(lastActor, lastTask);
     }
 
@@ -181,7 +206,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterEntry(ActionLanguageParser.EntryContext ctx) {
         typically = ctx.TYPICALLY() != null;
     }
-
+    
     @Override
     public void enterTime(ActionLanguageParser.TimeContext ctx) {
         lastTime = new Time(Integer.parseInt(ctx.DecimalConstant().getText()));
