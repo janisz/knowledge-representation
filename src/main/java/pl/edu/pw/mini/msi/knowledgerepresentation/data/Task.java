@@ -1,7 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
 public class Task {
-    public String name;
+    String name;
 
     @java.beans.ConstructorProperties({"name"})
     public Task(String name) {

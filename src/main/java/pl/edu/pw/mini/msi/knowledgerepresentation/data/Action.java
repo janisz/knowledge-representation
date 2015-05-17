@@ -1,8 +1,8 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
 public class Action {
-    public Actor actor;
-    public Task task;
+    Actor actor;
+    Task task;
 
     @java.beans.ConstructorProperties({"actor", "task"})
     public Action(Actor actor, Task task) {

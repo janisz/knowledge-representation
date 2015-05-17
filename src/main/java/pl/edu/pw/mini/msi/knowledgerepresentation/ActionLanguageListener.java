@@ -1,15 +1,18 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import alice.tuprolog.InvalidTheoryException;
+import alice.tuprolog.Prolog;
+import alice.tuprolog.Theory;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
@@ -17,19 +20,12 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
-import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
-import alice.tuprolog.EngineManager;
-import alice.tuprolog.Prolog;
-import alice.tuprolog.Theory;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
@@ -40,13 +36,14 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
 
     private final Context context;
-    
+    private final Prolog engine;
+
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
     private Collection<Fluent> lastFluentsList = Sets.newHashSet();
     private Collection<Fluent> underConditionFluentList = Sets.newHashSet();
     private Collection<Actor> lastActorsList = Sets.newHashSet();
-    
+
     private Action lastAction;
     private Actor lastActor;
     private Time lastTime;
@@ -55,52 +52,10 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private String lastScenarioId;
     private QueryType lastQueryType;
     private boolean typically;
-    private EngineManager engineManager;
-    
-    private void updateEngine(){
-    	updateEngineScenarios();
-    	updateEngineKnowledge();
-    }
-    
-    private void updateEngineKnowledge(){
-    	Knowledge knowledge = new Knowledge(false);
-    	
-    	for(Fluent fluent : context.fluents){
-    		knowledge.addFluent(fluent.getName(), fluent.isPositive());
-    	}
-    	
-    	
-    	
-    }
-    
-    private void updateEngineScenarios(){
-    	
-    	for(String scenarioName : context.scenarios.keySet()){
-    		Scenario scenario = context.scenarios.get(scenarioName);
-    		pl.edu.pw.mini.msi.knowledgerepresentation.engine.Scenario engineScenario = new pl.edu.pw.mini.msi.knowledgerepresentation.engine.Scenario(false);
-    		
-    		Map<Time, Action> actionsMap = scenario.getActions();
-    		for(Time time : actionsMap.keySet()){
-    			Action action = actionsMap.get(time);
-    			engineScenario.addScenarioACSPart(action.actor.getName(), action.task.name, time.getTime());
-    		}
-    		
-    		Multimap<Time, Fluent> observationsMap = scenario.getObservations();
-    		for(Time time : observationsMap.keySet()){
-    			Collection<Fluent> fluentsCollection = observationsMap.get(time);
-    			Set<pl.edu.pw.mini.msi.knowledgerepresentation.engine.Fluent> fluents = new HashSet<pl.edu.pw.mini.msi.knowledgerepresentation.engine.Fluent>();
-    			for(Fluent fluent : fluentsCollection){
-    				fluents.add(new pl.edu.pw.mini.msi.knowledgerepresentation.engine.Fluent(fluent.getName(), fluent.isPositive()));
-    			}
-    			engineScenario.addScenarioOBSPart(fluents, time.getTime());
-    		}
-    		
-    	}
-    	
-    }
-    
+
     public ActionLanguageListener(Context context, Prolog engine) {
         this.context = context;
+        this.engine = engine;
     }
 
     @Override
@@ -108,7 +63,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         log.debug("Set initial state: %s", lastFluentsList);
         //TODO: Implement me
     }
-    
+
     @Override
     public void exitCauses(ActionLanguageParser.CausesContext ctx) {
     /*TODO: Implement me*/
@@ -117,48 +72,32 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     }
 
     @Override
-    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitTriggers(ActionLanguageParser.TriggersContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitTriggers(ActionLanguageParser.TriggersContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitOccurs(ActionLanguageParser.OccursContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitOccurs(ActionLanguageParser.OccursContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitState(ActionLanguageParser.StateContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitState(ActionLanguageParser.StateContext ctx) { /*TODO: Implement me*/ }
 
     @Override
-    public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
-    	/*TODO: Implement me*/
-    }
+    public void exitPerformed(ActionLanguageParser.PerformedContext ctx) { /*TODO: Implement me*/ }
 
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
-    	
+    /*TODO: Implement me*/
         Scenario scenario = context.scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
         log.debug(String.format("%s INVOLVED %s WHEN %s",
                 lastQueryType, lastActorsList, scenario));
@@ -171,14 +110,14 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void exitQuestion(ActionLanguageParser.QuestionContext ctx) {
-        if (ctx.TYPICALLY() != null) {//////
+        if (ctx.TYPICALLY() != null) {
             lastQueryType = QueryType.GENERALLY;
         }
     }
 
     @Override
     public void exitBasicQuestion(ActionLanguageParser.BasicQuestionContext ctx) {
-        if (ctx.ALWAYS() != null) {//////
+        if (ctx.ALWAYS() != null) {
             lastQueryType = QueryType.ALWAYS;
         } else if (ctx.EVER() != null) {
             lastQueryType = QueryType.EVER;
@@ -189,14 +128,14 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
         underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
     }
-    
+
     @Override
     public void exitUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
         Collection<Fluent> fluents = ImmutableList.copyOf(underConditionFluentList);
         underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
         lastFluentsList = fluents;
     }
-    
+
     @Override
     public void enterActor(ActionLanguageParser.ActorContext ctx) {
         Actor actor = new Actor(ctx.IDENTIFIER().getText());
@@ -207,13 +146,11 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     }
 
     private void addTheory(Theory theory) {
-        /*
-    	try {
+        try {
             engine.addTheory(theory);
         } catch (InvalidTheoryException e) {
             Throwables.propagate(e);
         }
-        */
     }
 
     @Override
@@ -233,7 +170,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         context.fluents.add(new Fluent(ctx.IDENTIFIER().getText(), true));
         addTheory(lastFluent.theory());
     }
-    
+
     @Override
     public void enterInstruction(ActionLanguageParser.InstructionContext ctx) {
         log.debug("Enter " + ctx.getText());
