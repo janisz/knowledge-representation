@@ -123,20 +123,21 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
     	//log.debug(String.format("ALWAYS %s ", lastFluent));
-    	engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+
+    	//engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
     public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
     	//log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
-    	engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+    	//engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
     	//log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, scenario));
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-        engineManager.involved(lastQueryType, lastActorsList, ctx.scenarioId().IDENTIFIER().getText());
+        //engineManager.involved(lastQueryType, lastActorsList, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
