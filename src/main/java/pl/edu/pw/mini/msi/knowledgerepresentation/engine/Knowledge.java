@@ -9,7 +9,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
  * Created by rwyka on 5/10/15.
  */
 public class Knowledge {
-    public FluentList _Initially = new FluentList();
+    public List<Fluent> _Initially = new ArrayList<Fluent>();
     public List<EffectCauses> _Couses = new ArrayList<EffectCauses>();
     public List<EffectInvokes> _Invokes = new ArrayList<EffectInvokes>();
     public List<EffectTriggers> _Triggers = new ArrayList<EffectTriggers>();
@@ -20,7 +20,7 @@ public class Knowledge {
 
     public List<Action> _ListOfAllActions = new ArrayList<Action>(); //tylko nazwy
     public List<Fluent> _ListOfAllFluents = new ArrayList<Fluent>(); //tylko nazwy
-    public List<FluentList> _AlwaysList = new ArrayList<FluentList>();
+    public List<List<Fluent>> _AlwaysList = new ArrayList<List<Fluent>>();
 
     public Knowledge() {
 
@@ -87,11 +87,7 @@ public class Knowledge {
 
     }
 
-    public void addAlways(Fluent fluent){
-
-    	FluentList fluentList = new FluentList();
-    	//fluentList.add(fluent);
-
+    public void addAlways(List<Fluent> fluentList){
     	_AlwaysList.add(fluentList);
 
     }

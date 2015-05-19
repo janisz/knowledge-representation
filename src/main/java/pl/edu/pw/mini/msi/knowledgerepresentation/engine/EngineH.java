@@ -12,14 +12,13 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
  */
 public class EngineH {
     public List<AbstractMap<String, Fluent>> H;
-    public List<List<AbstractMap<String, Fluent>>> Hspecial;
+    public List<AbstractMap<String, Fluent>> Hspecial;
 
     public EngineH(int t) {
         H = new ArrayList<AbstractMap<String, Fluent>>();
-        Hspecial = new ArrayList<List<AbstractMap<String, Fluent>>>();
+        Hspecial = new ArrayList<AbstractMap<String, Fluent>>();
         for(int i = 0; i < t; i++){
             H.add(new HashMap<String, Fluent>());
-            Hspecial.add(new ArrayList<AbstractMap<String, Fluent>>());
         }
     }
 
@@ -46,6 +45,7 @@ public class EngineH {
         for(Fluent f : fl){
             hm.put(f.getName(), f);
         }
+        Hspecial.add(hm);
     }
 
     private int hist(Fluent f, int t){
@@ -73,8 +73,8 @@ public class EngineH {
             for (Fluent f : fl)
                 hs.put(f.getName(), f);
 
-            for (int i = 0; i < Hspecial.get(t).size(); i++) {
-                if (Hspecial.get(t).get(i).equals(hs))
+            for (int i = 0; i < Hspecial.size(); i++) {
+                if (Hspecial.get(i).equals(hs))
                     return true;
             }
         }
@@ -95,14 +95,11 @@ public class EngineH {
         }
 
         for(int i = 0; i < Hspecial.size(); ++i){
-            for(int j = 0; j < Hspecial.get(i).size(); ++j){
-                HashMap<String, Fluent> hmap = new HashMap<String, Fluent>();
-                for(Fluent f : Hspecial.get(i).get(j).values()){
-                    hmap.put(f.getName(), f);
-                }
-
-                n.Hspecial.get(i).add(hmap);
+            HashMap<String, Fluent> hmap = new HashMap<String, Fluent>();
+            for(Fluent f : Hspecial.get(i).values()){
+                hmap.put(f.getName(), f);
             }
+            n.Hspecial.add(hmap);
         }
 
         return n;

@@ -117,7 +117,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { 
     	log.debug(String.format("ALWAYS %s", lastFluent));
-    	knowledge.addAlways(lastFluent);
+    	//knowledge.addAlways(lastFluent);
     }
     
     @Override

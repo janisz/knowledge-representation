@@ -1,6 +1,7 @@
 
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 import java.io.Console;
+import java.util.List;
 
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 
@@ -153,7 +154,7 @@ public class Engine {
 
 
     public void LoadInitially(){
-        for(Fluent x : _K._Initially.list){
+        for(Fluent x : _K._Initially){
             _H.Set(x, 0);
         }
     }
@@ -310,8 +311,8 @@ public class Engine {
     }
 
     public void LoadAlways(){
-        for(FluentList fl : _K._AlwaysList){
-            _H.SetAlways(fl.list);
+        for(List<Fluent> fl : _K._AlwaysList){
+            _H.SetAlways(fl);
         }
     }
 
