@@ -6,6 +6,7 @@ import java.util.List;
 
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
 
 
 public class Knowledge {
@@ -99,6 +100,14 @@ public class Knowledge {
     	fluentList.add(fluent);
     	
     	_AlwaysList.add(fluentList);
+    	
+    }
+    
+    public void releases(boolean typically, Action releasingAction, Collection<Fluent> releasedFluents, Time delay, Collection<Fluent> conditionFluents){
+    	
+    }
+    
+    public void impossible(Action impossibleAction, Time time, Collection<Fluent> conditionFluents){
     	
     }
     

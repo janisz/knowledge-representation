@@ -1,15 +1,14 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
@@ -17,25 +16,30 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
+import pl.edu.pw.mini.msi.knowledgerepresentation.engine.EngineManager;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
-    private enum QueryType {
+    public enum QueryType {
         GENERALLY, ALWAYS, EVER, NONE
     }
-
+    
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
     
     private final Knowledge knowledge;
     private final HashMap<String, Scenario> scenarios = Maps.newLinkedHashMap();
+    private EngineManager engineManager;
     
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
@@ -87,8 +91,8 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     
     @Override
     public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { 
-    	//log.debug(String.format("(Typically=%s) %s TRIGGERS %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
-    	
+    	log.debug(String.format("(Typically=%s) %s RELEASES %s AFTER %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
+    	knowledge.releases(typically, lastAction, lastFluentsList, lastTime, underConditionFluentList);
     }
 
     @Override
@@ -104,7 +108,8 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
-    	
+    	log.debug(String.format("IMPOSSIBLE %s AT %s IF %s", lastAction, lastTime, underConditionFluentList));
+    	knowledge.impossible(lastAction, lastTime, underConditionFluentList);
     }
 
     @Override
@@ -115,20 +120,21 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     
     @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
-    	
+    	//log.debug(String.format("ALWAYS %s ", lastFluent));
+    	engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
     public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
-    	
+    	//log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
+    	engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
-    /*TODO: Implement me*/
+    	//log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, scenario));
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-        log.debug(String.format("%s INVOLVED %s WHEN %s",
-                lastQueryType, lastActorsList, scenario));
+        engineManager.involved(lastQueryType, lastActorsList, ctx.scenarioId().IDENTIFIER().getText());
     }
 
     @Override
@@ -225,6 +231,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
         log.debug("Create scenario: ", scenario);
         scenarios.put(name, scenario);
+        //engineManager = new EngineManager(knowledge, scenario, 20);
     }
 
     @Override
@@ -238,9 +245,10 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
             observations.put(lastTime, fluent);
         }
     }
-
+    
     @Override
     public void visitErrorNode(ErrorNode node) {
         log.error("Visit error node: " + node.getText());
     }
+	
 }
