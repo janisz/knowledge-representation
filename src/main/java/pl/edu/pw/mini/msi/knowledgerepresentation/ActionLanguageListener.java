@@ -74,9 +74,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitInitiallisation(ActionLanguageParser.InitiallisationContext ctx) {
         log.debug("Set initial state: %s", lastFluentsList);
-        for (Fluent fluent : lastFluentsList) {
-            //knowledge._Initially.add(fluent);
-        }
+        knowledge._Initially.addAll(lastFluentsList);
     }
     
     @Override
@@ -116,7 +114,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { 
-    	log.debug(String.format("ALWAYS %s", lastFluent));
+    	log.debug(String.format("ALWAYS %s", lastFluentsList));
     	knowledge.addAlways(new ArrayList<>(lastFluentsList));
     }
     

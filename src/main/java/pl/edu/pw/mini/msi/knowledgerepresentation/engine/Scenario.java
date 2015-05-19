@@ -1,7 +1,10 @@
 
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
+
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+
 import java.util.ArrayList;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 import java.util.List;
 
 /**
@@ -22,12 +25,12 @@ public class Scenario {
         ACS.add(new ScenarioACSPart(b, 3));
         ACS.add(new ScenarioACSPart(c, 10));
 
-        FluentList fa = new FluentList();
-        fa.Add(new Fluent("hasCard", true));
-        fa.Add(new Fluent("inHostel", true));
+        List<Fluent> fa = new ArrayList<>();
+        fa.add(new Fluent("hasCard", true));
+        fa.add(new Fluent("inHostel", true));
 
-        FluentList fb = new FluentList();
-        fb.Add(new Fluent("hasCard", false));
+        List<Fluent> fb = new ArrayList<>();
+        fb.add(new Fluent("hasCard", false));
 
         OBS.add(new ScenarioOBSPart(fa, 4));
         OBS.add(new ScenarioOBSPart(fb, 10));

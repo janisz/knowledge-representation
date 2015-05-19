@@ -161,7 +161,7 @@ public class Engine {
 
     public void LoadFluentsFromScenario(){
         for(ScenarioOBSPart x : _S.OBS){
-            for(Fluent y : x._Fluents.list) {
+            for(Fluent y : x._Fluents) {
                 _H.Set(y, x._Time);
             }
         }
