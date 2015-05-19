@@ -1,33 +1,32 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
-
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 
 /**
  * Created by rwyka on 5/11/15.
  */
 public class EngineO {
-    public List<FluentList> O;
+    public List<AbstractMap<String, Fluent>> O;
 
-    public EngineO(int t) {
-        O = new ArrayList<FluentList>();
-        for (int i = 0; i < t; ++i) {
-            O.add(new FluentList());
+    public EngineO(int t){
+        O = new ArrayList<AbstractMap<String, Fluent>>();
+        for(int i = 0; i < t; ++i){
+            O.add(new HashMap<String, Fluent>());
         }
     }
 
-    public void Add(FluentList fl, int t) {
-        for (Fluent f : fl.getList()) {
-            O.get(t).add(f);
+    public void  Add(List<Fluent> fl, int t){
+        for (Fluent f : fl){
+            O.get(t).put(f.getName(), f);
         }
     }
 
-    public EngineO clone() {
+    public EngineO clone(){
         EngineO n = new EngineO(O.size());
-        for (int i = 0; i < O.size(); ++i) {
-            n.O.add(O.get(i).clone());
+        for(int i = 0; i < O.size(); ++i){
+            for(Fluent f : O.get(i).values()) {
+                n.O.get(i).put(f.getName(), f);
+            }
         }
         return n;
     }

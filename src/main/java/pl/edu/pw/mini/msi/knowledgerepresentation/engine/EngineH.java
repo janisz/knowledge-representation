@@ -1,67 +1,65 @@
+
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
-
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 
-
+/**
+ * Created by rwyka on 5/10/15.
+ */
 public class EngineH {
-    public List<List<Fluent>> H;
-    public List<List<FluentList>> Hspecial;
+    public List<AbstractMap<String, Fluent>> H;
+    public List<List<AbstractMap<String, Fluent>>> Hspecial;
 
     public EngineH(int t) {
-        H = new ArrayList<List<Fluent>>();
-        Hspecial = new ArrayList<List<FluentList>>();
-        for (int i = 0; i < t; i++) {
-            H.add(new ArrayList<Fluent>());
-            Hspecial.add(new ArrayList<FluentList>());
+        H = new ArrayList<AbstractMap<String, Fluent>>();
+        Hspecial = new ArrayList<List<AbstractMap<String, Fluent>>>();
+        for(int i = 0; i < t; i++){
+            H.add(new HashMap<String, Fluent>());
+            Hspecial.add(new ArrayList<AbstractMap<String, Fluent>>());
         }
     }
 
-    public String toString() {
+    public String toString(){
         String S = "";
-        for (int i = 0; i < H.size(); i++) {
-            for (int j = 0; j < H.get(i).size(); j++) {
-                S += i + ". " + H.get(i).get(j).toString() + "\n";
+        for(int i = 0; i < H.size(); i++){
+            for(Fluent fl: H.get(i).values()){
+                S += i + ". " + fl.toString() + "\n";
             }
         }
         return S;
     }
 
-    public boolean Set(Fluent f, int t) {
+    public boolean Set(Fluent f, int t){
         boolean is = true;
-        for (int i = 0; i < H.get(t).size(); i++) {
-            if (H.get(t).get(i).sameName(f)) {
-                H.get(t).set(i, f);
-                return true;
-            }
+        AbstractMap<String, Fluent> Map = H.get(t);
+        boolean r = Map.containsKey(f.getName());
+        Map.put(f.getName(), f);
+        return r;
+    }
+
+    public void SetAlways(List<Fluent> fl){
+        HashMap hm = new HashMap();
+        for(Fluent f : fl){
+            hm.put(f.getName(), f);
         }
-        H.get(t).add(f);
-        return false;
     }
 
-    public void SetAlways(FluentList fl) {
-        for (int i = 0; i < Hspecial.size(); i++)
-            Hspecial.get(i).add(fl);
-    }
-
-    private int hist(Fluent f, int t) {
-        for (int i = 0; i < H.get(t).size(); i++) {
-            if (H.get(t).get(i).sameName(f)) {
-                if (H.get(t).get(i).isPositive() == f.isPositive())
-                    return 1;
-                else
-                    return 0;
-            }
+    private int hist(Fluent f, int t){
+        AbstractMap<String, Fluent> Map = H.get(t);
+        if(Map.containsKey(f.getName())){
+            return Map.get(f.getName()).value() == f.value() ? 1 : 0;
         }
         return -1;
     }
 
-    public boolean Is(Fluent f, int t) {
-        for (int time = t; time >= 0; time--) {
+    public  boolean Is(Fluent f, int t){
+        for(int time = t; time >=0; time--){
             int r = hist(f, time);
-            if (r == 0)
+            if(r == 0)
                 return false;
             else if (r == 1)
                 return true;
@@ -69,30 +67,41 @@ public class EngineH {
         return false;
     }
 
-    public boolean IsTrue(FluentList fl, int t) {
-        for (int i = 0; i < Hspecial.get(t).size(); i++) {
-            if (Hspecial.get(t).get(i).equals(fl))
-                return true;
+    public  boolean IsTrue(List<Fluent> fl, int t) {
+        if (Hspecial.size() != 0) {
+            HashMap<String, Fluent> hs = new HashMap<String, Fluent>();
+            for (Fluent f : fl)
+                hs.put(f.getName(), f);
+
+            for (int i = 0; i < Hspecial.get(t).size(); i++) {
+                if (Hspecial.get(t).get(i).equals(hs))
+                    return true;
+            }
         }
 
-        for (Fluent f : fl.getList()) {
-            if (!Is(f, t))
+        for(Fluent f : fl){
+            if(!Is(f, t))
                 return false;
         }
         return true;
     }
 
-    public EngineH clone() {
+    public EngineH clone(){
         EngineH n = new EngineH(H.size());
-        for (int i = 0; i < H.size(); ++i) {
-            for (int j = 0; j < H.get(i).size(); ++j) {
-                n.H.get(i).add(H.get(i).get(j).clone());
+        for(int i = 0; i < H.size(); ++i){
+            for(Fluent f : H.get(i).values()){
+                n.H.get(i).put(f.getName(), f);
             }
         }
 
-        for (int i = 0; i < Hspecial.size(); ++i) {
-            for (int j = 0; j < Hspecial.get(i).size(); ++j) {
-                n.Hspecial.get(i).add(Hspecial.get(i).get(j).clone());
+        for(int i = 0; i < Hspecial.size(); ++i){
+            for(int j = 0; j < Hspecial.get(i).size(); ++j){
+                HashMap<String, Fluent> hmap = new HashMap<String, Fluent>();
+                for(Fluent f : Hspecial.get(i).get(j).values()){
+                    hmap.put(f.getName(), f);
+                }
+
+                n.Hspecial.get(i).add(hmap);
             }
         }
 

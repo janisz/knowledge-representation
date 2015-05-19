@@ -1,10 +1,12 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.antlr.v4.runtime.misc.FlexibleHashMap;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,32 +75,32 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void exitInitiallisation(ActionLanguageParser.InitiallisationContext ctx) {
         log.debug("Set initial state: %s", lastFluentsList);
         for (Fluent fluent : lastFluentsList) {
-            knowledge._Initially.add(fluent);
+            //knowledge._Initially.add(fluent);
         }
     }
     
     @Override
     public void exitCauses(ActionLanguageParser.CausesContext ctx) {
         log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
-        knowledge.addEffectCause(typically, lastAction, lastFluentsList, underConditionFluentList);
+        knowledge.addEffectCause(typically, lastAction, new ArrayList<Fluent>(lastFluentsList), new ArrayList<Fluent>(underConditionFluentList));
     }
     
     @Override
     public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { 
     	log.debug(String.format("(Typically=%s) %s INVOKES %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
-    	knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), underConditionFluentList);
+    	knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), new ArrayList<Fluent>(underConditionFluentList));
     }
     
     @Override
     public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { 
     	log.debug(String.format("(Typically=%s) %s RELEASES %s AFTER %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
-    	knowledge.releases(typically, lastAction, lastFluentsList, lastTime, underConditionFluentList);
+    	knowledge.releases(typically, lastAction, lastFluentsList, lastTime.getTime(), underConditionFluentList);
     }
 
     @Override
     public void exitTriggers(ActionLanguageParser.TriggersContext ctx) {
     	log.debug(String.format("(Typically=%s) %s TRIGGERS %s", typically, lastAction, underConditionFluentList));
-    	knowledge.addEffectTriggers(typically, lastAction, underConditionFluentList);
+    	knowledge.addEffectTriggers(typically, lastAction, new ArrayList<Fluent>(underConditionFluentList));
     }
     
     @Override
@@ -109,7 +111,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
     	log.debug(String.format("IMPOSSIBLE %s AT %s IF %s", lastAction, lastTime, underConditionFluentList));
-    	knowledge.impossible(lastAction, lastTime, underConditionFluentList);
+    	knowledge.impossible(lastAction, lastTime.getTime(), underConditionFluentList);
     }
 
     @Override

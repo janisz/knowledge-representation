@@ -1,47 +1,46 @@
+
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
+/**
+ * Created by rwyka on 5/10/15.
+ */
+public class FluentList {
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+    List<Fluent> list = new ArrayList<Fluent>();
+    public FluentList(){
 
-
-public class FluentList implements Cloneable {
-
-    private final Map<String, Fluent> map;
-
-    private FluentList(Map<String, Fluent> fluents) {
-        map = fluents;
     }
 
-    public FluentList(Fluent... fluents) {
-        map = new HashMap<>();
-        for (Fluent fluent : fluents) {
-            add(fluent);
+    public FluentList(Fluent a){
+        Add(a);
+    }
+
+    public FluentList(Fluent a, Fluent b){
+        Add(a);
+        Add(b);
+    }
+
+    public FluentList(Fluent a, Fluent b, Fluent c){
+        Add(a);
+        Add(b);
+        Add(c);
+    }
+
+    public void Add(Fluent F){
+        list.add(F);
+    }
+
+
+
+    public FluentList clone(){
+        FluentList fl = new FluentList();
+        for(Fluent f : list){
+            fl.Add(f.clone());
         }
-    }
-    
-    public FluentList(Collection<Fluent> fluents){
-    	map = new HashMap<>();
-        for (Fluent fluent : fluents) {
-            add(fluent);
-        }
-    }
-    
-    public Collection<Fluent> getList() {
-        return map.values();
-    }
-
-    public void add(Fluent fluent) {
-        if (!map.containsKey(fluent.getName())) {
-            map.put(fluent.getName(), fluent);
-        }
-    }
-
-    @Override
-    public FluentList clone() {
-        return new FluentList(map);
+        return fl;
     }
 }

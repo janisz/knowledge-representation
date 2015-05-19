@@ -1,15 +1,16 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
-
-
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
-
+import java.util.List;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
+/**
+ * Created by rwyka on 5/10/15.
+ */
 public class EffectInvokes {
     Action _Action;
     Action _InvokedAction;
     int _TimeDelay;
-    FluentList _Condition;
+    List<Fluent> _Condition;
 
-    public EffectInvokes(Action action, Action invokedAction, int after, FluentList condition) {
+    public EffectInvokes(Action action, Action invokedAction, int after, List<Fluent> condition){
         _Action = action;
         _InvokedAction = invokedAction;
         _TimeDelay = after;
