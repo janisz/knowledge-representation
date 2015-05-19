@@ -8,7 +8,7 @@ class EngineTest extends Specification {
 
     def "should not throw exception if configuration is valid"() {
         given:
-print """
+        print """
 initially  [dogHungry, -bowlFul]
 [dogHungry, bowlFull] triggers (dog, eats)
 (dog, eats) causes [-bowlFull] if [bowlFull, dogHungry]
@@ -33,7 +33,6 @@ initially  [dogHungry, -bowlFul]
         EffectCauses tec_b = new EffectCauses(dog_commitSuicide, [new Fluent("dogDead", true)], [])
         EffectTriggers tet_a = new EffectTriggers([new Fluent("dogSad", true)], dog_commitSuicide)
 
-
         knowledge._Couses.add(ec_a)
         knowledge._Couses.add(ec_b)
         knowledge._Invokes.add(ei_a)
@@ -44,7 +43,8 @@ initially  [dogHungry, -bowlFul]
         knowledge._TypicallyCouses.add(tec_b)
         knowledge._TypicallyTriggers.add(tet_a)
 
-        def em = new EngineManager(knowledge, new Scenario(), 8)
+
+        def em = new EngineManager(knowledge, fakeScenario(), 8)
         when:
         em.Run()
         then:
@@ -60,21 +60,21 @@ initially  [dogHungry, -bowlFul]
         knowledge._Initially.add(new Fluent("inHostel", true))
         knowledge._Initially.add(new Fluent("hasCard", false))
 
-         Action Janek_closesDoor = new Action("Janek", "closesDoor")
-         Action Janek_locksTheDoor = new Action("Janek", "locksTheDoor")
-         Action Janek_takesCard = new Action("Janek", "takesCard")
-         Action Janek_leaves = new Action("Janek", "leaves")
-         Action Janek_comeBack = new Action("Janek", "comeBack")
+        Action Janek_closesDoor = new Action("Janek", "closesDoor")
+        Action Janek_locksTheDoor = new Action("Janek", "locksTheDoor")
+        Action Janek_takesCard = new Action("Janek", "takesCard")
+        Action Janek_leaves = new Action("Janek", "leaves")
+        Action Janek_comeBack = new Action("Janek", "comeBack")
 
-         EffectCauses ec_a = new EffectCauses(Janek_locksTheDoor, [new Fluent("hostelClosed", true)], [])
-         EffectCauses ec_b = new EffectCauses(Janek_takesCard, [new Fluent("hasCard", true)], [])
-         EffectCauses ec_c = new EffectCauses(Janek_leaves, [new Fluent("inHostel", false)], [])
-         EffectCauses ec_d = new EffectCauses(Janek_comeBack, [new Fluent("inHostel", true)], [new Fluent("hasCard", true)])
+        EffectCauses ec_a = new EffectCauses(Janek_locksTheDoor, [new Fluent("hostelClosed", true)], [])
+        EffectCauses ec_b = new EffectCauses(Janek_takesCard, [new Fluent("hasCard", true)], [])
+        EffectCauses ec_c = new EffectCauses(Janek_leaves, [new Fluent("inHostel", false)], [])
+        EffectCauses ec_d = new EffectCauses(Janek_comeBack, [new Fluent("inHostel", true)], [new Fluent("hasCard", true)])
 
-         EffectTriggers et_a = new EffectTriggers([new Fluent("hasCard", false)], Janek_takesCard)
-         EffectTriggers et_b = new EffectTriggers([new Fluent("drunk", true)], Janek_leaves)
+        EffectTriggers et_a = new EffectTriggers([new Fluent("hasCard", false)], Janek_takesCard)
+        EffectTriggers et_b = new EffectTriggers([new Fluent("drunk", true)], Janek_leaves)
 
-         EffectInvokes ei_a = new EffectInvokes(Janek_leaves, Janek_locksTheDoor, 1, [])
+        EffectInvokes ei_a = new EffectInvokes(Janek_leaves, Janek_locksTheDoor, 1, [])
 
         knowledge._Couses.add(ec_a)
         knowledge._Couses.add(ec_b)
@@ -96,13 +96,43 @@ initially  [dogHungry, -bowlFul]
         knowledge._ListOfAllActions.add(Janek_leaves)
         knowledge._ListOfAllActions.add(Janek_comeBack)
 
-        def em = new EngineManager(knowledge, new Scenario(), 8)
+        def em = new EngineManager(knowledge, fakeScenario(), 8)
 
         when:
         em.Run()
 
         then:
         1 == em._Finished.size()
+    }
+
+    Scenario fakeScenario() {
+        println """{
+  ACS = {
+      ((Janek, takesCard), 1),
+      ((Janek, leaves), 2),
+      ((Janek, locksTheDoor), 3),
+      ((Janek, comeback), 10)
+    },
+  OBS = {
+      ([hasCard, inHostel], 4),
+      ([-hasCard], 10)
+  }
+}"""
+        def scenario = new Scenario()
+        scenario.ACS.addAll([
+                new ScenarioACSPart(new Action("Janek", "takesCard"), 1),
+                new ScenarioACSPart(new Action("Janek", "leaves"), 2),
+                new ScenarioACSPart(new Action("Janek", "locksTheDoor"), 3),
+                new ScenarioACSPart(new Action("Janek", "comeback"), 10),
+        ])
+
+        scenario.OBS.add(new ScenarioOBSPart([
+                new Fluent("hasCard", true),
+                new Fluent("inHostel", true),
+        ], 4))
+        scenario.OBS.add(new ScenarioOBSPart([new Fluent("hasCard", false)], 10))
+
+        return scenario
     }
 
 }
