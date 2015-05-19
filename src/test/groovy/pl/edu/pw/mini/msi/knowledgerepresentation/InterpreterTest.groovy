@@ -65,11 +65,23 @@ class InterpreterTest extends Specification {
         when:
         interpreter.eval(instruction)
         then:
-        knowledge._Initially.list.containsAll(fluents)
+        knowledge._Initially.containsAll(fluents)
         where:
         instruction           | fluents
         'initially [hasBook]' | [fluent('hasBook')]
         'initially [hasBook,-empty]' | [fluent('hasBook'), fluent('empty').not()]
+    }
+
+    @Unroll
+    def "should populate always (#fluents)"() {
+        when:
+        interpreter.eval(instruction)
+        then:
+        fluents == knowledge._AlwaysList
+        where:
+        instruction           | fluents
+        'always [hasBook]' | [[fluent('hasBook')]]
+        'always [hasBook,-empty]' | [[fluent('hasBook'), fluent('empty').not()]]
     }
 
     def "should create empty scenario"() {

@@ -29,7 +29,7 @@ releases: action RELEASES fluentsList afterTime? underCondition?;
 triggers: fluentsList TRIGGERS action;
 occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
-always: ALWAYS fluent;
+always: ALWAYS fluentsList;
 
 underCondition: IF fluentsList;
 afterTime: AFTER time;
