@@ -20,6 +20,13 @@ class InterpreterTest extends Specification {
         interpreter = new Interpreter(errorListener, parseTreeListener)
     }
 
+    def "should work for example code"() {
+        given:
+        String code = getClass().getResource('/example_2.1.al' ).text
+        expect:
+        interpreter.eval(code)
+    }
+
     @Unroll
     def "should return OK when line ('#instruction') is valid instruction"() {
         expect:

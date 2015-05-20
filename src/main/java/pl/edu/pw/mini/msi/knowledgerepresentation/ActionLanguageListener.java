@@ -205,8 +205,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         log.debug("Clean previous instruction context");
         events.clear();
         observations.clear();
-        lastFluentsList.clear();
+        lastFluentsList = Sets.newHashSet();
         lastActorsList.clear();
+        lastTime = new Time(0);
     }
 
     @Override
@@ -222,7 +223,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void enterFluentsList(ActionLanguageParser.FluentsListContext ctx) {
         log.debug("Clean previously parsed fluent list data");
-        lastFluentsList.clear();
+        lastFluentsList = Sets.newHashSet();
     }
 
     @Override
