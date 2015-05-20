@@ -19,7 +19,7 @@
 	
 ### Uruchamianie
 
-- dev `./gradlew run`
+- dev `./gradlew run < plik_z_kodem_programu`
 - prod - zip z aplikacją znajduje się w `build/distributions`, należy go rozpakować. Skrypt wykonywalny znajduje się 
 w wewnątrz katalogu `bin`.
 
