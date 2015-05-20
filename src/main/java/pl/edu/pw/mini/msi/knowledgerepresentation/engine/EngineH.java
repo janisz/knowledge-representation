@@ -1,24 +1,26 @@
 
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 
-import java.util.AbstractMap;
+import java.util.Map;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 
 /**
  * Created by rwyka on 5/10/15.
  */
 public class EngineH {
-    public List<AbstractMap<String, Fluent>> H;
-    public List<AbstractMap<String, Fluent>> Hspecial;
+    public List<Map<String, Fluent>> H;
+    public List<Map<String, Fluent>> Hspecial;
 
     public EngineH(int t) {
-        H = new ArrayList<AbstractMap<String, Fluent>>();
-        Hspecial = new ArrayList<AbstractMap<String, Fluent>>();
+        H = new ArrayList<>();
+        Hspecial = new ArrayList<>();
         for(int i = 0; i < t; i++){
-            H.add(new HashMap<String, Fluent>());
+            H.add(new HashMap<>());
         }
     }
 
@@ -33,15 +35,14 @@ public class EngineH {
     }
 
     public boolean Set(Fluent f, int t){
-        boolean is = true;
-        AbstractMap<String, Fluent> Map = H.get(t);
+        Map<String, Fluent> Map = H.get(t);
         boolean r = Map.containsKey(f.getName());
         Map.put(f.getName(), f);
         return r;
     }
 
     public void SetAlways(List<Fluent> fl){
-        HashMap hm = new HashMap();
+        Map<String, Fluent> hm = new HashMap<>();
         for(Fluent f : fl){
             hm.put(f.getName(), f);
         }
@@ -49,7 +50,7 @@ public class EngineH {
     }
 
     private int hist(Fluent f, int t){
-        AbstractMap<String, Fluent> Map = H.get(t);
+        Map<String, Fluent> Map = H.get(t);
         if(Map.containsKey(f.getName())){
             return Map.get(f.getName()).value() == f.value() ? 1 : 0;
         }
@@ -73,8 +74,8 @@ public class EngineH {
             for (Fluent f : fl)
                 hs.put(f.getName(), f);
 
-            for (int i = 0; i < Hspecial.size(); i++) {
-                if (Hspecial.get(i).equals(hs))
+            for (Map<String, Fluent> aHspecial : Hspecial) {
+                if (aHspecial.equals(hs))
                     return true;
             }
         }
