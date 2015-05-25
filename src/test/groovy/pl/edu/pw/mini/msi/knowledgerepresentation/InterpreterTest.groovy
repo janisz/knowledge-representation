@@ -2,9 +2,12 @@ package pl.edu.pw.mini.msi.knowledgerepresentation
 
 import org.antlr.v4.runtime.misc.ParseCancellationException
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.*
+import pl.edu.pw.mini.msi.knowledgerepresentation.util.FileLoader
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge
 import spock.lang.Specification
 import spock.lang.Unroll
+import java.net.URL
+import java.lang.ClassLoader
 
 class InterpreterTest extends Specification {
 
@@ -19,14 +22,15 @@ class InterpreterTest extends Specification {
         parseTreeListener = new ActionLanguageListener(knowledge)
         interpreter = new Interpreter(errorListener, parseTreeListener)
     }
-
+	
     def "should work for example code"() {
         given:
-        String code = getClass().getResource('/example_2.1.al' ).text
+        	String file = getClass().getClassLoader().getResource("example_2.1.al").getFile()
+			String document = FileLoader.parseTestFileAsString(file)
         expect:
-        interpreter.eval(code)
+        	interpreter.eval(document)
     }
-
+	
     @Unroll
     def "should return OK when line ('#instruction') is valid instruction"() {
         expect:
@@ -102,14 +106,14 @@ class InterpreterTest extends Specification {
         given:
         def scenarioDefinition = '''scenario {
             ACS = {
-                ((Janek, takesCard), 3),
-                ((Janek, locksTheDoor), 4),
-                ((Janek, comeback), 10)
+                ((Janek, takesCard), 13),
+                ((Janek, locksTheDoor), 14),
+                ((Janek, comeback), 20)
             },
             OBS = {
-                ([-hasCard, inHostel], 4),
-                ([hasCard], 5),
-                ([inHostel], 4)
+                ([-hasCard, inHostel], 14),
+                ([hasCard], 15),
+                ([inHostel], 14)
             }
         }'''
         when:
@@ -117,31 +121,31 @@ class InterpreterTest extends Specification {
         then:
         parseTreeListener.scenarios.size() == 1
         parseTreeListener.scenarios['scenario'].actions.size() == 3
-        parseTreeListener.scenarios['scenario'].actions[time(3)] == action('Janek', 'takesCard')
-        parseTreeListener.scenarios['scenario'].actions[time(4)] == action('Janek', 'locksTheDoor')
-        parseTreeListener.scenarios['scenario'].actions[time(10)] == action('Janek', 'comeback')
+        parseTreeListener.scenarios['scenario'].actions[time(13)] == action('Janek', 'takesCard')
+        parseTreeListener.scenarios['scenario'].actions[time(14)] == action('Janek', 'locksTheDoor')
+        parseTreeListener.scenarios['scenario'].actions[time(20)] == action('Janek', 'comeback')
         parseTreeListener.scenarios['scenario'].observations.size() == 3
-        parseTreeListener.scenarios['scenario'].observations.get(time(5)).toList() == [fluent('hasCard')]
-        parseTreeListener.scenarios['scenario'].observations.get(time(4)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
+        parseTreeListener.scenarios['scenario'].observations.get(time(15)).toList() == [fluent('hasCard')]
+        parseTreeListener.scenarios['scenario'].observations.get(time(14)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
     }
-
+	
     def "should create multiple scenarios"() {
         given:
         def scenarioDefinition = '''scenario {
             ACS = {
-                ((Janek, takesCard), 3),
-                ((Janek, locksTheDoor), 4),
-                ((Janek, comeback), 10)
+                ((Janek, takesCard), 13),
+                ((Janek, locksTheDoor), 14),
+                ((Janek, comeback), 20)
             },
             OBS = {
-                ([-hasCard, inHostel], 4),
-                ([hasCard], 5)
+                ([-hasCard, inHostel], 14),
+                ([hasCard], 15)
             }
         }
         scenarioTwo { ACS = {}, OBS = {} }
         scenarioThree {
-            ACS = { ((DoorKeeper, locksTheDoor), 1) },
-            OBS = { ([-doorAreLocked], 4), ([doorAreLocked], 2) }
+            ACS = { ((DoorKeeper, locksTheDoor), 11) },
+            OBS = { ([-doorAreLocked], 14), ([doorAreLocked], 12) }
         }'''
         when:
         interpreter.eval(scenarioDefinition)
