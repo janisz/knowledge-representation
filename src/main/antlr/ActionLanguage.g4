@@ -20,7 +20,6 @@ entry
   | TYPICALLY? occurs
   | impossible
   | always
-  | file
   ;
 
 initiallisation: INITIALLY fluentsList;
@@ -31,7 +30,6 @@ triggers: fluentsList TRIGGERS action;
 occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
 always: ALWAYS fluentsList;
-file: FILE filePath;
 
 underCondition: IF fluentsList;
 afterTime: AFTER time;
@@ -69,6 +67,7 @@ basicQuestion
   | EVER
   ;
 
+
 actorsList: '[' actors ']';
 actors: actor | actors ',' actor;
 
@@ -77,14 +76,12 @@ actor: IDENTIFIER;
 task: IDENTIFIER;
 time: DecimalConstant;
 scenarioId: IDENTIFIER;
-filePath: IDENTIFIER;
 
 WS: [ \n\t\r]+ -> skip;
 
 ACS: 'ACS';
 AFTER: 'after';
 ALWAYS: 'always';
-FILE: 'file';
 AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';
@@ -102,6 +99,4 @@ TRIGGERS: 'triggers';
 TYPICALLY: 'typically';
 WHEN: 'when';
 IDENTIFIER : [a-zA-Z]+;
-DecimalConstant: [1-9][0-9]*;
-FILE_PATH: [a-zA-Z]+;
-FILE_PATH1: [a-zA-Z]+;
+DecimalConstant: [1-9] [0-9]*;

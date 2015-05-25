@@ -11,7 +11,6 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.controller.event.LoadFileEvent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
@@ -23,8 +22,6 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.engine.EngineManager;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
-import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser.FileContext;
-import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser.FilePathContext;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMultimap;
@@ -33,7 +30,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.common.eventbus.EventBus;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
@@ -46,7 +42,6 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private final Knowledge knowledge;
     private final HashMap<String, Scenario> scenarios = Maps.newLinkedHashMap();
     private EngineManager engineManager;
-    private EventBus eventBus;
     
     private Collection<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
@@ -64,15 +59,10 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private QueryType lastQueryType;
     private boolean typically;
     
-    public ActionLanguageListener(Knowledge knowledge, EventBus eventBus) {
-        this.knowledge = knowledge;
-        this.eventBus = eventBus;
-    }
-    
     public ActionLanguageListener(Knowledge knowledge) {
         this.knowledge = knowledge;
     }
-
+    
     public Knowledge getKnowledge() {
         return knowledge;
     }
@@ -245,7 +235,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         scenarios.put(name, scenario);
         //engineManager = new EngineManager(knowledge, scenario, 20);
     }
-    
+
     @Override
     public void exitEvent(ActionLanguageParser.EventContext ctx) {
         events.add(new Event(lastAction, lastTime));
@@ -258,25 +248,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         }
     }
     
+    @Override
     public void visitErrorNode(ErrorNode node) {
         log.error("Visit error node: " + node.getText());
     }
-    
-	public void enterFile(FileContext ctx) {
-		super.enterFile(ctx);
-	}
-	
-	public void enterFilePath(FilePathContext ctx) {
-		super.enterFilePath(ctx);
-	}
-	
-	public void exitFile(FileContext ctx) {
-		super.exitFile(ctx);
-	}
-	
-	public void exitFilePath(FilePathContext ctx) {
-		super.exitFilePath(ctx);
-		eventBus.post(new LoadFileEvent(ctx.IDENTIFIER().getText()));
-	}
 	
 }
