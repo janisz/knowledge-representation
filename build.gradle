@@ -3,6 +3,20 @@ apply plugin: 'groovy'
 apply plugin: 'antlr'
 apply plugin: 'idea'
 apply plugin: 'application'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
+    }
+}
+
 
 sourceCompatibility = 1.8
 version = '1.0'
@@ -48,4 +62,11 @@ allprojects {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.4'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
 }
