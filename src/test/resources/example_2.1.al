@@ -8,31 +8,10 @@ typically (Janek, leaves) invokes (Janek, locksTheDoor)
 typically (DoorKeeper, lockTheDoor) occurs at 10
 
 
-scenarioOne {
-  ACS = {
-      ((Janek, takesCard), 1),
-      ((Janek, locksTheDoor), 3),
-      ((Janek, comeback), 10)
-    },
-  OBS = {
-      ([hasCard, inHostel], 4),
-      ([-hasCard], 10)
-  }
-}
+scenarioOne {ACS = {((Janek, takesCard), 11),((Janek, locksTheDoor), 13),((Janek, comeback), 20)},OBS = {([hasCard, inHostel], 14),([-hasCard], 20)}}
 
 
-scenarioTwo {
-  ACS = {
-      ((Janek, takesCard), 3),
-      ((Janek, locksTheDoor), 4),
-      ((Janek, comeback), 10)
-    },
-  OBS = {
-      ([-hasCard], 4),
-      ([inHostel], 4),
-      ([hasCard], 10)
-  }
-}
+scenarioTwo {ACS = {((Janek, takesCard), 13),((Janek, locksTheDoor), 14),((Janek, comeback), 20)},OBS = {([-hasCard], 14),([inHostel], 14),([hasCard], 20)}}
 
 always involved [DoorKepper] when scenarioOne
 typically [inHostel, -hasCard] at 11 when scenarioTwo
