@@ -1,4 +1,6 @@
-# knowledge-representation [![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg)](https://raw.githubusercontent.com/janisz/knowledge-representation/master/LICENSE) [![Build Status](https://travis-ci.org/janisz/knowledge-representation.svg?branch=master)](https://travis-ci.org/janisz/knowledge-representation) [![Dependency Status](https://www.versioneye.com/user/projects/55633032366466001bc30100/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55633032366466001bc30100) 
+#knowledge-representation
+
+[![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg)](https://raw.githubusercontent.com/janisz/knowledge-representation/master/LICENSE) [![Build Status](https://travis-ci.org/janisz/knowledge-representation.svg?branch=master)](https://travis-ci.org/janisz/knowledge-representation) [![Dependency Status](https://www.versioneye.com/user/projects/55633032366466001bc30100/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55633032366466001bc30100) [![Coverage Status](https://coveralls.io/repos/janisz/knowledge-representation/badge.svg?branch=coveralls)](https://coveralls.io/r/janisz/knowledge-representation?branch=coveralls)
 ##Scenariusze działań z projektami domyślymi
 
 ### Harmonogram
