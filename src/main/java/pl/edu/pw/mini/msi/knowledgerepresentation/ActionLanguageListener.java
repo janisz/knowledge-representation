@@ -1,21 +1,20 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import org.antlr.v4.runtime.misc.FlexibleHashMap;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioACSPart;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioOBSPart;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.EngineManager;
@@ -23,13 +22,12 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.google.common.collect.ImmutableList.copyOf;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
@@ -40,7 +38,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
     
     private final Knowledge knowledge;
-    private final HashMap<String, Scenario> scenarios = Maps.newLinkedHashMap();
+    private final Map<String, Scenario> scenarios = Maps.newLinkedHashMap();
     private EngineManager engineManager;
     
     private Collection<Event> events = Lists.newArrayList();
@@ -67,7 +65,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         return knowledge;
     }
 
-    public HashMap<String, Scenario> getScenarios() {
+    public Map<String, Scenario> getScenarios() {
         return scenarios;
     }
 
@@ -80,13 +78,13 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitCauses(ActionLanguageParser.CausesContext ctx) {
         log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
-        knowledge.addEffectCause(typically, lastAction, new ArrayList<Fluent>(lastFluentsList), new ArrayList<Fluent>(underConditionFluentList));
+        knowledge.addEffectCause(typically, lastAction, copyOf(lastFluentsList), copyOf(underConditionFluentList));
     }
     
     @Override
     public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { 
     	log.debug(String.format("(Typically=%s) %s INVOKES %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
-    	knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), new ArrayList<Fluent>(underConditionFluentList));
+        knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), copyOf(underConditionFluentList));
     }
     
     @Override
@@ -98,7 +96,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitTriggers(ActionLanguageParser.TriggersContext ctx) {
     	log.debug(String.format("(Typically=%s) %s TRIGGERS %s", typically, lastAction, underConditionFluentList));
-    	knowledge.addEffectTriggers(typically, lastAction, new ArrayList<Fluent>(underConditionFluentList));
+        knowledge.addEffectTriggers(typically, lastAction, copyOf(underConditionFluentList));
     }
     
     @Override
@@ -115,7 +113,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { 
     	log.debug(String.format("ALWAYS %s", lastFluentsList));
-    	knowledge.addAlways(new ArrayList<>(lastFluentsList));
+        knowledge.addAlways(copyOf(lastFluentsList));
     }
     
     @Override
@@ -161,13 +159,13 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override
     public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
-        underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
+        underConditionFluentList = copyOf(lastFluentsList);
     }
 
     @Override
     public void exitUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
-        Collection<Fluent> fluents = ImmutableList.copyOf(underConditionFluentList);
-        underConditionFluentList = ImmutableList.copyOf(lastFluentsList);
+        Collection<Fluent> fluents = copyOf(underConditionFluentList);
+        underConditionFluentList = copyOf(lastFluentsList);
         lastFluentsList = fluents;
     }
 
@@ -229,11 +227,16 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitScenario(ActionLanguageParser.ScenarioContext ctx) {
         String name = ctx.IDENTIFIER().getText();
-        Map<Time, Action> actions = events.stream().collect(Collectors.toMap(Event::getTime, Event::getAction));
-        Scenario scenario = new Scenario(name, ImmutableMultimap.copyOf(observations), actions);
+        List<ScenarioACSPart> acs = events.stream().map(
+                e -> new ScenarioACSPart(e.getAction(), e.getTime())
+        ).collect(Collectors.toList());
+        List<ScenarioOBSPart> obs = observations.asMap().entrySet().stream().map(
+                e -> new ScenarioOBSPart(copyOf(e.getValue()), e.getKey().getTime())
+        ).collect(Collectors.toList());
+
+        Scenario scenario = new Scenario(acs, obs);
         log.debug("Create scenario: ", scenario);
         scenarios.put(name, scenario);
-        //engineManager = new EngineManager(knowledge, scenario, 20);
     }
 
     @Override

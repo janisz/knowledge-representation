@@ -14,8 +14,8 @@ public class Event {
         return this.action;
     }
 
-    public Time getTime() {
-        return this.time;
+    public int getTime() {
+        return this.time.getTime();
     }
 
     public boolean equals(Object o) {

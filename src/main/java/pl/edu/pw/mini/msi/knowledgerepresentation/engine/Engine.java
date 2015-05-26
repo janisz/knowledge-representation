@@ -1,9 +1,12 @@
 
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
-import java.io.Console;
-import java.util.List;
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioACSPart;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioOBSPart;
+
+import java.util.List;
 
 
 /**

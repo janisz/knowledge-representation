@@ -1,7 +1,6 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine
 
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*
 import spock.lang.Specification
 
 class EngineTest extends Specification {
@@ -118,18 +117,20 @@ initially  [dogHungry, -bowlFul]
       ([-hasCard], 10)
   }
 }"""
-        def scenario = new Scenario()
-        scenario.ACS.addAll([
-                new ScenarioACSPart(new Action("Janek", "takesCard"), 1),
-                new ScenarioACSPart(new Action("Janek", "leaves"), 2),
-                new ScenarioACSPart(new Action("Janek", "locksTheDoor"), 3),
-                new ScenarioACSPart(new Action("Janek", "comeback"), 10),
-        ])
-
-        scenario.OBS.add(new ScenarioOBSPart([
-                new Fluent("hasCard", true),
-                new Fluent("inHostel", true),
-        ], 4))
+        def scenario = new Scenario(
+                [
+                        new ScenarioACSPart(new Action("Janek", "takesCard"), 1),
+                        new ScenarioACSPart(new Action("Janek", "leaves"), 2),
+                        new ScenarioACSPart(new Action("Janek", "locksTheDoor"), 3),
+                        new ScenarioACSPart(new Action("Janek", "comeback"), 10),
+                ],
+                [
+                        new ScenarioOBSPart([
+                                new Fluent("hasCard", true),
+                                new Fluent("inHostel", true),
+                        ], 4)
+                ]
+        )
         scenario.OBS.add(new ScenarioOBSPart([new Fluent("hasCard", false)], 10))
 
         return scenario

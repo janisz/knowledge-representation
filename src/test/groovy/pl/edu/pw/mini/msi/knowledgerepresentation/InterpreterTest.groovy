@@ -116,13 +116,16 @@ class InterpreterTest extends Specification {
         interpreter.eval(scenarioDefinition)
         then:
         parseTreeListener.scenarios.size() == 1
-        parseTreeListener.scenarios['scenario'].actions.size() == 3
-        parseTreeListener.scenarios['scenario'].actions[time(3)] == action('Janek', 'takesCard')
-        parseTreeListener.scenarios['scenario'].actions[time(4)] == action('Janek', 'locksTheDoor')
-        parseTreeListener.scenarios['scenario'].actions[time(10)] == action('Janek', 'comeback')
-        parseTreeListener.scenarios['scenario'].observations.size() == 3
-        parseTreeListener.scenarios['scenario'].observations.get(time(5)).toList() == [fluent('hasCard')]
-        parseTreeListener.scenarios['scenario'].observations.get(time(4)).toList() == [fluent('hasCard').not(), fluent('inHostel')]
+        parseTreeListener.scenarios['scenario'].ACS.size() == 3
+        parseTreeListener.scenarios['scenario'].OBS == [
+                new ScenarioOBSPart([fluent('hasCard').not(), fluent('inHostel')], 4),
+                new ScenarioOBSPart([fluent('hasCard')], 5),
+        ]
+        parseTreeListener.scenarios['scenario'].ACS  == [
+                new ScenarioACSPart(action('Janek', 'takesCard'), 3),
+                new ScenarioACSPart(action('Janek', 'locksTheDoor'), 4),
+                new ScenarioACSPart(action('Janek', 'comeback'), 10),
+        ] as List
     }
 
     def "should create multiple scenarios"() {
@@ -147,12 +150,12 @@ class InterpreterTest extends Specification {
         interpreter.eval(scenarioDefinition)
         then:
         parseTreeListener.scenarios.size() == 3
-        parseTreeListener.scenarios['scenario'].actions.size() == 3
-        parseTreeListener.scenarios['scenario'].observations.size() == 3
-        parseTreeListener.scenarios['scenarioTwo'].actions.size() == 0
-        parseTreeListener.scenarios['scenarioTwo'].observations.size() == 0
-        parseTreeListener.scenarios['scenarioThree'].actions.size() == 1
-        parseTreeListener.scenarios['scenarioThree'].observations.size() == 2
+        parseTreeListener.scenarios['scenario'].ACS.size() == 3
+        parseTreeListener.scenarios['scenario'].OBS.size() == 2
+        parseTreeListener.scenarios['scenarioTwo'].ACS.size() == 0
+        parseTreeListener.scenarios['scenarioTwo'].OBS.size() == 0
+        parseTreeListener.scenarios['scenarioThree'].ACS.size() == 1
+        parseTreeListener.scenarios['scenarioThree'].OBS.size() == 2
     }
 
     @Unroll
