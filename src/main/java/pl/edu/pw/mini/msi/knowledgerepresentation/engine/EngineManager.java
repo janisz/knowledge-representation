@@ -2,7 +2,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 import java.util.ArrayList;
 import java.util.List;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
+
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
 
 /**
  * Created by rwyka on 5/12/15.
@@ -15,7 +18,7 @@ public class EngineManager {
 
     public EngineManager(Knowledge K, Scenario S, int T){
         Engine e = new Engine(K, S, T);
-        _ActiveEngines.add(e);
+    	_ActiveEngines.add(e);
     }
 
 

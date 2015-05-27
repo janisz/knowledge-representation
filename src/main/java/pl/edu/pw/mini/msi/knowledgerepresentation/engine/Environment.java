@@ -2,8 +2,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
 import java.util.ArrayList;
 import java.util.List;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
 /**
  * Created by rwyka on 5/19/15.
  */
@@ -26,37 +28,36 @@ public class Environment {
     }
 
 
-    public boolean QueryConditionEver(List<Fluent> condition, int time, int scenario){
-        return _EM.get(scenario).ConditionAllways(condition, time);
+    public boolean QueryConditionEver(List<Fluent> condition, int time, Scenario scenario){
+        return _EM.get(_S.indexOf(scenario)).ConditionAllways(condition, time);
     }
 
-    public void QueryConditionTypically(List<Fluent> condition, int time, int scenario){
-
+    public void QueryConditionTypically(List<Fluent> condition, int time, Scenario scenario){
+    	
     }
 
-    public boolean QueryConditionAllways(List<Fluent> condition, int time, int scenario){
-        return _EM.get(scenario).ConditionEver(condition, time);
+    public boolean QueryConditionAllways(List<Fluent> condition, int time, Scenario scenario){
+        return _EM.get(_S.indexOf(scenario)).ConditionEver(condition, time);
     }
 
-
-    public boolean QueryActionEver(Action action, int time, int scenario){
-        return _EM.get(scenario).ActionAllways(action, time);
+    public boolean QueryActionEver(Action action, int time, Scenario scenario){
+        return _EM.get(_S.indexOf(scenario)).ActionAllways(action, time);
     }
-
-    public void QueryActionTypically(Action action, int time, int scenario){
-
-    }
-
-    public boolean QueryActionAllwaysr(Action action, int time, int scenario){
-        return _EM.get(scenario).ActionEver(action, time);
-    }
-
-
-    public void QueryInvolvedEver(Fluent fluent, int time, int scenario){
+    
+    public void QueryActionTypically(Action action, int time, Scenario scenario){
 
     }
 
-    public void QueryInvolvedAllways(Fluent fluent, int time, int scenario){
+    public boolean QueryActionAllwaysr(Action action, int time, Scenario scenario){
+        return _EM.get(_S.indexOf(scenario)).ActionEver(action, time);
+    }
+
+
+    public void QueryInvolvedEver(Fluent fluent, int time, Scenario scenario){
+
+    }
+
+    public void QueryInvolvedAllways(Fluent fluent, int time, Scenario scenario){
 
     }
 

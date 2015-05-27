@@ -7,7 +7,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class ErrorListener extends ConsoleErrorListener {
+public class ErrorListener extends ConsoleErrorListener {
 
     private static final Logger log = LoggerFactory.getLogger(ErrorListener.class);
 

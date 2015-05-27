@@ -1,13 +1,17 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import static com.google.common.collect.ImmutableList.copyOf;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
@@ -18,16 +22,16 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioOBSPart;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.EngineManager;
+import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Environment;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.google.common.collect.ImmutableList.copyOf;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
@@ -56,9 +60,11 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private String lastScenarioId;
     private QueryType lastQueryType;
     private boolean typically;
+    private Environment environment;
     
     public ActionLanguageListener(Knowledge knowledge) {
         this.knowledge = knowledge;
+        environment = new Environment(knowledge);
     }
     
     public Knowledge getKnowledge() {
@@ -118,22 +124,77 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     
     @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
-    	//log.debug(String.format("ALWAYS %s ", lastFluent));
-
+    	log.debug(String.format("ALWAYS %s ", lastFluent));
+    	//always/ever/typically [Fluent] at 1 when scenarioOne
+    	//lastQueryType, lastFluentsList, lastTime, lastScenarioId
+    	
     	//engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+    	Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+    	List<Fluent> fluentList = new ArrayList<Fluent>();
+    	fluentList.addAll(lastFluentsList);
+    	
+    	boolean result;
+    	switch(lastQueryType){
+	    	case ALWAYS:
+	    			result = environment.QueryConditionAllways(fluentList, lastTime.getTime(), scenario);
+	    			log.info("Answer: [" + result + "]");
+	    		break;
+	    	case EVER:
+	    			result = environment.QueryConditionEver(fluentList, lastTime.getTime(), scenario);
+	    			log.info("Answer: [" + result + "]");
+	    		break;
+	    	case GENERALLY:
+	    			environment.QueryConditionTypically(fluentList, lastTime.getTime(), scenario);
+	    		break;
+	    	case NONE:
+	    			
+	    		break;
+    	}
+    	
     }
 
     @Override
     public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
-    	//log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
+    	log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
+		//always/ever/typically performed (Janek,action) at 1 when scenarioOne
+		//lastQueryType,lastActorsList,lastTask,lastAction,lastTime,lastScenarioId
+
     	//engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+    	Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+    	boolean result;
+    	switch(lastQueryType){
+	    	case ALWAYS:
+	    			result = environment.QueryActionAllwaysr(lastAction, lastTime.getTime(), scenario);
+	    			log.info("Answer: [" + result + "]");
+	    		break;
+	    	case EVER:
+	    			result = environment.QueryActionEver(lastAction, lastTime.getTime(), scenario);
+	    			log.info("Answer: [" + result + "]");
+	    		break;
+	    	case GENERALLY:
+	    			environment.QueryActionTypically(lastAction, lastTime.getTime(), scenario);
+	    		break;
+	    	case NONE:
+	    			
+	    		break;
+		}
+    	
     }
 
     @Override
     public void exitInvolved(ActionLanguageParser.InvolvedContext ctx) {
-    	//log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, scenario));
+        log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, lastScenarioId));
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-        //engineManager.involved(lastQueryType, lastActorsList, ctx.scenarioId().IDENTIFIER().getText());
+
+    	boolean result;
+        switch(lastQueryType){
+	        case ALWAYS:
+	        		environment.QueryInvolvedAllways(lastFluent, 0, scenario);
+	        	break;
+	        case EVER:
+	        		environment.QueryInvolvedEver(lastFluent, 0, scenario);
+	        	break;
+        }
     }
 
     @Override
