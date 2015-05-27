@@ -26,6 +26,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Environment;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseListener;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
+import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser.ScenarioIdContext;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Lists;
@@ -316,5 +317,11 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void visitErrorNode(ErrorNode node) {
         log.error("Visit error node: " + node.getText());
     }
-	
+
+	@Override
+	public void exitScenarioId(ScenarioIdContext ctx) {
+		super.exitScenarioId(ctx);
+		lastScenarioId = ctx.IDENTIFIER().getText();
+	}
+    
 }
