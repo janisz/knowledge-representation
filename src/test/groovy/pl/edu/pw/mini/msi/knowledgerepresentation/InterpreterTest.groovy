@@ -27,7 +27,7 @@ class InterpreterTest extends Specification {
         interpreter.eval(code)
     }
 
-    def "Rafals"() {
+    def "Wykasz's test"() {
         given:
         def program = '''
 initially [dogHungry, -dogDead]
@@ -48,10 +48,8 @@ scenarioOne {
 ever [dogHungry] at 0 when scenarioOne
 ever [dogHungry] at 1 when scenarioOne
 '''
-        when:
+        expect:
         interpreter.eval(program)
-        then:
-        1 == 1
     }
 
     @Unroll
