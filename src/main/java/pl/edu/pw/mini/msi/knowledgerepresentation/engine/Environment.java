@@ -1,5 +1,6 @@
 
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
+import java.io.Console;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,8 @@ public class Environment {
     }
 
     public boolean QueryActionEver(Action action, int time, Scenario scenario){
+        System.out.println(scenario.toString());
+        System.out.println(_S.toString());
         return _EM.get(_S.indexOf(scenario)).ActionAllways(action, time);
     }
     

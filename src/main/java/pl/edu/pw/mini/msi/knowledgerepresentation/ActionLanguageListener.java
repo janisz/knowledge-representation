@@ -299,6 +299,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         Scenario scenario = new Scenario(acs, obs);
         log.debug("Create scenario: ", scenario);
         scenarios.put(name, scenario);
+        environment.AddScenario(scenario, 10);
     }
 
     @Override
