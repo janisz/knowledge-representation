@@ -99,4 +99,4 @@ TRIGGERS: 'triggers';
 TYPICALLY: 'typically';
 WHEN: 'when';
 IDENTIFIER : [a-zA-Z]+;
-DecimalConstant: [1-9] [0-9]*;
+DecimalConstant: [0-9]+;

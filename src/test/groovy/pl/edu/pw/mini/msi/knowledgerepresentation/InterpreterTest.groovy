@@ -22,9 +22,36 @@ class InterpreterTest extends Specification {
 
     def "should work for example code"() {
         given:
-        String code = getClass().getResource('/example_2.1.al' ).text
+        String code = getClass().getResource('/example_2.1.al').text
         expect:
         interpreter.eval(code)
+    }
+
+    def "Rafals"() {
+        given:
+        def program = '''
+initially [dogHungry, -dogDead]
+
+[dogHungry, -dogDead] triggers (dog, Sad)
+(dog, Sad) invokes (dog, CommitSuicide) after 5
+(dog, CommitSuicide) causes [dogDead] if [dogHungry, -dogDead]
+
+(dog, eats) causes [-dogHungry]
+
+scenarioOne {
+    ACS = {
+    },
+    OBS = {
+    }
+}
+
+ever [dogHungry] at 0 when scenarioOne
+ever [dogHungry] at 1 when scenarioOne
+'''
+        when:
+        interpreter.eval(program)
+        then:
+        1 == 1
     }
 
     @Unroll
@@ -169,6 +196,7 @@ class InterpreterTest extends Specification {
         'initially [hasBook]'                                                  | false
         '(DoorKeeper, lockTheDoor) occurs at 10'                               | false
         'typically (Janek, takesCard) causes [hasCard] after 11 if [-weekend]' | true
+        '(dog, CommitSuicide) causes [dogDead] if [dogHungry, -dogDead]'       | false
     }
 
     Actor actor(String name) {
