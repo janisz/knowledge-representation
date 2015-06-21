@@ -46,7 +46,11 @@ scenarioOne {
 }
 
 ever [dogHungry] at 0 when scenarioOne
-ever [dogHungry] at 1 when scenarioOne
+ever [-dogHungry] at 1 when scenarioOne
+always involved [dog] when scenarioOne
+always involved [cat] when scenarioOne
+ever performed (dog, CommitSuicide) at 4 when scenarioOne
+ever performed (dog, CommitSuicide) at 5 when scenarioOne
 '''
         expect:
         interpreter.eval(program)
