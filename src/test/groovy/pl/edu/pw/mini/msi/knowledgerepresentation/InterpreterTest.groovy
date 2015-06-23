@@ -24,7 +24,7 @@ class InterpreterTest extends Specification {
         given:
         String code = getClass().getResource('/example_2.1.al').text
         expect:
-        interpreter.eval(code)
+        interpreter.eval(code) == [null, null, null]
     }
 
     def "Wykasz's test"() {
@@ -52,14 +52,17 @@ always involved [cat] when scenarioOne
 ever performed (dog, CommitSuicide) at 4 when scenarioOne
 ever performed (dog, CommitSuicide) at 5 when scenarioOne
 '''
-        expect:
+        when:
         interpreter.eval(program)
+
+        then:
+        parseTreeListener.results == [true, false, null, null, false, true]
     }
 
     @Unroll
     def "should return OK when line ('#instruction') is valid instruction"() {
         expect:
-        interpreter.eval(instruction)
+        [] == interpreter.eval(instruction)
         where:
         instruction << [
                 'initially [hasBook]',

@@ -25,6 +25,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
     private final Knowledge knowledge;
     private final Map<String, Scenario> scenarios = Maps.newLinkedHashMap();
+    private final List<Boolean> results = Lists.newArrayList();
     private EngineManager engineManager;
     private List<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
@@ -41,6 +42,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private QueryType lastQueryType;
     private boolean typically;
     private Environment environment;
+
     public ActionLanguageListener(Knowledge knowledge) {
         this.knowledge = knowledge;
         environment = new Environment(knowledge);
@@ -52,6 +54,10 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     public Map<String, Scenario> getScenarios() {
         return scenarios;
+    }
+
+    public List<Boolean> getResults() {
+        return results;
     }
 
     @Override
@@ -112,7 +118,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         List<Fluent> fluentList = new ArrayList<Fluent>();
         fluentList.addAll(lastFluentsList);
 
-        boolean result;
+        Boolean result = null;
         switch (lastQueryType) {
             case ALWAYS:
                 result = environment.QueryConditionAllways(fluentList, lastTime.getTime(), scenario);
@@ -129,6 +135,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
                 break;
         }
+        results.add(result);
 
     }
 
@@ -140,7 +147,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
         //engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-        boolean result;
+        Boolean result = null;
         switch (lastQueryType) {
             case ALWAYS:
                 result = environment.QueryActionAllwaysr(lastAction, lastTime.getTime(), scenario);
@@ -157,6 +164,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
                 break;
         }
+        results.add(result);
 
     }
 
@@ -165,7 +173,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, lastScenarioId));
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
 
-        boolean result;
+        Boolean result = null;
         switch (lastQueryType) {
             case ALWAYS:
                 environment.QueryInvolvedAllways(lastFluent, 0, scenario);
@@ -174,6 +182,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
                 environment.QueryInvolvedEver(lastFluent, 0, scenario);
                 break;
         }
+        results.add(result);
     }
 
     @Override

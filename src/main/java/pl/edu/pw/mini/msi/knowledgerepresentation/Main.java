@@ -17,13 +17,13 @@ public class Main {
         Logger log = LoggerFactory.getLogger(Main.class);
         ANTLRErrorListener errorListener = new ErrorListener();
         Knowledge knowledge = new Knowledge();
-        ParseTreeListener parseTreeListener = new ActionLanguageListener(knowledge);
+        ActionLanguageListener parseTreeListener = new ActionLanguageListener(knowledge);
         Interpreter interpreter = new Interpreter(errorListener, parseTreeListener);
 
         try {
             String code = IOUtils.toString(System.in);
-            List<Interpreter.Return> returns = interpreter.eval(code);
-            log.info(Joiner.on(", ").join(returns));
+            List<Boolean> returns = interpreter.eval(code);
+            log.info(Joiner.on(", ").useForNull("null").join(returns));
         } catch (RuntimeException e) {
             log.error(e.getMessage(), e);
         }

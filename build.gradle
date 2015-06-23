@@ -6,6 +6,7 @@ apply plugin: 'application'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.plugin'
 
 buildscript {
     repositories {
@@ -67,4 +68,21 @@ jacocoTestReport {
         xml.enabled = true // coveralls plugin depends on xml format report
         html.enabled = true
     }
+}
+
+javafx {
+    appID 'KnowledgeRepresentation'
+    appName 'KnowledgeRepresentation'
+    mainClass ' pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui'
+
+    embedLauncher = true
+
+    category = 'Science'
+    copyright = 'Copyright (c) 2015 MiNI'
+    description = 'Knowledge Representation'
+    licenseType = 'BSD'
+    vendor = 'MiNI PW'
+    installSystemWide = true
+    menu = true
+    shortcut = true
 }
