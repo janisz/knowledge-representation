@@ -19,8 +19,6 @@ buildscript {
 
 version = '1.0'
 
-mainClassName = "pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui"
-
 run {
     standardInput = System.in
 }
