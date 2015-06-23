@@ -1,4 +1,3 @@
-
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
 /**

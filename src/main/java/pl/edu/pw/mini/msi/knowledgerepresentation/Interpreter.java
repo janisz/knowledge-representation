@@ -16,14 +16,9 @@ import java.util.List;
 
 public class Interpreter {
 
-    public enum Return {
-        TRUE, FALSE, NONE
-    }
-
     private static final Logger log = LoggerFactory.getLogger(Interpreter.class);
     private final ANTLRErrorListener errorListener;
     private final ParseTreeListener parseTreeListener;
-
     public Interpreter(ANTLRErrorListener errorListener, ParseTreeListener parseTreeListener) {
         this.errorListener = errorListener;
         this.parseTreeListener = parseTreeListener;
@@ -37,5 +32,9 @@ public class Interpreter {
         parser.addErrorListener(errorListener);
         ParseTreeWalker.DEFAULT.walk(parseTreeListener, parser.programm());
         return ImmutableList.of(Return.TRUE); //TODO: Handle query output
+    }
+
+    public enum Return {
+        TRUE, FALSE, NONE
     }
 }

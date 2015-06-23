@@ -42,6 +42,6 @@ public class Event {
     }
 
     public String toString() {
-       return "Event(action=" + this.action + ", time=" + this.time + ")";
+        return "Event(action=" + this.action + ", time=" + this.time + ")";
     }
 }

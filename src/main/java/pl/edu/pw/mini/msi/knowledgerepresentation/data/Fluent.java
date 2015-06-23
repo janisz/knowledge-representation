@@ -26,7 +26,9 @@ public class Fluent implements Cloneable {
         return name.equals(fluent.getName());
     }
 
-    public  boolean value(){return positive;}
+    public boolean value() {
+        return positive;
+    }
 
     public boolean equals(Object o) {
         if (o == this) return true;
@@ -49,7 +51,7 @@ public class Fluent implements Cloneable {
     }
 
     public String toString() {
-       return "Fluent(name=" + this.name + ", positive=" + this.positive + ")";
+        return "Fluent(name=" + this.name + ", positive=" + this.positive + ")";
     }
 
     @Override

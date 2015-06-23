@@ -1,7 +1,4 @@
-
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
-
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
 
 import java.util.List;
 

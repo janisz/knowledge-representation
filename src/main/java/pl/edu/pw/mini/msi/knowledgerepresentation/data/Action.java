@@ -46,6 +46,6 @@ public class Action {
     }
 
     public String toString() {
-       return "Action(actor=" + this.actor + ", task=" + this.task + ")";
+        return "Action(actor=" + this.actor + ", task=" + this.task + ")";
     }
 }

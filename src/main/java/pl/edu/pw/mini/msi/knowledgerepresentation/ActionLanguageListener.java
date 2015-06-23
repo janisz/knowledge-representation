@@ -1,26 +1,11 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import static com.google.common.collect.ImmutableList.copyOf;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import com.google.common.base.Function;
+import com.google.common.collect.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Action;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Actor;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Event;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Fluent;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Scenario;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioACSPart;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.ScenarioOBSPart;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Task;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.Time;
+import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.EngineManager;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Environment;
 import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
@@ -28,30 +13,24 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageBaseList
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser.ScenarioIdContext;
 
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.collect.ImmutableList.copyOf;
 
 public class ActionLanguageListener extends ActionLanguageBaseListener {
 
-    public enum QueryType {
-        GENERALLY, ALWAYS, EVER, NONE
-    }
-    
     private static final Logger log = LoggerFactory.getLogger(ActionLanguageListener.class);
-    
     private final Knowledge knowledge;
     private final Map<String, Scenario> scenarios = Maps.newLinkedHashMap();
     private EngineManager engineManager;
-    
-    private Collection<Event> events = Lists.newArrayList();
+    private List<Event> events = Lists.newArrayList();
     private Multimap<Time, Fluent> observations = LinkedHashMultimap.create();
     private Collection<Fluent> lastFluentsList = Sets.newHashSet();
     private Collection<Fluent> underConditionFluentList = Sets.newHashSet();
     private Collection<Actor> lastActorsList = Sets.newHashSet();
-    
     private Action previousLastAction;
     private Action lastAction;
     private Actor lastActor;
@@ -62,12 +41,11 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private QueryType lastQueryType;
     private boolean typically;
     private Environment environment;
-    
     public ActionLanguageListener(Knowledge knowledge) {
         this.knowledge = knowledge;
         environment = new Environment(knowledge);
     }
-    
+
     public Knowledge getKnowledge() {
         return knowledge;
     }
@@ -81,105 +59,105 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         log.debug("Set initial state: %s", lastFluentsList);
         knowledge._Initially.addAll(lastFluentsList);
     }
-    
+
     @Override
     public void exitCauses(ActionLanguageParser.CausesContext ctx) {
         log.debug(String.format("(Typically=%s) %s CAUSES %s after %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
         knowledge.addEffectCause(typically, lastAction, copyOf(lastFluentsList), copyOf(underConditionFluentList));
     }
-    
+
     @Override
-    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) { 
-    	log.debug(String.format("(Typically=%s) %s INVOKES %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
+    public void exitInvokes(ActionLanguageParser.InvokesContext ctx) {
+        log.debug(String.format("(Typically=%s) %s INVOKES %s after %s IF %s", typically, previousLastAction, lastAction, lastTime, underConditionFluentList));
         knowledge.addEffectInvokes(typically, previousLastAction, lastAction, lastTime.getTime(), copyOf(underConditionFluentList));
     }
-    
+
     @Override
-    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) { 
-    	log.debug(String.format("(Typically=%s) %s RELEASES %s AFTER %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
-    	knowledge.releases(typically, lastAction, lastFluentsList, lastTime.getTime(), underConditionFluentList);
+    public void exitReleases(ActionLanguageParser.ReleasesContext ctx) {
+        log.debug(String.format("(Typically=%s) %s RELEASES %s AFTER %s IF %s", typically, lastAction, lastFluentsList, lastTime, underConditionFluentList));
+        knowledge.releases(typically, lastAction, lastFluentsList, lastTime.getTime(), underConditionFluentList);
     }
 
     @Override
     public void exitTriggers(ActionLanguageParser.TriggersContext ctx) {
-    	log.debug(String.format("(Typically=%s) %s TRIGGERS %s", typically, lastAction, underConditionFluentList));
+        log.debug(String.format("(Typically=%s) %s TRIGGERS %s", typically, lastAction, underConditionFluentList));
         knowledge.addEffectTriggers(typically, lastAction, copyOf(underConditionFluentList));
     }
-    
+
     @Override
     public void exitOccurs(ActionLanguageParser.OccursContext ctx) {
-    	
+
     }
 
     @Override
     public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
-    	log.debug(String.format("IMPOSSIBLE %s AT %s IF %s", lastAction, lastTime, underConditionFluentList));
-    	knowledge.impossible(lastAction, lastTime.getTime(), underConditionFluentList);
+        log.debug(String.format("IMPOSSIBLE %s AT %s IF %s", lastAction, lastTime, underConditionFluentList));
+        knowledge.impossible(lastAction, lastTime.getTime(), underConditionFluentList);
     }
 
     @Override
-    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) { 
-    	log.debug(String.format("ALWAYS %s", lastFluentsList));
+    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) {
+        log.debug(String.format("ALWAYS %s", lastFluentsList));
         knowledge.addAlways(copyOf(lastFluentsList));
     }
-    
+
     @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
-    	log.debug(String.format("ALWAYS %s ", lastFluent));
-    	//always/ever/typically [Fluent] at 1 when scenarioOne
-    	//lastQueryType, lastFluentsList, lastTime, lastScenarioId
-    	
-    	//engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
-    	Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-    	List<Fluent> fluentList = new ArrayList<Fluent>();
-    	fluentList.addAll(lastFluentsList);
-    	
-    	boolean result;
-    	switch(lastQueryType){
-	    	case ALWAYS:
-	    			result = environment.QueryConditionAllways(fluentList, lastTime.getTime(), scenario);
-	    			log.info("Answer: [" + result + "]");
-	    		break;
-	    	case EVER:
-	    			result = environment.QueryConditionEver(fluentList, lastTime.getTime(), scenario);
-	    			log.info("Answer: [" + result + "]");
-	    		break;
-	    	case GENERALLY:
-	    			environment.QueryConditionTypically(fluentList, lastTime.getTime(), scenario);
-	    		break;
-	    	case NONE:
-	    			
-	    		break;
-    	}
-    	
+        log.debug(String.format("ALWAYS %s ", lastFluent));
+        //always/ever/typically [Fluent] at 1 when scenarioOne
+        //lastQueryType, lastFluentsList, lastTime, lastScenarioId
+
+        //engineManager.conditionAt(lastQueryType, lastFluentsList, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+        Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+        List<Fluent> fluentList = new ArrayList<Fluent>();
+        fluentList.addAll(lastFluentsList);
+
+        boolean result;
+        switch (lastQueryType) {
+            case ALWAYS:
+                result = environment.QueryConditionAllways(fluentList, lastTime.getTime(), scenario);
+                log.info("Answer: [" + result + "]");
+                break;
+            case EVER:
+                result = environment.QueryConditionEver(fluentList, lastTime.getTime(), scenario);
+                log.info("Answer: [" + result + "]");
+                break;
+            case GENERALLY:
+                environment.QueryConditionTypically(fluentList, lastTime.getTime(), scenario);
+                break;
+            case NONE:
+
+                break;
+        }
+
     }
 
     @Override
     public void exitPerformed(ActionLanguageParser.PerformedContext ctx) {
-    	log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
-		//always/ever/typically performed (Janek,action) at 1 when scenarioOne
-		//lastQueryType,lastActorsList,lastTask,lastAction,lastTime,lastScenarioId
+        log.debug(String.format("ALWAYS %s PERFORMED", lastFluent));
+        //always/ever/typically performed (Janek,action) at 1 when scenarioOne
+        //lastQueryType,lastActorsList,lastTask,lastAction,lastTime,lastScenarioId
 
-    	//engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
-    	Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
-    	boolean result;
-    	switch(lastQueryType){
-	    	case ALWAYS:
-	    			result = environment.QueryActionAllwaysr(lastAction, lastTime.getTime(), scenario);
-	    			log.info("Answer: [" + result + "]");
-	    		break;
-	    	case EVER:
-	    			result = environment.QueryActionEver(lastAction, lastTime.getTime(), scenario);
-	    			log.info("Answer: [" + result + "]");
-	    		break;
-	    	case GENERALLY:
-	    			environment.QueryActionTypically(lastAction, lastTime.getTime(), scenario);
-	    		break;
-	    	case NONE:
-	    			
-	    		break;
-		}
-    	
+        //engineManager.performed(lastQueryType, lastAction, lastTime, ctx.scenarioId().IDENTIFIER().getText());
+        Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
+        boolean result;
+        switch (lastQueryType) {
+            case ALWAYS:
+                result = environment.QueryActionAllwaysr(lastAction, lastTime.getTime(), scenario);
+                log.info("Answer: [" + result + "]");
+                break;
+            case EVER:
+                result = environment.QueryActionEver(lastAction, lastTime.getTime(), scenario);
+                log.info("Answer: [" + result + "]");
+                break;
+            case GENERALLY:
+                environment.QueryActionTypically(lastAction, lastTime.getTime(), scenario);
+                break;
+            case NONE:
+
+                break;
+        }
+
     }
 
     @Override
@@ -187,14 +165,14 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         log.debug(String.format("%s INVOLVED %s WHEN %s", lastQueryType, lastActorsList, lastScenarioId));
         Scenario scenario = scenarios.get(ctx.scenarioId().IDENTIFIER().getText());
 
-    	boolean result;
-        switch(lastQueryType){
-	        case ALWAYS:
-	        		environment.QueryInvolvedAllways(lastFluent, 0, scenario);
-	        	break;
-	        case EVER:
-	        		environment.QueryInvolvedEver(lastFluent, 0, scenario);
-	        	break;
+        boolean result;
+        switch (lastQueryType) {
+            case ALWAYS:
+                environment.QueryInvolvedAllways(lastFluent, 0, scenario);
+                break;
+            case EVER:
+                environment.QueryInvolvedEver(lastFluent, 0, scenario);
+                break;
         }
     }
 
@@ -235,21 +213,21 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterActor(ActionLanguageParser.ActorContext ctx) {
         Actor actor = new Actor(ctx.IDENTIFIER().getText());
         lastActor = actor;
-        
-        if(!lastActorsList.contains(actor)){
-        	lastActorsList.add(actor);
+
+        if (!lastActorsList.contains(actor)) {
+            lastActorsList.add(actor);
         }
-        
+
     }
 
     @Override
     public void enterTask(ActionLanguageParser.TaskContext ctx) {
         lastTask = new Task(ctx.IDENTIFIER().getText());
     }
-    
+
     @Override
     public void exitAction(ActionLanguageParser.ActionContext ctx) {
-    	previousLastAction = lastAction;
+        previousLastAction = lastAction;
         lastAction = new Action(lastActor, lastTask);
     }
 
@@ -274,7 +252,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     public void enterEntry(ActionLanguageParser.EntryContext ctx) {
         typically = ctx.TYPICALLY() != null;
     }
-    
+
     @Override
     public void enterTime(ActionLanguageParser.TimeContext ctx) {
         lastTime = new Time(Integer.parseInt(ctx.DecimalConstant().getText()));
@@ -289,12 +267,22 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitScenario(ActionLanguageParser.ScenarioContext ctx) {
         String name = ctx.IDENTIFIER().getText();
-        List<ScenarioACSPart> acs = events.stream().map(
-                e -> new ScenarioACSPart(e.getAction(), e.getTime())
-        ).collect(Collectors.toList());
-        List<ScenarioOBSPart> obs = observations.asMap().entrySet().stream().map(
-                e -> new ScenarioOBSPart(copyOf(e.getValue()), e.getKey().getTime())
-        ).collect(Collectors.toList());
+        List<ScenarioACSPart> acs = Lists.transform(copyOf(events), new Function<Event, ScenarioACSPart>() {
+            @Override
+            public ScenarioACSPart apply(Event e) {
+                return new ScenarioACSPart(e.getAction(), e.getTime());
+            }
+        });
+
+        List<ScenarioOBSPart> obs = Lists.transform(
+                copyOf(observations.asMap().entrySet()),
+                new Function<Map.Entry<Time, Collection<Fluent>>, ScenarioOBSPart>() {
+                    @Override
+                    public ScenarioOBSPart apply(Map.Entry<Time, Collection<Fluent>> e) {
+                        return new ScenarioOBSPart(copyOf(e.getValue()), e.getKey().getTime());
+                    }
+                }
+        );
 
         Scenario scenario = new Scenario(acs, obs);
         log.debug("Create scenario: ", scenario);
@@ -313,16 +301,20 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
             observations.put(lastTime, fluent);
         }
     }
-    
+
     @Override
     public void visitErrorNode(ErrorNode node) {
         log.error("Visit error node: " + node.getText());
     }
 
-	@Override
-	public void exitScenarioId(ScenarioIdContext ctx) {
-		super.exitScenarioId(ctx);
-		lastScenarioId = ctx.IDENTIFIER().getText();
-	}
-    
+    @Override
+    public void exitScenarioId(ScenarioIdContext ctx) {
+        super.exitScenarioId(ctx);
+        lastScenarioId = ctx.IDENTIFIER().getText();
+    }
+
+    public enum QueryType {
+        GENERALLY, ALWAYS, EVER, NONE
+    }
+
 }

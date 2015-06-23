@@ -103,8 +103,8 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         then:
         knowledge._Initially.containsAll(fluents)
         where:
-        instruction           | fluents
-        'initially [hasBook]' | [fluent('hasBook')]
+        instruction                  | fluents
+        'initially [hasBook]'        | [fluent('hasBook')]
         'initially [hasBook,-empty]' | [fluent('hasBook'), fluent('empty').not()]
     }
 
@@ -115,9 +115,9 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         then:
         fluents == knowledge._AlwaysList
         where:
-        instruction           | fluents
-        'always [hasBook]' | [[fluent('hasBook')]]
-        'always [hasBook,-empty]' | [[fluent('hasBook'), fluent('empty').not()]]
+        instruction               | fluents
+        'always [hasBook]'        | [[fluent('hasBook')]]
+        'always [hasBook,-empty]' | [[fluent('empty').not(),fluent('hasBook')]]
     }
 
     def "should create empty scenario"() {
@@ -147,10 +147,10 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         parseTreeListener.scenarios.size() == 1
         parseTreeListener.scenarios['scenario'].ACS.size() == 3
         parseTreeListener.scenarios['scenario'].OBS == [
-                new ScenarioOBSPart([fluent('hasCard').not(), fluent('inHostel')], 4),
+                new ScenarioOBSPart([fluent('inHostel'), fluent('hasCard').not()], 4),
                 new ScenarioOBSPart([fluent('hasCard')], 5),
         ]
-        parseTreeListener.scenarios['scenario'].ACS  == [
+        parseTreeListener.scenarios['scenario'].ACS == [
                 new ScenarioACSPart(action('Janek', 'takesCard'), 3),
                 new ScenarioACSPart(action('Janek', 'locksTheDoor'), 4),
                 new ScenarioACSPart(action('Janek', 'comeback'), 10),

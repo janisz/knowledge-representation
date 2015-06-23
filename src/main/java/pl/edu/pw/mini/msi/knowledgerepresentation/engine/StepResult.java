@@ -1,6 +1,5 @@
-
 package pl.edu.pw.mini.msi.knowledgerepresentation.engine;
-import pl.edu.pw.mini.msi.knowledgerepresentation.data.*;
+
 /**
  * Created by rwyka on 5/11/15.
  */
@@ -11,30 +10,30 @@ public class StepResult {
     public Engine engineR;
 
 
-    public StepResult(Engine e){
+    public StepResult(Engine e) {
         engineL = engineR = e;
     }
 
-    public StepResult(Engine nL, Engine nR){
+    public StepResult(Engine nL, Engine nR) {
         fork = true;
         engineL = nL;
         engineR = nR;
     }
 
-    public StepResult(Engine e, boolean endflag){
+    public StepResult(Engine e, boolean endflag) {
         engineL = engineR = e;
         end = endflag;
     }
 
-    public static StepResult Normal(Engine e){
-        return  new StepResult(e);
+    public static StepResult Normal(Engine e) {
+        return new StepResult(e);
     }
 
-    public static StepResult Fork(Engine nL, Engine nR){
+    public static StepResult Fork(Engine nL, Engine nR) {
         return new StepResult(nL, nR);
     }
 
-    public static StepResult End(Engine e){
+    public static StepResult End(Engine e) {
         return new StepResult(e, true);
     }
 }

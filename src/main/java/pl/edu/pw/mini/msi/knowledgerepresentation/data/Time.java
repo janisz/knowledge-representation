@@ -28,6 +28,6 @@ public class Time {
     }
 
     public String toString() {
-       return "Time(time=" + this.time + ")";
+        return "Time(time=" + this.time + ")";
     }
 }
