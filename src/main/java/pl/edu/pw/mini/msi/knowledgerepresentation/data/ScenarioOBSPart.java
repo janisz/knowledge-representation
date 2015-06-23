@@ -1,12 +1,13 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.data;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
  * Created by rwyka on 5/10/15.
  */
 public class ScenarioOBSPart {
-    public final List<Fluent> _Fluents;
+    public final Collection<Fluent> _Fluents;
     public final int _Time;
 
     public ScenarioOBSPart(List<Fluent> fluents, int time) {

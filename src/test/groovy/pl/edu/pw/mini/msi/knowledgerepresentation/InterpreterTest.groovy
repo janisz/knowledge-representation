@@ -113,7 +113,7 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         when:
         interpreter.eval(instruction)
         then:
-        fluents == knowledge._AlwaysList
+        fluents.containsAll(knowledge._AlwaysList)
         where:
         instruction               | fluents
         'always [hasBook]'        | [[fluent('hasBook')]]
@@ -146,10 +146,8 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         then:
         parseTreeListener.scenarios.size() == 1
         parseTreeListener.scenarios['scenario'].ACS.size() == 3
-        parseTreeListener.scenarios['scenario'].OBS == [
-                new ScenarioOBSPart([fluent('inHostel'), fluent('hasCard').not()], 4),
-                new ScenarioOBSPart([fluent('hasCard')], 5),
-        ]
+        parseTreeListener.scenarios['scenario'].OBS[0]._Fluents as Set == [fluent('inHostel'), fluent('hasCard').not()] as Set
+        parseTreeListener.scenarios['scenario'].OBS[1] == new ScenarioOBSPart([fluent('hasCard')], 5)
         parseTreeListener.scenarios['scenario'].ACS == [
                 new ScenarioACSPart(action('Janek', 'takesCard'), 3),
                 new ScenarioACSPart(action('Janek', 'locksTheDoor'), 4),
