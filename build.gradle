@@ -18,7 +18,7 @@ buildscript {
 }
 
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 version = '1.0'
 
 mainClassName = "pl.edu.pw.mini.msi.knowledgerepresentation.Main"
@@ -48,7 +48,7 @@ generateGrammarSource {
 idea {
     module {
         generatedSourceDirs += file("$buildDir/generated-src/antlr/main/")
-        jdkName = '1.8'
+        jdkName = '1.7'
     }
 }
 
