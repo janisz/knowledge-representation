@@ -17,8 +17,6 @@ buildscript {
     }
 }
 
-
-sourceCompatibility = 1.7
 version = '1.0'
 
 mainClassName = "pl.edu.pw.mini.msi.knowledgerepresentation.Main"

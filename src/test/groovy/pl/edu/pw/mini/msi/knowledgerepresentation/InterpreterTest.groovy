@@ -113,7 +113,7 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         when:
         interpreter.eval(instruction)
         then:
-        fluents.containsAll(knowledge._AlwaysList)
+        fluents[0].containsAll(knowledge._AlwaysList[0])
         where:
         instruction               | fluents
         'always [hasBook]'        | [[fluent('hasBook')]]
