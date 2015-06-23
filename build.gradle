@@ -2,7 +2,6 @@ apply plugin: 'java'
 apply plugin: 'groovy'
 apply plugin: 'antlr'
 apply plugin: 'idea'
-apply plugin: 'application'
 apply plugin: 'jacoco'
 apply plugin: 'com.github.kt3k.coveralls'
 
@@ -20,7 +19,7 @@ buildscript {
 
 version = '1.0'
 
-mainClassName = "pl.edu.pw.mini.msi.knowledgerepresentation.Main"
+mainClassName = "pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui"
 
 run {
     standardInput = System.in
@@ -73,7 +72,7 @@ jacocoTestReport {
 javafx {
     appID 'KnowledgeRepresentation'
     appName 'KnowledgeRepresentation'
-    mainClass ' pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui'
+    mainClass 'pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui'
 
     embedLauncher = true
 

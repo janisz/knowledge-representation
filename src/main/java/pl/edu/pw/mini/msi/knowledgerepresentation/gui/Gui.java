@@ -22,11 +22,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 
-/**
- * Created on: 20.03.2012
- *
- * @author Sebastian Damm
- */
 public class Gui extends Application {
     private static final Logger log = LoggerFactory.getLogger(Gui.class);
     private FileChooser fileChooser;
