@@ -15,8 +15,8 @@ public class EngineH {
     public List<Map<String, Fluent>> Hspecial;
 
     public EngineH(int t) {
-        H = new ArrayList<>();
-        Hspecial = new ArrayList<>();
+        H = new ArrayList<Map<String, Fluent>>();
+        Hspecial = new ArrayList<Map<String, Fluent>>();
         for (int i = 0; i < t; i++) {
             H.add(new HashMap<String, Fluent>());
         }
@@ -40,7 +40,7 @@ public class EngineH {
     }
 
     public void SetAlways(List<Fluent> fl) {
-        Map<String, Fluent> hm = new HashMap<>();
+        Map<String, Fluent> hm = new HashMap<String, Fluent>();
         for (Fluent f : fl) {
             hm.put(f.getName(), f);
         }
