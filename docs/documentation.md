@@ -10,6 +10,7 @@ TBD @tom8a
 ## Praca z programem
 
 Okno programu składa się z
+
 1. Pola tekstowego (podgądu) definicji
 2. Pola tekstowego zapytań
 3. Przycisku "Open" który otwiera menadżera plików w celu wybrania definicji do załadowania
