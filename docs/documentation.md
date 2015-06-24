@@ -5,7 +5,7 @@
 
 ## Instalacja
 
-TBD
+TBD @tom8a
 
 ## Praca z programem
 
