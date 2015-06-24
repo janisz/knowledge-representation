@@ -22,8 +22,8 @@ Okno programu składa się z
 
 ### Ładowanie definicji
 
-Aby załadować definicje należy klinkąc przycisk "Open" i wybrać pożądany plik.
-Plik zostanie załadowwany do pamięci i wyświtlony w polu "Definitions" tylko
+Aby załadować definicje należy klinkąć przycisk "Open" i wybrać pożądany plik.
+Plik zostanie załadowwany do pamięci i wyświetlony w polu "Definitions" tylko
 do odczytu.
 
 ### Wpisywanie zapytań
@@ -35,15 +35,15 @@ Zapytania zgodne z gramatyką ustalonego języka akcji należy wpisywać w polu
 
 W celu otrzymania odpowiedzi na zapytania należy kliknąć przycisk "Compute".
 Po zakończeniu obliczeń pojawi się Okno komunikatów w listą wyników `true/false/null`
-dla odpowiednio prawdy, fałszu i zapytania obecnie nie obsługiwanego.
+dla odpowiednio prawdy, fałszu i zapytania obecnie nieobsługiwanego.
 
 ![Alt Text](graphics/compute_result.png)
 
 
 ### Błędy
 
-Jeśli wpisane zapytania lub załadowany plik zawierają błędy to po kliknięci
-przyciski "Compute" natychmiast pojawi się Okno komunikatów z informacą o błędzie
+Jeśli wpisane zapytania, lub załadowany plik zawierają błędy to po kliknięciu
+przycisku "Compute" natychmiast pojawi się Okno komunikatów z informacją o błędzie
 oraz o najbardziej prawdopodobnym miejscu jego wystąpienia.
 
 ![Alt Text](graphics/error_missing_coma.png)
@@ -53,10 +53,10 @@ oraz o najbardziej prawdopodobnym miejscu jego wystąpienia.
 ## Syntaktyka języka akcji
 
 Gramatyka języka została opracowana w taki sposób aby wyelimionować
-znaczenie białych znaków. Ponadto aby ułatwić czytelność kodu
+znaczenie białych znaków. Ponadto, aby ułatwić czytelność kodu
 wszystkie sekcje są otoczone specjalnymi znakami.
 
-1. Listy fluentów zawsze są otoczone przez  nawisay kwadratowe (`[]`)
+1. Listy fluentów zawsze są otoczone przez nawiasy kwadratowe (`[]`)
 ```javascript
 initially [dogHungry, -dogDead]
 ```
