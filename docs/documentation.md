@@ -11,10 +11,10 @@ TBD @tom8a
 
 Okno programu składa się z
 
-1. Pola tekstowego (podgądu) definicji
+1. Pola tekstowego (podglądu) definicji
 2. Pola tekstowego zapytań
-3. Przycisku "Open" który otwiera menadżera plików w celu wybrania definicji do załadowania
-4. Przyciski "Compute" który uruchamia obliczenia
+3. Przycisku "Open", który otwiera menadżera plików w celu wybrania definicji do załadowania
+4. Przycisku "Compute", który uruchamia obliczenia
 5. Okna komunikatów
 
 ![Alt Text](graphics/overview.png)
@@ -23,7 +23,7 @@ Okno programu składa się z
 ### Ładowanie definicji
 
 Aby załadować definicje należy klinkąć przycisk "Open" i wybrać pożądany plik.
-Plik zostanie załadowwany do pamięci i wyświetlony w polu "Definitions" tylko
+Plik zostanie załadowany do pamięci i wyświetlony w polu "Definitions" tylko
 do odczytu.
 
 ### Wpisywanie zapytań
@@ -42,7 +42,7 @@ dla odpowiednio prawdy, fałszu i zapytania obecnie nieobsługiwanego.
 
 ### Błędy
 
-Jeśli wpisane zapytania, lub załadowany plik zawierają błędy to po kliknięciu
+Jeśli wpisane zapytania, lub załadowany plik zawierają błędy, to po kliknięciu
 przycisku "Compute" natychmiast pojawi się Okno komunikatów z informacją o błędzie
 oraz o najbardziej prawdopodobnym miejscu jego wystąpienia.
 
@@ -52,7 +52,7 @@ oraz o najbardziej prawdopodobnym miejscu jego wystąpienia.
 
 ## Syntaktyka języka akcji
 
-Gramatyka języka została opracowana w taki sposób aby wyelimionować
+Gramatyka języka została opracowana w taki sposób aby wyeliminować
 znaczenie białych znaków. Ponadto, aby ułatwić czytelność kodu
 wszystkie sekcje są otoczone specjalnymi znakami.
 
