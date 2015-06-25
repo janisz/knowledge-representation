@@ -3,9 +3,13 @@
 ![Alt Text](graphics/intro.png)
 
 
-## Instalacja
+## Instalacja i uruchomienie
 
-TBD @tom8a
+Aby uruchomić program należy dwa razy kliknąć w plik „program01/KnowledgeRepresentation.exe” (są dwa pliki o tej nazwie – plik aplikacji i plik ikony, należy wybrać plik aplikacji).
+
+Jeśli program się nie uruchomi należy:  
+1. Dwa razy kliknąć w „program02/jre-8u45-windows-i586.exe” i postępować według instrukcji instalatora najnowszej wersji Javy  
+2. Po zakończeniu fazy z punktu 1. należy dwa razy kliknąć w „program02/knowledge representation/knowledge-representation-1.0.jar”
 
 ## Praca z programem
 
