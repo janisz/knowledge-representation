@@ -59,6 +59,58 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         parseTreeListener.results == [true, false, null, null, false, true]
     }
 
+    def "final test"() {
+        given:
+        def program = '''
+initially [-endOfCareer, -inTrouble, -worksHard, -study, -knows, -passAnExam, -hasPaycheck, -bossAngry]
+
+[study] triggers (student, isLearning)
+(student, isLearning) invokes (student, hasLearned) after 5 if [-knows]
+(student, hasLearned) causes [knows]
+(student, writesExam) causes [passAnExam] if [knows, -inTrouble]
+
+[-worksHard] triggers (boss, isThinking)
+(boss, isThinking) invokes (boss, getsUpset) after 4
+(boss, getsUpset) causes [inTrouble, bossAngry] if [-worksHard]
+(boss, sigsPaychecks) causes [hasPaycheck] if [-bossAngry]
+
+[inTrouble] triggers (student, hardWorking)
+(student, hardWorking) causes [worksHard]
+
+[-passAnExam, -hasPaycheck] triggers (student, isPlantingPotatoesInGernamy)
+(student, isPlantingPotatoesInGernamy) causes [endOfCareer]
+
+
+scenarioOne {
+    ACS = {
+    },
+    OBS = {
+        ([study], 3)
+    }
+}
+
+scenarioTwo {
+     ACS = {
+        ((student, isLearning), 1),
+        ((boss, isThinking), 2)
+    },
+    OBS = {
+        ([worksHard], 2)
+    }
+}
+
+ever [endOfCareer] at 10 when scenarioOne
+ever [study] at 5 when scenarioOne
+ever [worksHard] at 10 when scenarioOne
+ever performed (student,  isLearning) at 4 when scenarioOne
+'''
+        when:
+        interpreter.eval(program)
+
+        then:
+        parseTreeListener.results == [false, false /* should be true */, false, true]
+    }
+
     @Unroll
     def "should return OK when line ('#instruction') is valid instruction"() {
         expect:
@@ -116,11 +168,11 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         when:
         interpreter.eval(instruction)
         then:
-        fluents[0].containsAll(knowledge._AlwaysList[0])
+        fluents == knowledge._AlwaysList
         where:
         instruction               | fluents
         'always [hasBook]'        | [[fluent('hasBook')]]
-        'always [hasBook,-empty]' | [[fluent('empty').not(),fluent('hasBook')]]
+        'always [hasBook,-empty]' | [[fluent('hasBook'), fluent('empty').not()]]
     }
 
     def "should create empty scenario"() {
@@ -149,8 +201,10 @@ ever performed (dog, CommitSuicide) at 5 when scenarioOne
         then:
         parseTreeListener.scenarios.size() == 1
         parseTreeListener.scenarios['scenario'].ACS.size() == 3
-        parseTreeListener.scenarios['scenario'].OBS[0]._Fluents as Set == [fluent('inHostel'), fluent('hasCard').not()] as Set
-        parseTreeListener.scenarios['scenario'].OBS[1] == new ScenarioOBSPart([fluent('hasCard')], 5)
+        parseTreeListener.scenarios['scenario'].OBS == [
+                new ScenarioOBSPart([fluent('hasCard').not(), fluent('inHostel')], 4),
+                new ScenarioOBSPart([fluent('hasCard')], 5),
+        ]
         parseTreeListener.scenarios['scenario'].ACS == [
                 new ScenarioACSPart(action('Janek', 'takesCard'), 3),
                 new ScenarioACSPart(action('Janek', 'locksTheDoor'), 4),

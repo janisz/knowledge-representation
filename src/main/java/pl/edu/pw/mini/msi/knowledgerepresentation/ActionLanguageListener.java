@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import com.google.common.base.Function;
 import com.google.common.collect.*;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 
@@ -276,22 +276,12 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override
     public void exitScenario(ActionLanguageParser.ScenarioContext ctx) {
         String name = ctx.IDENTIFIER().getText();
-        List<ScenarioACSPart> acs = Lists.transform(copyOf(events), new Function<Event, ScenarioACSPart>() {
-            @Override
-            public ScenarioACSPart apply(Event e) {
-                return new ScenarioACSPart(e.getAction(), e.getTime());
-            }
-        });
-
-        List<ScenarioOBSPart> obs = Lists.transform(
-                copyOf(observations.asMap().entrySet()),
-                new Function<Map.Entry<Time, Collection<Fluent>>, ScenarioOBSPart>() {
-                    @Override
-                    public ScenarioOBSPart apply(Map.Entry<Time, Collection<Fluent>> e) {
-                        return new ScenarioOBSPart(copyOf(e.getValue()), e.getKey().getTime());
-                    }
-                }
-        );
+        List<ScenarioACSPart> acs = events.stream().map(
+                e -> new ScenarioACSPart(e.getAction(), e.getTime())
+        ).collect(Collectors.toList());
+        List<ScenarioOBSPart> obs = observations.asMap().entrySet().stream().map(
+                e -> new ScenarioOBSPart(copyOf(e.getValue()), e.getKey().getTime())
+        ).collect(Collectors.toList());
 
         Scenario scenario = new Scenario(acs, obs);
         log.debug("Create scenario: ", scenario);
