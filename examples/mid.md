@@ -1,4 +1,4 @@
-1. Kod programu
+### Kod programu
 ```python
 initially night or day
 typically GoToBed causes sleep if night
@@ -16,15 +16,15 @@ Sunrise causes -night if night
 
 
 scenario = {
-  night, 5
+  night, 1
 
-  Wakeup at 13
+  Wakeup at 10
 }
 
 always/ever/typically performed GoToBed at 1 when scenario
 always/ever/typically night at 1 when scenario
 ```
-2. Zamiana na formę predykatów
+### Zamiana na formę predykatów
 ```python
 (a, t_a) in E and (b, t_b) in E => t_a ≠ t_b or a = b
 
@@ -41,20 +41,19 @@ always/ever/typically night at 1 when scenario
 (night, t_8) in H and (Sunrise, t_8) in E => (day, t_8+1) in H
 (night, t_9) in H and (Sunrise, t_9) in E => (night, t_9+1) not in H
 
-(night, 5) in H
-(Wakeup, 13) in E
+(night, 1) in H
+(Wakeup, 10) in E
 
 T_inf = 10
 
 
 ```
-3. Musimy rozmieścić w czasie wszystkie fluenty i akcje
+### Musimy rozmieścić w czasie wszystkie fluenty i akcje
 
     * Fluenty
       - night
       - day
       - sleep
-      - night
       - tired
       - hungry
       - headache
@@ -70,12 +69,49 @@ Zakładając, że horyzont czasowy wynosi 10 chwil to mamy 10 × 2^8 = 2560 komb
 zbioru H, oraz 10 × 4 = 40 możliwości zbioru E i tele samo zbioru N.
 W sumie daje nam to 2560 × 40 × 40 = 4096000 opcji do przejżenia.
 
-4. Odrzucamy niepoprawne scenariusze
+### Odrzucamy niepoprawne scenariusze
 
 Na przykład scenariusz w którym `(night, 5) not in H` nie jest poprawny i powinien
 zostać odrzucony.
 
-5. Drukujemy odpowiedzi na pytania
+Jeden ze scenariuszy może wyglądać tak:
+
+- H
+
+|T\F|night|day|sleep|tired|hungry|headache|hangOver|
+----|-----|---|-----|-----|------|--------|---------
+|0  |0    |1  |0    |1    |0     |1       |0       |
+|1  |1    |0  |0    |1    |0     |1       |0       |
+|2  |1    |0  |0    |1    |0     |1       |0       |
+|3  |1    |0  |0    |1    |0     |1       |0       |
+|4  |1    |0  |0    |1    |0     |1       |0       |
+|5  |1    |0  |0    |1    |0     |1       |0       |
+|6  |1    |0  |1    |1    |0     |1       |0       |
+|7  |1    |0  |1    |1    |0     |1       |0       |
+|8  |1    |0  |1    |1    |0     |1       |0       |
+|9  |1    |0  |1    |1    |0     |1       |0       |
+|10 |1    |0  |1    |1    |0     |1       |0       |
+|11 |0    |1  |0    |1    |0     |1       |0       |
+
+- E
+
+|T\F|GoToBed|Wakeup|Eat|NOP|
+----|-------|------|---|----
+|0  |1      |0     |0  |0  |
+|1  |0      |0     |0  |1  |
+|2  |0      |0     |0  |1  |
+|3  |0      |0     |0  |1  |
+|4  |0      |0     |0  |1  |
+|5  |0      |0     |0  |1  |
+|6  |0      |0     |0  |1  |
+|7  |0      |0     |0  |1  |
+|8  |0      |0     |0  |1  |
+|9  |0      |0     |0  |1  |
+|10 |0      |1     |0  |0  |
+|11 |0      |0     |0  |1  |
+
+
+### Drukujemy odpowiedzi na pytania
 
 Mamy już pełen schemat wykonania dla wszystkich możliwych scenariuszy więc możemy
 łatwo odpowiedzieć na pytania.
