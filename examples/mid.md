@@ -50,24 +50,43 @@ T_inf = 10
 ```
 ### Musimy rozmieścić w czasie wszystkie fluenty i akcje
 
-    * Fluenty
-      - night
-      - day
-      - sleep
-      - tired
-      - hungry
-      - headache
-      - hangOver
-    * Akcje
-      - GoToBed
-      - Wakeup
-      - Eat
-      - [NOP](https://en.wikipedia.org/wiki/NOP)
+  * Fluenty
+    - night
+    - day
+    - sleep
+    - tired
+    - hungry
+    - headache
+    - hangOver
+  * Akcje
+    - GoToBed
+    - Wakeup
+    - Eat
+    - [NOP](https://en.wikipedia.org/wiki/NOP)
 
 W jednej chwili może być tylko jedna akcja lecz wiele fluentów.
 Zakładając, że horyzont czasowy wynosi 10 chwil to mamy 10 × 2^8 = 2560 kombinacji
 zbioru H, oraz 10 × 4 = 40 możliwości zbioru E i tele samo zbioru N.
 W sumie daje nam to 2560 × 40 × 40 = 4096000 opcji do przejżenia.
+
+### Wyznaczamy zbiór okluzji
+
+*Dla uproszczenia nie przejmujemy się czasem*
+
+```python
+O(GoTOBed) = { sleep, nap }
+O(WakeUp) = { tired }
+O(Eat) = { hungry }
+O(Sunrise) = { day, night }
+```
+
+Zbiór okluzji jest nam potrzebny aby zredukować liczbę sprawdzanych przypadków. 
+Generujemy wszystkie możliwe wersje przebiegu akcji (jest ich zdecydowanie mniej niż możliwych 
+kombinacji fluentów), a następnie dla każdego przypadku generujemy możliwe dla niego 
+kombinacje fluentów. Dzięki temu jeśli w czasie `t` ma zajść akcja `a` to sprawdzimy
+tylko te przypadki w których coś się może zmienić, zamiast wszystkich. Np. w chwili 4,
+wykonana została akcja `GoToBed` to sprawdzimy tylko zmianę `sleep` i `nap` czyli w sumie
+4 przypadki a nie 256.
 
 ### Odrzucamy niepoprawne scenariusze
 
