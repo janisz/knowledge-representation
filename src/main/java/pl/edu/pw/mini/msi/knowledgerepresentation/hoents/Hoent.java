@@ -32,18 +32,18 @@ public class Hoent {
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
 
-        String fluentValuesQuestionMark = "";
+        StringBuilder fluentValuesQuestionMark = new StringBuilder("");
         for (short fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            fluentValuesQuestionMark = fluentValuesQuestionMark.concat("?");
+            fluentValuesQuestionMark = fluentValuesQuestionMark.append("?");
         }
-        String fluentValuesZero = "";
+        StringBuilder fluentValuesZero = new StringBuilder("");
         for (short fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            fluentValuesZero = fluentValuesZero.concat("?");
+            fluentValuesZero = fluentValuesZero.append("?");
         }
 
         for (short timeIndex = 0; timeIndex < tMax; timeIndex++) {
-            sysElemH.add( new String(fluentValuesQuestionMark) );
-            sysElemO.add( new String(fluentValuesZero) );
+            sysElemH.add( fluentValuesQuestionMark.toString() );
+            sysElemO.add( fluentValuesZero.toString() );
             sysElemE.add( new SysElemEAtTimeUnit() );
             sysElemN.add( false );
         }
@@ -151,5 +151,44 @@ public class Hoent {
         }
         this.sysElemO.remove(timeID);
         this.sysElemO.add(timeID, resultSB.toString());
+    }
+
+    public boolean eCanInsertActionAtTime(byte actionID, byte timeID) {
+        if (this.sysElemE.get(timeID).occuringAction == actionID) {
+            return true;
+        }
+        else if (ArrayListOfByteUtils.contains(this.sysElemE.get(timeID).disallowedActions, actionID) == true) {
+            return false;
+        }
+        else if (this.sysElemE.get(timeID).occuringAction > -1 && this.sysElemE.get(timeID).occuringAction != actionID) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    /**
+     * Before adding check if it is possible with eCanInsertActionAtTime(...).
+     * @param actionID
+     * @param timeID
+     */
+    public void eAddAction(byte actionID, byte timeID) {
+        this.sysElemE.get(timeID).occuringAction = actionID;
+    }
+
+    public void eAddNegatedActionAtTime(byte actionID, byte timeID) {
+        ArrayList<Byte> disallowedActionsAL = this.sysElemE.get(timeID).disallowedActions;
+        if (ArrayListOfByteUtils.contains(disallowedActionsAL, actionID) ) {
+            return;
+        }
+        else {
+            ArrayListOfByteUtils.insertIntoArrayList(disallowedActionsAL, actionID);
+        }
+    }
+
+    public void nSetToTrue(byte timeID) {
+        this.sysElemN.remove(timeID);
+        this.sysElemN.add(timeID, new Boolean(true));
     }
 }

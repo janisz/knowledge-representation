@@ -63,7 +63,7 @@ public class Hoents {
             }
         }
         //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
-        Boolean hasChanged = true;
+        //Boolean hasChanged = true;
         for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
@@ -73,26 +73,49 @@ public class Hoents {
             }
         }
 
-        for (short time = 0; time < this.tMax; time++) {
-            for (Sentence sentence : certainSentences) {
-                if ( sentence instanceof AtSentence) {
-
+        isCurrentlyProcessingTypicalSentences = true;
+        ArrayList<Sentence> typicallySentences = getSentences(isCurrentlyProcessingTypicalSentences);
+        //3. proceed occursAt "typically" sentences=================================================================
+        for (Sentence sentence : typicallySentences) {
+            if ( (sentence instanceof AtSentence)
+                    || (sentence instanceof OccursAtSentence) ){
+                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1);
+            }
+        }
+        //4. proceed "typically" sentences other than occursAtSentence=======================================
+        //Boolean hasChanged = true;
+        for (byte timeID = 0; timeID < tMax; timeID++) {
+            for (Sentence sentence : typicallySentences) {
+                if ((sentence instanceof AtSentence) == false
+                        && (sentence instanceof OccursAtSentence) == false) {
+                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID);
                 }
             }
         }
 
-        isCurrentlyProcessingTypicalSentences = true;
+
 
     }
 
+    /**
+     * FAPR96.pdf site 8 ABOVE Definition 2
+     */
     private void calculateOMinimalStructures() {
 
     }
 
+    /**
+     * Fluents that changed are in the set O(A,t)
+     * FAPR96.pdf site 8 Definition 2
+     */
     private void calculateModelsOfTypeOne() {
 
     }
 
+    /**
+     * Maximization of typicalities.
+     * FAPR96.pdf site 9 Definition 3
+     */
     private void calculateModelsOfTypeTwo() {
 
     }

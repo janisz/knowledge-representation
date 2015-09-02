@@ -21,7 +21,7 @@ public class Fluent {
 
     @Override
     public String toString() {
-        return fluent;
+        return this.fluent;
     }
 
 }

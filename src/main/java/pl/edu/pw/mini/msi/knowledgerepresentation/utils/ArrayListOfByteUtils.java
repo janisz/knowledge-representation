@@ -30,5 +30,6 @@ public class ArrayListOfByteUtils {
             }
         }
         return false;
+        //TODO TOMEKL optimize, because list is sorted
     }
 }

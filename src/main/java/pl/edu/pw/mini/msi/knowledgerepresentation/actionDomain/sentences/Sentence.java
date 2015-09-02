@@ -69,13 +69,13 @@ public class Sentence {
 
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
             throws Exception {
-        return null; //empty, should be overriden
-        //throw new Exception("Sentence.applyCertainSentence(...) not overridden.");
+        //return null; //empty, should be overriden
+        throw new Exception("Sentence.applyCertainSentence(...) not overridden.");
     }
 
-    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount)
+    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
             throws Exception {
-        return null; //empty, should be overriden
-        //throw new Exception("Sentence.applyTypicalSentence(...) not overridden.");
+        //return null; //empty, should be overriden
+        throw new Exception("Sentence.applyTypicalSentence(...) not overridden.");
     }
 }

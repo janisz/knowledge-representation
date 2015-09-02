@@ -14,14 +14,13 @@ public class Action {
     public byte actionID = -1;
 
     public void fillFluentsIDs(ArrayList<String> actionsMapping) {
-        String actionString = "(" + actor + "," + "task" + ")";
+        String actionString = this.toString();
         actionID = ArrayListOfStringUtils.getIndexOfString(actionsMapping, actionString);
     }
 
     @Override
     public String toString() {
-        return "(" + actor + "," + task + ")";
+        return "(" + actor.toString() + "," + task.toString() + ")";
     }
-
 
 }

@@ -58,8 +58,9 @@ public class InvokesSentence extends Sentence {
                 "after " + time.toString() + " if [" + StringUtils.TSIN(conditionFormula) + "]]";
     }
 
-    /*public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
-            throws Exception {
+    @Override
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+            throws Exception{
         //A invokes B after t if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
@@ -71,15 +72,14 @@ public class InvokesSentence extends Sentence {
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
+
+                newStructures.add(structure.copy()); //TODO TOMEKL important
+
+                if (structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
+                    continue;
+                }
+
                 for (String posEvaluate : posEvaluates) {
-                    boolean leftConditions = true;
-
-                    leftConditions = leftConditions && structure.eIsActionAtTime(this.action.actionID, timeID);
-                    if (leftConditions == false) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
-
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
                         //newStructures.add(structure.copy());
@@ -94,50 +94,21 @@ public class InvokesSentence extends Sentence {
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
-                    //resultCondition
-                    boolean isAtLeastOneSameResultingStructure = false;
-                    boolean isAtLeastOneResultingStructure = false;
-                    ArrayList<ArrayList<String>> posAndNegEvaluatesOfResultCondition =
-                            FormulaUtils.getPositiveAndNegativeEvaluates(this.causesFormula, fluentsCount);
-                    ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
-                    for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
-                        boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition,
-                                (byte) (timeID + 1));
-                        if (hCompatibilityOfResCond == false) {
-                            continue;
-                        }
-                        String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
-                                (byte) (timeID + 1));
-                        byte zerosAndOnesCounterOfResultCondition = StringUtils.countZerosAndOnes(newEvaluatesOfResultCondition);
-                        if (zerosAndOnesCounterOfResultCondition == 0) {
-                            if (isAtLeastOneSameResultingStructure == false) {
-                                Hoent newStructureOfResultCondition = newStructure.copy();
-                                newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
-                                newStructures.add(newStructureOfResultCondition);
-                            }
-                            isAtLeastOneSameResultingStructure = true;
-                            isAtLeastOneResultingStructure = true;
-                            continue;
-                        }
-                        Hoent newStructureOfResultCondition = newStructure.copy();
-                        newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                        newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
-                        newStructures.add(newStructureOfResultCondition);
-                        isAtLeastOneResultingStructure = true;
+                    if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
+                        == false) {
+                        //continue; //TODO TOMEKL throw error information?
+                        throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
                     }
-                    //if (isAtLeastOneResultingStructure == false) {
-                    //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");
-                    //}
+                    newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
 
-                    //newStructures.add(newStructure);
+                    newStructures.add(newStructure);
                     //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
                 }
-                newStructures.add(structure.copy());
             }
         }
         else {
             //empty if part=================================================================================================
-            //A causes a if p
+            //A invokes B after t if p
 
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
@@ -145,56 +116,111 @@ public class InvokesSentence extends Sentence {
 
                 boolean leftConditions = true;
 
-                leftConditions = leftConditions && structure.eIsActionAtTime(this.action.actionID, timeID);
-                if (leftConditions == false) {
-                    //newStructures.add(structure.copy());
+                if(structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
+                    newStructures.add(structure.copy());
                     continue;
                 }
 
                 Hoent newStructure = structure.copy();
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
-                //resultCondition
-                boolean isAtLeastOneSameResultingStructure = false;
-                boolean isAtLeastOneResultingStructure = false;
-                ArrayList<ArrayList<String>> posAndNegEvaluatesOfResultCondition =
-                        FormulaUtils.getPositiveAndNegativeEvaluates(this.causesFormula, fluentsCount);
-                ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
-                for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
-                    boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition, (byte) (timeID + 1));
-                    if (hCompatibilityOfResCond == false) {
-                        continue;
-                    }
-                    String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
-                            (byte) (timeID + 1));
-                    byte zerosAndOnesCounterOfResultCondition = StringUtils.countZerosAndOnes(newEvaluatesOfResultCondition);
-                    if (zerosAndOnesCounterOfResultCondition == 0) {
-                        if (isAtLeastOneSameResultingStructure == false) {
-                            Hoent newStructureOfResultCondition = newStructure.copy();
-                            newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
-                            newStructures.add(newStructureOfResultCondition);
-                        }
-                        isAtLeastOneSameResultingStructure = true;
-                        isAtLeastOneResultingStructure = true;
-                        continue;
-                    }
-                    Hoent newStructureOfResultCondition = newStructure.copy();
-                    newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                    newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
-                    newStructures.add(newStructureOfResultCondition);
-                    isAtLeastOneResultingStructure = true;
+                if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
+                        == false) {
+                    //continue; //TODO TOMEKL throw error information?
+                    throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
                 }
-                //if (isAtLeastOneResultingStructure == false) {
-                //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");
-                //}
+                newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
 
-                //newStructures.add(newStructure);
-                //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
+                newStructures.add(newStructure);
 
-                newStructures.add(structure.copy());
+                //newStructures.add(structure.copy()); //TODO comment this?
             }
         }
 
         return newStructures;
-    }*/
+    }
+
+    @Override
+    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+            throws Exception{
+        //A invokes B after t if p
+        ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
+
+        if (this.conditionFormula != null) {
+            ArrayList<ArrayList<String>> posAndNegEvaluates =
+                    FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
+            ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+
+            for (Hoent structure : structures) {
+                boolean isAtLeastOneNewStructure = false;
+                //boolean addedIdenticalStructure = false;
+
+                newStructures.add(structure.copy()); //TODO TOMEKL important; not typically resulting action wasn't invoked
+
+                if (structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
+                    continue;
+                }
+
+                for (String posEvaluate : posEvaluates) {
+                    boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
+                    if (hCompatibility == false) {
+                        //newStructures.add(structure.copy());
+                        continue;
+                    }
+                    String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
+                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    if (zerosAndOnesCounter == 0) {
+                        //newStructures.add(structure.copy());
+                        continue;
+                    }
+                    Hoent newStructure = structure.copy();
+                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+                    newStructure.nSetToTrue((byte)(timeID + this.time.timeID));
+
+                    if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
+                            == false) {
+                        //change compared to applyCertainSentence
+                        continue; //TODO TOMEKL throw error information?
+                        //throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
+                    }
+                    newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
+
+                    newStructures.add(newStructure);
+                    //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
+                }
+            }
+        }
+        else {
+            //empty if part=================================================================================================
+            //A invokes B after t if p
+
+            for (Hoent structure : structures) {
+                boolean isAtLeastOneNewStructure = false;
+                //boolean addedIdenticalStructure = false;
+
+                newStructures.add(structure.copy());//not typically resulting action wasn't invoked
+                if(structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
+                    continue;
+                }
+
+                Hoent newStructure = structure.copy();
+                //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+
+                if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
+                        == false) {
+                    //change compared to applyCertainSentence
+                    continue; //TODO TOMEKL throw error information?
+                    //throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
+                }
+                newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
+                newStructure.nSetToTrue((byte)(timeID + this.time.timeID));
+
+                newStructures.add(newStructure);
+
+                //newStructures.add(structure.copy()); //TODO comment this?
+            }
+        }
+
+        return newStructures;
+    }
 }

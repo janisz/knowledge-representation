@@ -53,7 +53,7 @@ public class ConjunctionFormula implements IFormula{
         for (short index = 0; index < fluentCount; index++) {
             resultSB.append("-");
         }
-        for (short fluentID : fluentIDs) {
+        for (byte fluentID : fluentIDs) {
             resultSB.replace(fluentID, fluentID + 1, "+");
         }
         return resultSB.toString();

@@ -12,6 +12,6 @@ public class Scenario {
 
     @Override
     public String toString() {
-        return scenario;
+        return this.scenario;
     }
 }

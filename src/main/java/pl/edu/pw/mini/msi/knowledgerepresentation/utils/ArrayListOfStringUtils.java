@@ -13,6 +13,7 @@ public class ArrayListOfStringUtils {
             }
         }
         return (short)-1;
+        //TODO TOMEKL optimize, because list is sorted
     }
 
     public static String myToString(ArrayList<String> list) {

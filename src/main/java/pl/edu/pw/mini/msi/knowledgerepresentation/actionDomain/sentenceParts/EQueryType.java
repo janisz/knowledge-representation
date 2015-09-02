@@ -16,7 +16,7 @@ public enum EQueryType {
 
     @Override
     public String toString() {
-        return string;
+        return this.string;
     }
 
     }

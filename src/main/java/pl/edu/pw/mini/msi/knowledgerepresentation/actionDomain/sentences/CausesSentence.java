@@ -47,7 +47,9 @@ public class CausesSentence extends Sentence {
                 StringUtils.TSIN(conditionFormula) + "]]";
     }
 
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID){
+    @Override
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+            throws Exception{
         //A causes a if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
@@ -59,14 +61,15 @@ public class CausesSentence extends Sentence {
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
-                for (String posEvaluate : posEvaluates) {
-                    boolean leftConditions = true;
 
-                    leftConditions = leftConditions && structure.eIsActionAtTime(this.action.actionID, timeID);
-                    if (leftConditions == false) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
+                newStructures.add(structure.copy());
+                if(structure.eIsActionAtTime(this.action.actionID, timeID)  == false) {
+                    //newStructures.add(structure.copy());
+                    continue;
+                }
+
+                for (String posEvaluate : posEvaluates) {
+                    //boolean leftConditions = true;
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
@@ -100,7 +103,7 @@ public class CausesSentence extends Sentence {
                         if (zerosAndOnesCounterOfResultCondition == 0) {
                             if (isAtLeastOneSameResultingStructure == false) {
                                 Hoent newStructureOfResultCondition = newStructure.copy();
-                                newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
+                                newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
                                 newStructures.add(newStructureOfResultCondition);
                             }
                             isAtLeastOneSameResultingStructure = true;
@@ -109,7 +112,7 @@ public class CausesSentence extends Sentence {
                         }
                         Hoent newStructureOfResultCondition = newStructure.copy();
                         newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                        newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
+                        newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
                         newStructures.add(newStructureOfResultCondition);
                         isAtLeastOneResultingStructure = true;
                     }
@@ -120,7 +123,6 @@ public class CausesSentence extends Sentence {
                     //newStructures.add(newStructure);
                     //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
                 }
-                newStructures.add(structure.copy());
             }
         }
         else {
@@ -131,11 +133,10 @@ public class CausesSentence extends Sentence {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
-                boolean leftConditions = true;
+                //boolean leftConditions = true;
 
-                leftConditions = leftConditions && structure.eIsActionAtTime(this.action.actionID, timeID);
-                if (leftConditions == false) {
-                    //newStructures.add(structure.copy());
+                if(structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
+                    newStructures.add(structure.copy()); //change
                     continue;
                 }
 
@@ -159,7 +160,7 @@ public class CausesSentence extends Sentence {
                     if (zerosAndOnesCounterOfResultCondition == 0) {
                         if (isAtLeastOneSameResultingStructure == false) {
                             Hoent newStructureOfResultCondition = newStructure.copy();
-                            newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
+                            newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
                             newStructures.add(newStructureOfResultCondition);
                         }
                         isAtLeastOneSameResultingStructure = true;
@@ -168,7 +169,7 @@ public class CausesSentence extends Sentence {
                     }
                     Hoent newStructureOfResultCondition = newStructure.copy();
                     newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                    newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID + 1));
+                    newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
                     newStructures.add(newStructureOfResultCondition);
                     isAtLeastOneResultingStructure = true;
                 }
@@ -179,8 +180,12 @@ public class CausesSentence extends Sentence {
                 //newStructures.add(newStructure);
                 //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
 
-                newStructures.add(structure.copy()); 
+                //newStructures.add(structure.copy()); //TODO comment this?
             }
+        }
+
+        if (newStructures.size() == 0) {
+            throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + this.toString() + "]");
         }
 
         return newStructures;

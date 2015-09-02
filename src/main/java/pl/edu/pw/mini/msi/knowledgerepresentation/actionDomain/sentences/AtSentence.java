@@ -41,6 +41,7 @@ public class AtSentence extends Sentence {
     @Override
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
             throws Exception {
+        //a at t
         AtSentence atSentence = this;
         //String mask = atSentence.formula.getFluentsMask(fluentsCount);
 
@@ -59,9 +60,10 @@ public class AtSentence extends Sentence {
 //                        }
 //                    }
 //                }
-        ArrayList<Hoent> newHoents = new ArrayList<Hoent>();
-        for (String posEvaluate : posEvaluates) {
-            for (Hoent structure : structures) {
+        ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
+        for (Hoent structure : structures) {
+            boolean addedSameStructure = false;
+            for (String posEvaluate : posEvaluates) {
                 boolean result = structure.hCheckCompatibility(posEvaluate, timeID);
                 if (result == false) {
                     continue;
@@ -69,24 +71,21 @@ public class AtSentence extends Sentence {
                 String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
                 byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
                 if (zerosAndOnesCounter == 0) {
-                    newHoents.add(structure.copy());
+                    if (addedSameStructure == false) {
+                        newStructures.add(structure.copy());
+                        addedSameStructure = true;
+                    }
                     continue;
                 }
-                Hoent newHoent = structure.copy();
-                newHoent.hAddNewEvaluates(newEvaluates, timeID);
-                newHoents.add(newHoent);
+                Hoent newStructure = structure.copy();
+                newStructure.hAddNewEvaluates(newEvaluates, timeID);
+                newStructures.add(newStructure);
             }
         }
-        if (newHoents.size() == 0) {
+        if (newStructures.size() == 0) {
             throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
         }
-        //TODO remove duplicate HOENTs
-        return newHoents;
+        return newStructures;
     }
 
-    @Override
-    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount)
-            throws Exception {
-        return null;//empty
-    }
 }
