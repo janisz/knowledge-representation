@@ -2,11 +2,9 @@ package pl.edu.pw.mini.msi.knowledgerepresentation;
 
 import com.google.common.base.Joiner;
 import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.tree.ParseTreeListener;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 
 import java.io.IOException;
 import java.util.List;
@@ -16,8 +14,7 @@ public class Main {
 
         Logger log = LoggerFactory.getLogger(Main.class);
         ANTLRErrorListener errorListener = new ErrorListener();
-        Knowledge knowledge = new Knowledge();
-        ActionLanguageListener parseTreeListener = new ActionLanguageListener(knowledge);
+        ActionLanguageListener parseTreeListener = new ActionLanguageListener();
         Interpreter interpreter = new Interpreter(errorListener, parseTreeListener);
 
         try {
