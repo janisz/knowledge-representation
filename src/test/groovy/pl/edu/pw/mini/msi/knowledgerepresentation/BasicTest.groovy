@@ -17,10 +17,23 @@ class BasicTest extends Specification {
 
     def "should check if lexer is working"() {
         given:
-        lexer = new ActionLanguageLexer(new ANTLRInputStream('initially [-roomClosed, -hostelClosed, inHostel, -hasCard]'));
+        lexer = new ActionLanguageLexer(new ANTLRInputStream('initially [(((-roomClosed & -hostelClosed) & inHostel) & -hasCard)]'));
         tokenStream = new CommonTokenStream(lexer);
         expect:
-        tokenStream.numberOfOnChannelTokens == 14
+        tokenStream.numberOfOnChannelTokens == 20
+    }
+
+    def
+    "should parse al with logical expressions"() {
+        given:
+        InputStream resourceAsStream = getClass().getResourceAsStream("/example_logical_expressions.al");
+        ANTLRInputStream antlrInputStream = new ANTLRInputStream(resourceAsStream);
+        lexer = new ActionLanguageLexer(antlrInputStream);
+        tokenStream = new CommonTokenStream(lexer);
+        parser = new ActionLanguageParser(tokenStream)
+        tree = parser.programm()
+        expect:
+        tree.toStringTree(parser).count('entry ') == 4
     }
 
     @Unroll
