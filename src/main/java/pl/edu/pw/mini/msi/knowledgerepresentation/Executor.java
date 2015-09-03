@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
-import pl.edu.pw.mini.msi.knowledgerepresentation.engine.Knowledge;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageLexer;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoents;
