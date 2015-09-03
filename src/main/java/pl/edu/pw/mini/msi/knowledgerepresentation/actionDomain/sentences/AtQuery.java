@@ -4,6 +4,9 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.EQu
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.IFormula;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Scenario;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
+
+import java.util.ArrayList;
 
 /**
  * Created by Tomek on 2015-08-30.
@@ -26,5 +29,45 @@ public class AtQuery extends Query {
     @Override
     public String getScenarioName() {
         return scenario.scenario;
+    }
+
+    @Override
+    public Boolean getAnswer(ArrayList<Hoent> modelsOfTypeOne, ArrayList<Hoent> modelsOfTypeTwo, ArrayList<String> actions) {
+        if (queryType == EQueryType.always) {
+            for (Hoent model : modelsOfTypeOne) {
+                char result = this.formula.evaluateForValues( model.sysElemH.get( this.time.timeID ) );
+                if (result == '0') {
+                    return false;
+                }
+                else {
+                    ; //empty
+                }
+            }
+            return true;
+        }
+        else if (queryType == EQueryType.ever) {
+            for (Hoent model : modelsOfTypeOne) {
+                char result = this.formula.evaluateForValues( model.sysElemH.get( this.time.timeID ) );
+                if (result == '1') {
+                    return true;
+                }
+                else {
+                    ; //empty
+                }
+            }
+            return false;
+        }
+        else {//if (queryType == EQueryType.typically) {
+            for (Hoent model : modelsOfTypeTwo) {
+                char result = this.formula.evaluateForValues( model.sysElemH.get( this.time.timeID ) );
+                if (result == '0') {
+                    return false;
+                }
+                else {
+                    ; //empty
+                }
+            }
+            return true;
+        }
     }
 }

@@ -103,7 +103,7 @@ public class CausesSentence extends Sentence {
                         if (zerosAndOnesCounterOfResultCondition == 0) {
                             if (isAtLeastOneSameResultingStructure == false) {
                                 Hoent newStructureOfResultCondition = newStructure.copy();
-                                newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
+                                newStructureOfResultCondition.oAddFluents(this.action.actionID, this.causesFormula.getFluentsIDs(), (byte) (timeID));
                                 newStructures.add(newStructureOfResultCondition);
                             }
                             isAtLeastOneSameResultingStructure = true;
@@ -112,7 +112,7 @@ public class CausesSentence extends Sentence {
                         }
                         Hoent newStructureOfResultCondition = newStructure.copy();
                         newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                        newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
+                        newStructureOfResultCondition.oAddFluents(this.action.actionID, this.causesFormula.getFluentsIDs(), (byte) (timeID));
                         newStructures.add(newStructureOfResultCondition);
                         isAtLeastOneResultingStructure = true;
                     }
@@ -160,7 +160,7 @@ public class CausesSentence extends Sentence {
                     if (zerosAndOnesCounterOfResultCondition == 0) {
                         if (isAtLeastOneSameResultingStructure == false) {
                             Hoent newStructureOfResultCondition = newStructure.copy();
-                            newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
+                            newStructureOfResultCondition.oAddFluents(this.action.actionID, this.causesFormula.getFluentsIDs(), (byte) (timeID));
                             newStructures.add(newStructureOfResultCondition);
                         }
                         isAtLeastOneSameResultingStructure = true;
@@ -169,7 +169,7 @@ public class CausesSentence extends Sentence {
                     }
                     Hoent newStructureOfResultCondition = newStructure.copy();
                     newStructureOfResultCondition.hAddNewEvaluates(newEvaluatesOfResultCondition, (byte) (timeID + 1));
-                    newStructureOfResultCondition.oAddFluents(this.causesFormula.getFluentsIDs(), (byte) (timeID));
+                    newStructureOfResultCondition.oAddFluents(this.action.actionID, this.causesFormula.getFluentsIDs(), (byte) (timeID));
                     newStructures.add(newStructureOfResultCondition);
                     isAtLeastOneResultingStructure = true;
                 }

@@ -99,7 +99,7 @@ public class OccursAtSentence extends Sentence {
 
             //change compared to applyCertainSentence
             Hoent newStructure = structure.copy();
-            newStructure.nSetToTrue(time);
+            newStructure.nSetToTrue(time, this.action.actionID);
             newStructures.add(newStructure);
 
             eAtTime.occuringAction = this.action.actionID;

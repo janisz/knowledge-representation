@@ -23,4 +23,9 @@ public class Action {
         return "(" + actor.toString() + "," + task.toString() + ")";
     }
 
+    public static boolean isAgentInActionString(String actionString, String actorStringToCheck) {
+        int commaIndex = actionString.indexOf(',');
+        String actorString = actionString.substring(1, commaIndex);
+        return actionString.equals(actorStringToCheck);
+    }
 }

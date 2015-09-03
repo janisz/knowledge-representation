@@ -29,7 +29,7 @@ public class InvokesSentence extends Sentence {
         this.conditionFormula = conditionFormula;
 
         if (time == null) {
-            this.time = new Time("0");
+            this.time = new Time("1");
         }
 
         if (conditionFormula != null) {
@@ -175,7 +175,7 @@ public class InvokesSentence extends Sentence {
                     }
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
-                    newStructure.nSetToTrue((byte)(timeID + this.time.timeID));
+                    newStructure.nSetToTrue((byte)(timeID + this.time.timeID), this.resultingAction.actionID);
 
                     if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                             == false) {
@@ -213,7 +213,7 @@ public class InvokesSentence extends Sentence {
                     //throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
                 }
                 newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
-                newStructure.nSetToTrue((byte)(timeID + this.time.timeID));
+                newStructure.nSetToTrue((byte)(timeID + this.time.timeID), this.resultingAction.actionID);
 
                 newStructures.add(newStructure);
 

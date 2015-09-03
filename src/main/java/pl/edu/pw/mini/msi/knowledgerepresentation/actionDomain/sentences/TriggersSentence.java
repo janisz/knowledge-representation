@@ -138,7 +138,7 @@ public class TriggersSentence extends Sentence {
 
                 Hoent newStructure = structure.copy();
                 newStructure.eAddAction(this.action.actionID, timeID);
-                newStructure.nSetToTrue(timeID);
+                newStructure.nSetToTrue(timeID, this.action.actionID);
                 newStructures.add(newStructure);
 
                 //newStructures.add(newStructure);

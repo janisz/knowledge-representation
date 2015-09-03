@@ -87,7 +87,7 @@ public class ReleasesSentence extends Sentence {
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                     ArrayList<Byte> oneFLuentAL = new ArrayList<Byte>();
                     oneFLuentAL.add(this.fluent.fluentID);
-                    newStructure.oAddFluents(oneFLuentAL, timeID);
+                    newStructure.oAddFluents(this.action.actionID, oneFLuentAL, timeID);
 
                     newStructures.add(newStructure);
                     //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
@@ -111,7 +111,7 @@ public class ReleasesSentence extends Sentence {
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                 ArrayList<Byte> oneFLuentAL = new ArrayList<Byte>();
                 oneFLuentAL.add(this.fluent.fluentID);
-                newStructure.oAddFluents(oneFLuentAL, timeID);
+                newStructure.oAddFluents(this.action.actionID, oneFLuentAL, timeID);
 
                 newStructures.add(newStructure);
 

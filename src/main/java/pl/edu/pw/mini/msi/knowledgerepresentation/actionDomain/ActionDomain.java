@@ -31,11 +31,19 @@ public class ActionDomain {
 
     public HashMap<String, ArrayList<Sentence>> fullScenarios = new HashMap<String, ArrayList<Sentence>>();
 
-    public ArrayList<Query> queries = new ArrayList<Query>();
+    private ArrayList<Query> queries = new ArrayList<Query>();
     public HashMap<String, ArrayList<Query>> mappedQueries = new HashMap<String, ArrayList<Query>>();
+    public int minQueryID = Integer.MAX_VALUE;
 
     public ActionDomain() {
         ;//empty for now...
+    }
+
+    public void addQuery(Query query) {
+        queries.add(query);
+        if (query.id < minQueryID) {
+            minQueryID = query.id;
+        }
     }
 
     public void calculateFullScenarios() {

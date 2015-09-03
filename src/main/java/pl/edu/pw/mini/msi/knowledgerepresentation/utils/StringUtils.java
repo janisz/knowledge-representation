@@ -48,4 +48,8 @@ public class StringUtils {
         }
         return counter;
     }
+
+    public static String concatenateStringsWithComma(String str1, String str2) {
+        return "[" + str1 + "," + str2 + "]";
+    }
 }
