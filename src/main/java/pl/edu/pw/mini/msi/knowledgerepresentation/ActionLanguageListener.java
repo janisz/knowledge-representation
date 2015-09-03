@@ -44,10 +44,6 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     }
 
     @Override
-    public void exitAlways(ActionLanguageParser.AlwaysContext ctx) {
-    }
-
-    @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
     }
 

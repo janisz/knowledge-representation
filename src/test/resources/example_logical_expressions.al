@@ -1,6 +1,6 @@
 initially ((night || day) => sleep)
-typically (Janek, GoToBed) causes sleep if night
-typically (Janek, GoToBed) causes nap if ((sleep => night) && (night || day))
+(Janek, GoToBed) causes sleep if night
+(Janek, GoToBed) causes nap if ((sleep => night) && (night || day))
 (Janek, GoToBed) invokes (Janek, WakeUp) after 8 if night
 (Janek, WakeUp) releases tired after 1 if (-hangover && -headache)
 
@@ -30,6 +30,5 @@ scenarioTwo {
   }
 }
 
-always involved DoorKeeper when scenarioOne
 typically (inHostel && -hasCard) at 11 when scenarioTwo
 ever involved Janek, DoorKeeper when scenarioOne

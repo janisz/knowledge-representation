@@ -13,13 +13,12 @@ instruction
   ;
 
 entry
-  : TYPICALLY? causes
+  : causes
   | TYPICALLY? invokes
   | TYPICALLY? releases
   | TYPICALLY? triggers
   | TYPICALLY? occurs
   | impossible
-  | always
   ;
 
 initialization: INITIALLY logicalExpression;
@@ -29,7 +28,6 @@ releases: action RELEASES logicalExpression afterTime? underCondition?;
 triggers: logicalExpression TRIGGERS action;
 occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
-always: ALWAYS logicalExpression;
 
 underCondition: IF logicalExpression;
 afterTime: AFTER time;
@@ -64,8 +62,7 @@ question
   | TYPICALLY
   ;
 basicQuestion
-  : ALWAYS
-  | EVER
+  : EVER
   ;
 
 
@@ -83,7 +80,6 @@ WS: [ \n\t\r]+ -> skip;
 
 ACS: 'ACS';
 AFTER: 'after';
-ALWAYS: 'always';
 AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';
