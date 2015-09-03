@@ -17,10 +17,10 @@ class BasicTest extends Specification {
 
     def "should check if lexer is working"() {
         given:
-        lexer = new ActionLanguageLexer(new ANTLRInputStream('initially [(((-roomClosed & -hostelClosed) & inHostel) & -hasCard)]'));
+        lexer = new ActionLanguageLexer(new ANTLRInputStream('initially (((-roomClosed && -hostelClosed) && inHostel) && -hasCard)'));
         tokenStream = new CommonTokenStream(lexer);
         expect:
-        tokenStream.numberOfOnChannelTokens == 20
+        tokenStream.numberOfOnChannelTokens == 18
     }
 
     def

@@ -35,8 +35,7 @@ underCondition: IF logicalExpression;
 afterTime: AFTER time;
 action: '('actor ',' task ')';
 
-fluentsList: '[' fluents ']';
-fluents: fluent | fluents ',' fluent;
+fluentsList: fluent | fluentsList ',' fluent;
 
 scenario: IDENTIFIER '{' actions ',' observations '}';
 
@@ -48,8 +47,7 @@ observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluentsList ',' time ')';
 
-logicalExpression: '[' binaryExpression ']';
-binaryExpression: fluent | '(' binaryExpression logicalOperator binaryExpression ')';
+logicalExpression: fluent | '(' logicalExpression logicalOperator logicalExpression ')';
 
 query
   : state
@@ -71,7 +69,7 @@ basicQuestion
   ;
 
 
-actorsList: '[' actors ']';
+actorsList: actors;
 actors: actor | actors ',' actor;
 
 fluent: IDENTIFIER | NOT IDENTIFIER;
@@ -104,6 +102,6 @@ TYPICALLY: 'typically';
 WHEN: 'when';
 IDENTIFIER : [a-zA-Z]+;
 DecimalConstant: [0-9]+;
-LOGICAL_OR: '|';
+LOGICAL_OR: '||';
 LOGICAL_IF: '=>';
-LOGICAL_AND: '&';
+LOGICAL_AND: '&&';
