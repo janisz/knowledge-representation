@@ -6,7 +6,7 @@ grammar ActionLanguage;
 programm: instruction* EOF;
 
 instruction
-  : initiallisation
+  : initialization
   | entry
   | scenario
   | query
@@ -22,16 +22,16 @@ entry
   | always
   ;
 
-initiallisation: INITIALLY fluentsList;
-causes: action CAUSES fluentsList afterTime? underCondition?;
+initialization: INITIALLY logicalExpression;
+causes: action CAUSES logicalExpression afterTime? underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
-releases: action RELEASES fluentsList afterTime? underCondition?;
-triggers: fluentsList TRIGGERS action;
+releases: action RELEASES logicalExpression afterTime? underCondition?;
+triggers: logicalExpression TRIGGERS action;
 occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
-always: ALWAYS fluentsList;
+always: ALWAYS logicalExpression;
 
-underCondition: IF fluentsList;
+underCondition: IF logicalExpression;
 afterTime: AFTER time;
 action: '('actor ',' task ')';
 
@@ -48,13 +48,16 @@ observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
 observation: '(' fluentsList ',' time ')';
 
+logicalExpression: '[' binaryExpression ']';
+binaryExpression: fluent | '(' binaryExpression logicalOperator binaryExpression ')';
+
 query
   : state
   | performed
   | involved
   ;
 
-state: question fluentsList AT time WHEN scenarioId;
+state: question logicalExpression AT time WHEN scenarioId;
 performed: question PERFORMED action AT time WHEN scenarioId;
 involved: basicQuestion INVOLVED actorsList WHEN scenarioId;
 
@@ -76,6 +79,7 @@ actor: IDENTIFIER;
 task: IDENTIFIER;
 time: DecimalConstant;
 scenarioId: IDENTIFIER;
+logicalOperator: LOGICAL_AND | LOGICAL_IF | LOGICAL_OR;
 
 WS: [ \n\t\r]+ -> skip;
 
@@ -100,3 +104,6 @@ TYPICALLY: 'typically';
 WHEN: 'when';
 IDENTIFIER : [a-zA-Z]+;
 DecimalConstant: [0-9]+;
+LOGICAL_OR: '|';
+LOGICAL_IF: '=>';
+LOGICAL_AND: '&';
