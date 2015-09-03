@@ -24,7 +24,7 @@ entry
 initialization: INITIALLY logicalExpression;
 causes: action CAUSES logicalExpression afterTime? underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
-releases: action RELEASES logicalExpression afterTime? underCondition?;
+releases: action RELEASES fluent afterTime? underCondition?;
 triggers: logicalExpression TRIGGERS action;
 occurs: action OCCURS AT time;
 impossible: IMPOSSIBLE action AT time underCondition?;
