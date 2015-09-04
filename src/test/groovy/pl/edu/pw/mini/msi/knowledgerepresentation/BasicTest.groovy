@@ -54,4 +54,5 @@ class BasicTest extends Specification {
         'scenario ' | 2
         'query '    | 3
     }
+
 }

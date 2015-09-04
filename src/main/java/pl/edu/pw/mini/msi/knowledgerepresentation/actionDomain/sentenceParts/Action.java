@@ -13,6 +13,11 @@ public class Action {
 
     public byte actionID = -1;
 
+    public Action(Actor actor, Task task) {
+        this.actor = actor;
+        this.task = task;
+    }
+
     public void fillFluentsIDs(ArrayList<String> actionsMapping) {
         String actionString = this.toString();
         actionID = ArrayListOfStringUtils.getIndexOfString(actionsMapping, actionString);

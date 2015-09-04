@@ -22,7 +22,7 @@ entry
   ;
 
 initialization: INITIALLY logicalExpression;
-causes: action CAUSES logicalExpression afterTime? underCondition?;
+causes: action CAUSES logicalExpression underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
 releases: action RELEASES fluent underCondition?;
 triggers: logicalExpression TRIGGERS action;
@@ -43,7 +43,7 @@ event: '(' action ',' time ')';
 
 observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
-observation: '(' fluentsList ',' time ')';
+observation: '(' logicalExpression ',' time ')';
 
 logicalExpression: fluent | '(' logicalExpression logicalOperator logicalExpression ')';
 

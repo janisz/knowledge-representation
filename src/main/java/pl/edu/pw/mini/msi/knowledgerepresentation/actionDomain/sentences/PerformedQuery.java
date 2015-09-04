@@ -15,25 +15,25 @@ public class PerformedQuery extends Query {
     public EQueryType queryType;
     public Action action; //Action, not Task
     public Time time;
-    public Scenario scenario;
+    public ScenarioName scenarioName;
 
-    public PerformedQuery(EQueryType queryType, Action action, Time time, Scenario scenario) {
+    public PerformedQuery(EQueryType queryType, Action action, Time time, ScenarioName scenarioName) {
         super();
         this.queryType = queryType;
         this.action = action;
         this.time = time;
-        this.scenario = scenario;
+        this.scenarioName = scenarioName;
     }
 
     @Override
     public String getScenarioName() {
-        return scenario.scenario;
+        return scenarioName.scenarioName;
     }
 
     @Override
     public String toString() {
         return "[" + queryType.toString() + " performed " + action.toString() + " at " + time.toString() +
-                " when " + scenario.toString() + "]";
+                " when " + scenarioName.toString() + "]";
     }
 
     @Override

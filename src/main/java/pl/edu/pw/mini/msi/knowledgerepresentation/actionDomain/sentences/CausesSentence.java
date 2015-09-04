@@ -37,7 +37,9 @@ public class CausesSentence extends Sentence {
     @Override
     public void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings) {
         causesFormula.fillFluentsIDs(fluentMappings);
-        conditionFormula.fillFluentsIDs(fluentMappings);
+        if (conditionFormula != null) {
+            conditionFormula.fillFluentsIDs(fluentMappings);
+        }
         action.fillFluentsIDs(actionMappings);
     }
 

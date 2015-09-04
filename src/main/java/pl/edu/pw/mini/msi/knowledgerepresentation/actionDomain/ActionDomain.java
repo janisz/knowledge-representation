@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Fluent;
@@ -21,8 +23,11 @@ import java.util.HashMap;
  * Created by Tomek on 2015-08-29.
  */
 public class ActionDomain {
-    public ArrayList<Sentence> baseSentences = new ArrayList<Sentence>();
-    public HashMap<String, ArrayList<Sentence>> scenarios = new HashMap<String, ArrayList<Sentence>>();
+
+    private static final Logger log = LoggerFactory.getLogger(ActionDomain.class);
+
+    private ArrayList<Sentence> baseSentences = new ArrayList<Sentence>();
+    private HashMap<String, ArrayList<Sentence>> scenarios = new HashMap<String, ArrayList<Sentence>>();
 
     public ArrayList<String> actions = new ArrayList<String>(); //e.g., "(student,learn)"
     //public ArrayList<Actor> actors = new ArrayList<Actor>();
@@ -44,6 +49,25 @@ public class ActionDomain {
         if (query.id < minQueryID) {
             minQueryID = query.id;
         }
+        log.debug("Added query: [" + query.toString() + "]");
+    }
+
+    public void addBaseSentence(Sentence sentence) {
+        baseSentences.add(sentence);
+
+        log.debug("Added sentence: [" + sentence.toString() + "]");
+    }
+
+    public void addScenarioSentence(String scenarioName, Sentence sentence) {
+        if (scenarios.containsKey(scenarioName)) {
+            scenarios.get(scenarioName).add(sentence);
+        }
+        else {
+            scenarios.put(scenarioName, new ArrayList<Sentence>());
+            scenarios.get(scenarioName).add(sentence);
+        }
+
+        log.debug("Added scenario: [" + scenarioName.toString() + "][" + sentence.toString() + "]");
     }
 
     public void calculateFullScenarios() {
@@ -64,13 +88,13 @@ public class ActionDomain {
             String queryName = oldQuery.getScenarioName();
 
             if (mappedQueries.containsKey(queryName)) {
-                ArrayList<Query> queriesInMap = new ArrayList<Query>();
-                queriesInMap.add(oldQuery);
-                mappedQueries.put(queryName, queriesInMap);
-            }
-            else {
                 ArrayList<Query> queriesInMap = mappedQueries.get(queryName);
                 queriesInMap.add(oldQuery);
+            }
+            else {
+                ArrayList<Query> queriesAL = new ArrayList<Query>();
+                queriesAL.add(oldQuery);
+                mappedQueries.put(queryName, queriesAL);
             }
         }
     }

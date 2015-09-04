@@ -1,8 +1,9 @@
 initially ((night || day) => sleep)
-(Janek, GoToBed) causes sleep if night
+(Janek, -GoToBed) causes sleep if night
 (Janek, GoToBed) causes nap if ((sleep => night) && (night || day))
 (Janek, GoToBed) invokes (Janek, WakeUp) after 8 if night
 (Janek, WakeUp) releases tired if (-hangover && -headache)
+(Janek, DoSomething) occurs at 11
 
 scenarioOne {
   ACS = {
@@ -30,6 +31,3 @@ scenarioTwo {
   }
 }
 
-always involved DoorKeeper when scenarioOne
-typically (inHostel && -hasCard) at 11 when scenarioTwo
-ever involved Janek, DoorKeeper when scenarioOne

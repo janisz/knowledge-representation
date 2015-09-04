@@ -46,7 +46,9 @@ public class InvokesSentence extends Sentence {
 
     @Override
     public void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings) {
-        conditionFormula.fillFluentsIDs(fluentMappings);
+        if (conditionFormula != null) {
+            conditionFormula.fillFluentsIDs(fluentMappings);
+        }
         causalAction.fillFluentsIDs(actionMappings);
         resultingAction.fillFluentsIDs(actionMappings);
     }

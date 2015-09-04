@@ -2,7 +2,7 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Actor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.EQueryType;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Scenario;
+import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.ScenarioName;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
@@ -15,23 +15,23 @@ public class InvolvedQuery extends Query {
     //a/e involved Ag when Sc
     public EQueryType queryType;
     public Actor actor;
-    public Scenario scenario;
+    public ScenarioName scenarioName;
 
-    public InvolvedQuery(EQueryType queryType, Actor actor, Scenario scenario) {
+    public InvolvedQuery(EQueryType queryType, Actor actor, ScenarioName scenarioName) {
         super();
         this.queryType = queryType;
         this.actor = actor;
-        this.scenario = scenario;
+        this.scenarioName = scenarioName;
     }
 
     @Override
     public String getScenarioName() {
-        return scenario.scenario;
+        return scenarioName.scenarioName;
     }
 
     @Override
     public String toString() {
-        return "[" + queryType + " involved " + actor.toString() + " when " + scenario.toString() + "]";
+        return "[" + queryType + " involved " + actor.toString() + " when " + scenarioName.toString() + "]";
     }
 
     @Override

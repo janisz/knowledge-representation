@@ -39,6 +39,10 @@ public class ReleasesSentence extends Sentence {
     @Override
     public void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings) {
         fluent.fillFluentID(fluentMappings);
+        action.fillFluentsIDs(actionMappings);
+        if (conditionFormula != null) {
+            conditionFormula.fillFluentsIDs(fluentMappings);
+        }
     }
 
     @Override

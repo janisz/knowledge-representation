@@ -1,10 +1,10 @@
-initially (((-roomClosed && -hostelClosed) && inHostel) && -hasCard)
+initially ((-roomClosed && -hostelClosed) && (inHostel && -hasCard))
 (Janek, closesDoor) causes hostelClosed
 typically -hasCard triggers (Janek, takesCard)
 typically (Janek, leaves) invokes (Janek, locksTheDoor)
 (Janek, takesCard) causes hasCard
 (Janek, leaves) causes -inHostel
-(Janek, comeback) causes inHostel after 10 if hasCard
+(Janek, comeback) causes inHostel if hasCard
 typically (DoorKeeper, lockTheDoor) occurs at 10
 
 
@@ -34,7 +34,4 @@ scenarioTwo {
   }
 }
 
-always involved DoorKeeper when scenarioOne
-typically (inHostel && -hasCard) at 11 when scenarioTwo
-ever involved Janek, DoorKeeper when scenarioOne
 

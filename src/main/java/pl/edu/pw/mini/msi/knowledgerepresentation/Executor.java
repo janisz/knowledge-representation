@@ -1,5 +1,6 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
+import org.antlr.runtime.tree.CommonTree;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -20,18 +21,18 @@ import java.util.List;
 /**
  * Created by Tomek on 2015-09-03.
  */
-public class Executor {/*
-    private static final Logger log = LoggerFactory.getLogger(Interpreter.class);
+public class Executor {
+    private static final Logger log = LoggerFactory.getLogger(Executor.class);
     private final ANTLRErrorListener errorListener;
-    private final ActionLanguageListenerDeprecated parseTreeListener;
+    private final ActionLanguageListener parseTreeListener;
 
-    private Executor(ANTLRErrorListener errorListener, ActionLanguageListenerDeprecated parseTreeListener) {
+    private Executor(ANTLRErrorListener errorListener, ActionLanguageListener parseTreeListener) {
         this.errorListener = errorListener;
         this.parseTreeListener = parseTreeListener;
     }
 
     public Executor() {
-        this(new ErrorListener(), new ActionLanguageListenerDeprecated(new ActionDomain()));
+        this(new ErrorListener(), new ActionLanguageListener(new ActionDomain()));
     }
 
     public List<Boolean> getResults(String input) {
@@ -43,7 +44,10 @@ public class Executor {/*
         ParseTreeWalker.DEFAULT.walk(parseTreeListener, parser.programm());
         ActionDomain actionDomain = parseTreeListener.getActionDomain();
 
-        byte tMax = 5; //important
+        //CommonTree tree = (CommonTree)parser.parse().getTree();
+        //parser.programm().instruction(1)
+
+        byte tMax = 15; //important
         HashMap<Integer, Boolean> resultsHM = new HashMap<Integer,Boolean>();
         for (String scenarioName : actionDomain.mappedQueries.keySet()) {
             ArrayList<Query> queriesForScenario = actionDomain.mappedQueries.get(scenarioName);
@@ -56,7 +60,7 @@ public class Executor {/*
                 resultsForScenario = hoents.getQueriesAnswers();
             }
             catch (Exception exc) {
-                log.debug("While processing scenario [%s] occured exception [%s].", scenarioName, exc.getMessage());
+                log.debug("While processing scenario [" + scenarioName + "] occured exception [" + exc.getMessage() + "].");
                 for (int index = 0; index < queriesForScenario.size(); index++) {
                     resultsForScenario.add(null);
                 }
@@ -71,5 +75,5 @@ public class Executor {/*
             results.add(resultsHM.get(queryIDindex));
         }
         return results;
-    }*/
+    }
 }

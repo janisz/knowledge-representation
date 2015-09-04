@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.edu.pw.mini.msi.knowledgerepresentation.Executor;
 import pl.edu.pw.mini.msi.knowledgerepresentation.Interpreter;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class Gui extends Application {
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
         definitionsTextArea.setEditable(false);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition.al")));
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition3.al")));
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);
@@ -50,7 +51,7 @@ public class Gui extends Application {
         Label queriesLabel = new Label("Queries");
         queriesTextArea = new TextArea();
         queriesTextArea.setPrefWidth(100);
-        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries.al")));
+        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries3.al")));
         HBox buttonsBox = new HBox(10);
         Button openButton = new Button("Open");
         Button computeButton = new Button("Compute");
@@ -96,7 +97,8 @@ public class Gui extends Application {
                 e -> {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
-                        List<Boolean> returns = new Interpreter().eval(code);
+                        //List<Boolean> returns = new Interpreter().eval(code);
+                        List<Boolean> returns = new Executor().getResults(code);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

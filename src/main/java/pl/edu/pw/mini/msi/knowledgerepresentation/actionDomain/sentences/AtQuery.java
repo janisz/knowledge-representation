@@ -2,7 +2,7 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.EQueryType;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.IFormula;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Scenario;
+import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.ScenarioName;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
 
@@ -16,19 +16,24 @@ public class AtQuery extends Query {
     public EQueryType queryType;
     public IFormula formula;
     public Time time;
-    public Scenario scenario;
+    public ScenarioName scenarioName;
 
-    public AtQuery(EQueryType queryType, IFormula formula, Time time, Scenario scenario) {
+    public AtQuery(EQueryType queryType, IFormula formula, Time time, ScenarioName scenarioName) {
         super();
         this.queryType = queryType;
         this.formula = formula;
         this.time = time;
-        this.scenario = scenario;
+        this.scenarioName = scenarioName;
     }
 
     @Override
     public String getScenarioName() {
-        return scenario.scenario;
+        return scenarioName.scenarioName;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + queryType + formula.toString() + " at " + time.toString() + " when " + scenarioName.toString() + "]";
     }
 
     @Override
@@ -70,4 +75,5 @@ public class AtQuery extends Query {
             return true;
         }
     }
+
 }
