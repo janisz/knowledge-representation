@@ -2,7 +2,7 @@ initially ((night || day) => sleep)
 (Janek, GoToBed) causes sleep if night
 (Janek, GoToBed) causes nap if ((sleep => night) && (night || day))
 (Janek, GoToBed) invokes (Janek, WakeUp) after 8 if night
-(Janek, WakeUp) releases tired after 1 if (-hangover && -headache)
+(Janek, WakeUp) releases tired if (-hangover && -headache)
 
 scenarioOne {
   ACS = {

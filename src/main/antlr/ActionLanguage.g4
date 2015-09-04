@@ -15,19 +15,19 @@ instruction
 entry
   : causes
   | TYPICALLY? invokes
-  | TYPICALLY? releases
+  | releases
   | TYPICALLY? triggers
   | TYPICALLY? occurs
-  | impossible
+  | atsentence
   ;
 
 initialization: INITIALLY logicalExpression;
 causes: action CAUSES logicalExpression afterTime? underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
-releases: action RELEASES fluent afterTime? underCondition?;
+releases: action RELEASES fluent underCondition?;
 triggers: logicalExpression TRIGGERS action;
 occurs: action OCCURS AT time;
-impossible: IMPOSSIBLE action AT time underCondition?;
+atsentence: logicalExpression AT time;
 
 underCondition: IF logicalExpression;
 afterTime: AFTER time;
@@ -72,7 +72,7 @@ actors: actor | actors ',' actor;
 
 fluent: IDENTIFIER | NOT IDENTIFIER;
 actor: IDENTIFIER;
-task: IDENTIFIER;
+task: IDENTIFIER | NOT IDENTIFIER;
 time: DecimalConstant;
 scenarioId: IDENTIFIER;
 logicalOperator: LOGICAL_AND | LOGICAL_IF | LOGICAL_OR;

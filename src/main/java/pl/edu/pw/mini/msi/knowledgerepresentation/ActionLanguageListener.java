@@ -39,9 +39,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     }
 
-    @Override
-    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
-    }
+//    @Override
+//    public void exitImpossible(ActionLanguageParser.ImpossibleContext ctx) {
+//    }
 
     @Override
     public void exitState(ActionLanguageParser.StateContext ctx) {
