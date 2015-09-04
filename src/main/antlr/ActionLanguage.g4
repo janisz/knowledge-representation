@@ -62,7 +62,8 @@ question
   | TYPICALLY
   ;
 basicQuestion
-  : EVER
+  : ALWAYS
+  | EVER
   ;
 
 
@@ -80,6 +81,7 @@ WS: [ \n\t\r]+ -> skip;
 
 ACS: 'ACS';
 AFTER: 'after';
+ALWAYS: 'always';
 AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';

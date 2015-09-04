@@ -52,6 +52,6 @@ class BasicTest extends Specification {
         node        | count
         'entry '    | 7
         'scenario ' | 2
-        'query '    | 2
+        'query '    | 3
     }
 }
