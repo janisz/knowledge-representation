@@ -40,7 +40,6 @@ public class Gui extends Application {
         Label definitionsLabel = new Label("Definitions");
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
-        definitionsTextArea.setEditable(false);
         definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition.al")));
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
