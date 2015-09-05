@@ -88,11 +88,11 @@ public class InvokesSentence extends Sentence {
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
-                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                    if (zerosAndOnesCounter == 0) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    //if (zerosAndOnesCounter == 0) {
+                    //    //newStructures.add(structure.copy());
+                    //    continue;
+                    //}
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
@@ -170,11 +170,11 @@ public class InvokesSentence extends Sentence {
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
-                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                    if (zerosAndOnesCounter == 0) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    //if (zerosAndOnesCounter == 0) {
+                    //    //newStructures.add(structure.copy());
+                    //    continue;
+                    //}
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                     newStructure.nSetToTrue((byte)(timeID + this.time.timeID), this.resultingAction.actionID);

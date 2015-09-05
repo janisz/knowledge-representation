@@ -82,11 +82,11 @@ public class ReleasesSentence extends Sentence {
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
-                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                    if (zerosAndOnesCounter == 0) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    //if (zerosAndOnesCounter == 0) {
+                    //    //newStructures.add(structure.copy());
+                    //    continue;
+                    //}
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                     ArrayList<Byte> oneFLuentAL = new ArrayList<Byte>();

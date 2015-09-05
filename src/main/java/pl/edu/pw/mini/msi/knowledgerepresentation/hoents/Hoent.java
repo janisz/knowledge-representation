@@ -110,17 +110,17 @@ public class Hoent {
         for (short timeIndex = 0; timeIndex < tMax; timeIndex++) {
             HashMap<Byte, String> sysElemOAtTimeUnit = HashMapByteStringUtils.copy(this.sysElemO.get(timeIndex));
 
-            sysElemH.add(new String(this.sysElemH.get(timeIndex)));
-            sysElemO.add( sysElemOAtTimeUnit );
-            sysElemE.add( this.sysElemE.get(timeIndex).copy() );
-            sysElemN.add( this.sysElemN.get(timeIndex).copy() );
+            newHoent.sysElemH.add(new String(this.sysElemH.get(timeIndex)));
+            newHoent.sysElemO.add( sysElemOAtTimeUnit );
+            newHoent.sysElemE.add( this.sysElemE.get(timeIndex).copy() );
+            newHoent.sysElemN.add( this.sysElemN.get(timeIndex).copy() );
         }
 
         return newHoent;
     }
 
-    public Hoent hAddNewEvaluates(String newEvaluates, byte time) {
-        Hoent newHoent = this.copy();
+    public void hAddNewEvaluates(String newEvaluates, byte time) {
+        //Hoent newHoent = this.copy();
         String evaluationInH = sysElemH.get(time);
         StringBuilder newEvaluationInH = new StringBuilder("");
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
@@ -133,10 +133,10 @@ public class Hoent {
                 newEvaluationInH.append(charAtIndexInEvalInH);
             }
         }
-        newHoent.sysElemH.remove(time);
-        newHoent.sysElemH.add(time, newEvaluationInH.toString());
+        this.sysElemH.remove(time);
+        this.sysElemH.add(time, newEvaluationInH.toString());
 
-        return newHoent;
+       // return this;
     }
 
     public boolean eIsActionAtTime(byte actionID, byte timeID) {

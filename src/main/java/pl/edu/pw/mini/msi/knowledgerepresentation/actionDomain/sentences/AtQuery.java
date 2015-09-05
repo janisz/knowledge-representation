@@ -37,6 +37,11 @@ public class AtQuery extends Query {
     }
 
     @Override
+    public void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings) {
+        this.formula.fillFluentsIDs(fluentMappings);
+    }
+
+    @Override
     public Boolean getAnswer(ArrayList<Hoent> modelsOfTypeOne, ArrayList<Hoent> modelsOfTypeTwo, ArrayList<String> actions) {
         if (queryType == EQueryType.always) {
             for (Hoent model : modelsOfTypeOne) {

@@ -142,7 +142,7 @@ public class Hoents {
                 //TODO TOMEKL throws?
             }
         }
-        log.debug("deletionsOfNotOMinimalStructuresCounter: %s", String.valueOf(deletionsOfNotOMinimalStructuresCounter));
+        log.debug("deletionsOfNotOMinimalStructuresCounter:" + String.valueOf(deletionsOfNotOMinimalStructuresCounter));
     }
 
     /**
@@ -221,7 +221,7 @@ public class Hoents {
                 }
             }
         }
-        log.debug("deletionsOfGMDPreferredModelsCounter: %s", String.valueOf(deletionsOfGMDPreferredModelsCounter));
+        log.debug("deletionsOfGMDPreferredModelsCounter: " + String.valueOf(deletionsOfGMDPreferredModelsCounter));
     }
 
     //================================================================================================================

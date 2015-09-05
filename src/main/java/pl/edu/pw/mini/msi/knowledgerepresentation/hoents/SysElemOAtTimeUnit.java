@@ -6,4 +6,12 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.hoents;
 public class SysElemOAtTimeUnit {
     public byte actionID;
     public String fluents;
+
+    public SysElemOAtTimeUnit copy() {
+        SysElemOAtTimeUnit newO = new SysElemOAtTimeUnit();
+        newO.actionID = this.actionID;
+        newO.fluents = new String(fluents);
+
+        return newO;
+    }
 }

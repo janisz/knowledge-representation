@@ -104,6 +104,14 @@ public class ActionDomain {
         for (Sentence sentence : baseSentences) {
             sentence.fillFluentAndActionIDs(fluents, actions);
         }
+        for (String scenarioName : scenarios.keySet()) {
+            for (Sentence sentence : scenarios.get(scenarioName)) {
+                sentence.fillFluentAndActionIDs(fluents, actions);
+            }
+        }
+        for (Query query : queries) {
+            query.fillFluentAndActionIDs(fluents, actions);
+        }
     }
 
     /*public void calculateElementToIntMappings() {

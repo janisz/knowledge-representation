@@ -37,6 +37,11 @@ public class PerformedQuery extends Query {
     }
 
     @Override
+    public void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings) {
+        this.action.fillFluentsIDs(actionMappings);
+    }
+
+    @Override
     public Boolean getAnswer(ArrayList<Hoent> modelsOfTypeOne, ArrayList<Hoent> modelsOfTypeTwo, ArrayList<String> actions) {
         byte actionID = ArrayListOfStringUtils.getIndexOfString(actions, this.action.toString());
 

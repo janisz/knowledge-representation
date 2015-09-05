@@ -1,7 +1,12 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Fluents;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
+import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ByteUtils;
+import pl.edu.pw.mini.msi.knowledgerepresentation.utils.CharUtils;
 
 import java.util.ArrayList;
 
@@ -9,6 +14,8 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-09-04.
  */
 public class LogExprFormula implements IFormula {
+
+    private static final Logger log = LoggerFactory.getLogger(LogExprFormula.class);
 
     private ActionLanguageParser.LogicalExpressionContext logExpr = null;
     private ArrayList<String> fluentsMapping = null;
@@ -25,7 +32,54 @@ public class LogExprFormula implements IFormula {
 
     @Override
     public char evaluateForValues(String evaluatee) {
-        return 0;
+        char result =  getEvaluateFromLogExpr(this.logExpr, evaluatee, fluentsMapping);;
+        //DEBUGINFO
+        //log.debug("Evaluating formula: [" + getStringFromLogExpr(this.logExpr) + "] with values [" +
+        //        Fluents.evaluationToString(evaluatee, fluentsMapping) + "] == [" + result + "]" );
+        return result;
+    }
+
+    private char getEvaluateFromLogExpr(ActionLanguageParser.LogicalExpressionContext logExpr, String evaluatee,
+                                          ArrayList<String> fluentsMapping) {
+        if (logExpr.fluent() != null) {
+            byte fluentID = ArrayListOfStringUtils.getIndexOfString(fluentsMapping, logExpr.fluent().IDENTIFIER().getText());
+            char result = evaluatee.charAt(fluentID);
+            if (logExpr.fluent().NOT() != null) {
+                result = CharUtils.switchZeroAndOne(result);
+            }
+            return result;
+        }
+        else {
+            char ch1 = getEvaluateFromLogExpr(logExpr.logicalExpression(0), evaluatee, fluentsMapping);
+            String operator = logExpr.logicalOperator().getText();
+            char ch2 = getEvaluateFromLogExpr(logExpr.logicalExpression(1), evaluatee, fluentsMapping);
+
+            if (ch1 == '?' || ch2 == '?') {
+                return '?';
+            }
+            byte b1 = CharUtils.toZeroOrOneByte(ch1);
+            byte b2 = CharUtils.toZeroOrOneByte(ch2);
+
+            if (operator.equals("&&")) {
+                byte result = (byte)Math.min(b1, b2);
+                return ByteUtils.toZeroOrOneChar(result);
+            }
+            else if (operator.equals("||")) {
+                byte result = (byte)Math.max(b1, b2);
+                return ByteUtils.toZeroOrOneChar(result);
+            }
+            else if (operator.equals("=>")) {
+                if (b1 == 1 && b2 ==0) {
+                    return '0';
+                }
+                else {
+                    return '1';
+                }
+            }
+            else {
+                return '?';
+            }
+        }
     }
 
     @Override
@@ -40,7 +94,10 @@ public class LogExprFormula implements IFormula {
     private void getFluentsFromLogExpr(ActionLanguageParser.LogicalExpressionContext logExpr,
                                                     ArrayList<String> fluentsAL) {
         if (logExpr.fluent() != null) {
-            fluentsAL.add( logExpr.fluent().getText() );
+            String fluent = logExpr.fluent().IDENTIFIER().getText();
+            if (ArrayListOfStringUtils.getIndexOfString(fluentsAL, fluent) == -1) {
+                fluentsAL.add(fluent);
+            }
         }
         else {
             getFluentsFromLogExpr(logExpr.logicalExpression(0), fluentsAL);
@@ -54,7 +111,7 @@ public class LogExprFormula implements IFormula {
         ArrayList<Byte> fluentsIDsAL = new ArrayList<>();
 
         for (String fluent : fluentsAL) {
-            Byte id = ArrayListOfStringUtils.getIndexOfString(fluentsAL, fluent);
+            Byte id = ArrayListOfStringUtils.getIndexOfString(fluentsMapping, fluent);
             fluentsIDsAL.add(id);
         }
 
@@ -82,23 +139,24 @@ public class LogExprFormula implements IFormula {
     @Override
     public String toString() {
         //return logExpr.toString(); //not perfect, returns only one fluent TODO TOMEKL
-        String result = "";
+        //String result = "";
 
-        result = getStringFromLogExpr(logExpr, result);
+        String result = getStringFromLogExpr(logExpr);
 
         return result;
     }
 
-    private String getStringFromLogExpr(ActionLanguageParser.LogicalExpressionContext logExpr,
-                                       String oldString) {
+    private String getStringFromLogExpr(ActionLanguageParser.LogicalExpressionContext logExpr) {
         if (logExpr.fluent() != null) {
-            return (oldString + " " + logExpr.fluent().getText() );
+            return (" " + logExpr.fluent().getText() + " ");
         }
         else {
-            oldString += getStringFromLogExpr(logExpr.logicalExpression(0), oldString);
-            oldString += " " + logExpr.logicalOperator().getText() + " ";
-            oldString += getStringFromLogExpr(logExpr.logicalExpression(1), oldString);
-            return oldString;
+            String str = "(";
+            str += getStringFromLogExpr(logExpr.logicalExpression(0));
+            str += " " + logExpr.logicalOperator().getText() + " ";
+            str += getStringFromLogExpr(logExpr.logicalExpression(1));
+            str+= ")";
+            return str;
         }
     }
 

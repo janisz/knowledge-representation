@@ -32,7 +32,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     private Sentence lastSentence = null;
 
     private boolean isInLogicalExpression = false;
-
+    private boolean addedLogExprInUnderCondition = false;
+    private IFormula lastUnderConditionFormula = null;
+    private boolean isInUnderCondition = false;
 
     //===========================================================================================
     private ActionDomain actionDomain = new ActionDomain();
@@ -89,6 +91,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         lastSentence = null;
         lastTypically = false;
         isInLogicalExpression = false;
+        addedLogExprInUnderCondition = false;
+        lastUnderConditionFormula = null;
+        isInUnderCondition = false;
     }
 
     @Override public void exitInstruction(ActionLanguageParser.InstructionContext ctx) {
@@ -125,12 +130,12 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override public void exitCauses(ActionLanguageParser.CausesContext ctx) {
         //causes: action CAUSES logicalExpression underCondition?;
         CausesSentence causesSentence;
-        if (preLastFormula == null) {
-            causesSentence = new CausesSentence(lastAction, lastFormula, null, actionDomain);
-        }
-        else {
-            causesSentence = new CausesSentence(lastAction, preLastFormula, lastFormula, actionDomain);
-        }
+        //if (preLastFormula == null) {
+        //    causesSentence = new CausesSentence(lastAction, lastFormula, null, actionDomain);
+        //}
+        //else {
+            causesSentence = new CausesSentence(lastAction, lastFormula, lastUnderConditionFormula, actionDomain);
+        //}
         actionDomain.addBaseSentence(causesSentence);
     }
 
@@ -143,7 +148,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override public void exitInvokes(ActionLanguageParser.InvokesContext ctx) {
         //invokes: action INVOKES action afterTime? underCondition?;
         InvokesSentence invokesSentence = new InvokesSentence(
-                lastTypically, preLastAction, lastAction, lastTime, lastFormula, actionDomain);
+                lastTypically, preLastAction, lastAction, lastTime, lastUnderConditionFormula, actionDomain);
         actionDomain.addBaseSentence(invokesSentence);
     }
 
@@ -155,7 +160,8 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override public void exitReleases(ActionLanguageParser.ReleasesContext ctx) {
         //releases: action RELEASES fluent underCondition?;
-        ReleasesSentence releasesSentence = new ReleasesSentence(lastAction, lastFluent, lastFormula, actionDomain);
+        ReleasesSentence releasesSentence = new ReleasesSentence(lastAction, lastFluent, lastUnderConditionFormula,
+                actionDomain);
         actionDomain.addBaseSentence(releasesSentence);
     }
 
@@ -198,11 +204,13 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override public void enterUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
         //lastUnderConditionFormula = new LogExprFormula( ctx.logicalExpression() );
+        isInUnderCondition = true;
     }
 
 
     @Override public void exitUnderCondition(ActionLanguageParser.UnderConditionContext ctx) {
-        ;
+
+        isInUnderCondition = false;
     }
 
 
@@ -219,7 +227,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override public void enterAction(ActionLanguageParser.ActionContext ctx) {
         Actor foundActor = new Actor( ctx.actor().IDENTIFIER().getText() );
-        Task foundTask = new Task( ctx.task().NOT() == null, ctx.task().IDENTIFIER().getText() );
+        Task foundTask = new Task( ctx.task().NOT() != null, ctx.task().IDENTIFIER().getText() );
         Action foundAction = new Action(foundActor, foundTask);
         if (lastAction == null) {
             lastAction = foundAction;
@@ -332,10 +340,15 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         if (lastFormula == null) {
             lastFormula = new LogExprFormula(ctx);
         }
-        else {
-            preLastFormula = lastFormula;
-            lastFormula = new LogExprFormula(ctx);
-        } //I know this could be shrinked, but I prefer this way
+        if (isInUnderCondition) {
+            if (lastUnderConditionFormula == null) {
+                lastUnderConditionFormula = new LogExprFormula(ctx);
+            }
+        }
+        //else {
+        //    preLastFormula = lastFormula;
+        //    lastFormula = new LogExprFormula(ctx);
+        //} //I know this could be shrinked, but I prefer this way
     }
 
 

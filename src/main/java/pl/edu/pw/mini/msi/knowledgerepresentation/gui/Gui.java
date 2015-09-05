@@ -42,7 +42,7 @@ public class Gui extends Application {
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
         definitionsTextArea.setEditable(false);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition3.al")));
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_w_01.al")));
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);
@@ -51,7 +51,7 @@ public class Gui extends Application {
         Label queriesLabel = new Label("Queries");
         queriesTextArea = new TextArea();
         queriesTextArea.setPrefWidth(100);
-        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries3.al")));
+        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries_empty.al")));
         HBox buttonsBox = new HBox(10);
         Button openButton = new Button("Open");
         Button computeButton = new Button("Compute");

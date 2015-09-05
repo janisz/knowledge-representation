@@ -102,4 +102,15 @@ public class Fluents {
 
         return results;
     }
+
+    public static String evaluationToString(String evaluation, ArrayList<String> fluentsMapping) {
+        StringBuilder resultSB = new StringBuilder("");
+        for (int index = 0; index < fluentsMapping.size(); index++) {
+            if (index > 0) {
+                resultSB.append(",");
+            }
+            resultSB.append(fluentsMapping.get(index) + "=" + evaluation.charAt(index));
+        }
+        return resultSB.toString();
+    }
 }

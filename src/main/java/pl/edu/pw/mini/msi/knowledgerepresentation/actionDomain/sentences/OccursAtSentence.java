@@ -43,7 +43,7 @@ public class OccursAtSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse)
             throws Exception {
         byte time = this.time.timeID;
         //ArrayList<Hoent> newHoents = new ArrayList<Hoent>();

@@ -39,7 +39,7 @@ public class AtSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse)
             throws Exception {
         //a at t
         AtSentence atSentence = this;
@@ -60,6 +60,8 @@ public class AtSentence extends Sentence {
 //                        }
 //                    }
 //                }
+        byte timeID = this.time.timeID;
+
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
         for (Hoent structure : structures) {
             boolean addedSameStructure = false;

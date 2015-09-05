@@ -12,7 +12,7 @@ public class ArrayListOfStringUtils {
                 return (byte)list.indexOf(listElem);
             }
         }
-        return (short)-1;
+        return (byte)-1;
         //TODO TOMEKL optimize, because list is sorted
     }
 

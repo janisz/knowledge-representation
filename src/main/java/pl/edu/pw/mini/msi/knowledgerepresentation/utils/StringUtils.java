@@ -4,10 +4,10 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.utils;
  * Created by Tomek on 2015-08-31.
  */
 public class StringUtils {
-    public static String concatenateStringAndBoolean(String s, boolean b) {
+    public static String concatenateStringAndBoolean(String s, boolean negated) {
         String result = "";
 
-        if (b == false) {
+        if (negated == true) {
             result = result + "-";
         }
         result = result + s;

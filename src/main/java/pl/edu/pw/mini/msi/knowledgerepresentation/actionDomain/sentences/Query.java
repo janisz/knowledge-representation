@@ -21,4 +21,5 @@ public abstract class Query {
 
     public abstract Boolean getAnswer(ArrayList<Hoent> modelsOfTypeOne, ArrayList<Hoent> modelsOfTypeTwo,
                                       ArrayList<String> actions);
+    public abstract void fillFluentAndActionIDs(ArrayList<String> fluentMappings, ArrayList<String> actionMappings);
 }

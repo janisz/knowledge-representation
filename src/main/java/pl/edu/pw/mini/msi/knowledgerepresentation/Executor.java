@@ -26,6 +26,8 @@ public class Executor {
     private final ANTLRErrorListener errorListener;
     private final ActionLanguageListener parseTreeListener;
 
+    private String errorInformation = "";
+
     private Executor(ANTLRErrorListener errorListener, ActionLanguageListener parseTreeListener) {
         this.errorListener = errorListener;
         this.parseTreeListener = parseTreeListener;
@@ -33,6 +35,10 @@ public class Executor {
 
     public Executor() {
         this(new ErrorListener(), new ActionLanguageListener(new ActionDomain()));
+    }
+
+    public String getErrorInformation() {
+        return errorInformation;
     }
 
     public List<Boolean> getResults(String input) {
@@ -60,7 +66,11 @@ public class Executor {
                 resultsForScenario = hoents.getQueriesAnswers();
             }
             catch (Exception exc) {
-                log.debug("While processing scenario [" + scenarioName + "] occured exception [" + exc.getMessage() + "].");
+                String error = "While processing scenario [" + scenarioName + "] occurred exception [" + exc.getMessage() +
+                        "][" + exc.toString() + "]";
+                log.debug(error);
+                errorInformation += error + "\r\n";
+                exc.printStackTrace();
                 for (int index = 0; index < queriesForScenario.size(); index++) {
                     resultsForScenario.add(null);
                 }
