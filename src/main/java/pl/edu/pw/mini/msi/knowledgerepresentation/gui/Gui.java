@@ -41,7 +41,7 @@ public class Gui extends Application {
         Label definitionsLabel = new Label("Definitions");
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_w_01.al")));
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_fapr96.al")));
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);
@@ -97,7 +97,7 @@ public class Gui extends Application {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
                         //List<Boolean> returns = new Interpreter().eval(code);
-                        List<Boolean> returns = new Executor().getResults(code);
+                        List<Boolean> returns = new Executor().getResults(code, null);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

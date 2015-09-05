@@ -1,5 +1,6 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
+import com.google.common.base.Joiner
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
@@ -55,4 +56,23 @@ class BasicTest extends Specification {
         'query '    | 3
     }
 
+    @Unroll
+    def "proceeding file '#filename' returned #expectedResults"() {
+        given:
+        InputStream resourceAsStream = getClass().getResourceAsStream(filename);
+
+        List<Boolean> actualResults = new Executor().getResults(null, resourceAsStream);
+        //List<Boolean> expectedResults = new ArrayList<Boolean>();
+
+        expect:
+        Joiner.on(", ").useForNull("null").join(actualResults).equals( expectedResults )
+
+        where:
+        filename                | expectedResults
+        '/definition_w_01.al'   | 'true, true, true, true, true, true'
+        '/definition_w_02.al'   | 'true, true, false, true, true, true, true, true'
+        '/definition_w_06.al'   | 'true, true, true, true, false, false, false'
+        '/definition_w_12.al'   | 'true, true'
+        '/definition_w_14.al'   | 'true, true, false, true, true, true, true, true'
+    }
 }

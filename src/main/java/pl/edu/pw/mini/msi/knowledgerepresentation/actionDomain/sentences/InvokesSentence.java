@@ -94,6 +94,10 @@ public class InvokesSentence extends Sentence {
                     //    //newStructures.add(structure.copy());
                     //    continue;
                     //}
+                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
+                    if (zerosAndOnesCounter != 0) { //20150905_02
+                        newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
+                    } //20150905_02
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 

@@ -59,6 +59,7 @@ public class CausesSentence extends Sentence {
             ArrayList<ArrayList<String>> posAndNegEvaluates =
                     FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
             ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+            ArrayList<String> negEvaluates = posAndNegEvaluates.get(1);
 
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
@@ -69,6 +70,19 @@ public class CausesSentence extends Sentence {
                     newStructures.add(structure.copy()); //20150905
                     continue;
                 }
+
+                /*boolean addedSameStructureCopy = false;
+                for (String negEvaluate : negEvaluates) {
+                    boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
+                    if (hCompatibility == false) {
+                        if (addedSameStructureCopy == false) {
+                            newStructures.add(structure.copy()); //20150905
+                        }
+                        continue;
+                    }
+                    String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
+                    //TODO TOMEKL
+                }*/
 
                 for (String posEvaluate : posEvaluates) {
                     //boolean leftConditions = true;
@@ -84,6 +98,10 @@ public class CausesSentence extends Sentence {
                     //    //newStructures.add(structure.copy());
                     //    continue;
                     //}
+                    byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
+                    if (zerosAndOnesCounter != 0) { //20150905_02
+                        newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
+                    } //20150905_02
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 

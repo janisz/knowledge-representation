@@ -14,6 +14,8 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageLexer;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoents;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,9 +43,19 @@ public class Executor {
         return errorInformation;
     }
 
-    public List<Boolean> getResults(String input) {
+    public List<Boolean> getResults(String input, InputStream inputStream) {
         //log.debug("Create a lexer and parser for input", input);
-        ActionLanguageLexer lexer = new ActionLanguageLexer(new ANTLRInputStream(input));
+        ActionLanguageLexer lexer = null;
+        if (input != null) {
+            lexer = new ActionLanguageLexer(new ANTLRInputStream(input));
+        }
+        else if (inputStream != null) {
+            try {
+                lexer = new ActionLanguageLexer(new ANTLRInputStream(inputStream));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         ActionLanguageParser parser = new ActionLanguageParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
