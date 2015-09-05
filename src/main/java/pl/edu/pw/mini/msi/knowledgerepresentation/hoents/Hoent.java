@@ -175,6 +175,9 @@ public class Hoent {
     }
 
     public boolean eCanInsertActionAtTime(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return false; //20150905
+        }
         if (this.sysElemE.get(timeID).occuringAction == actionID) {
             return true;
         }
@@ -209,6 +212,9 @@ public class Hoent {
     }
 
     public void nSetToTrue(byte timeID, byte actionID) {
+        if (timeID  >= tMax) {
+            return; //20150905
+        }
         this.sysElemN.get(timeID).actionID = actionID;
         //this.sysElemN.add(timeID, new SysElemNAtTimeUnit(actionID));
     }

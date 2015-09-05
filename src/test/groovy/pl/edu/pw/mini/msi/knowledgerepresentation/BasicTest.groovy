@@ -61,18 +61,18 @@ class BasicTest extends Specification {
         given:
         InputStream resourceAsStream = getClass().getResourceAsStream(filename);
 
-        List<Boolean> actualResults = new Executor().getResults(null, resourceAsStream);
+        List<Boolean> actualResults = new Executor().getResults(null, resourceAsStream, tMax);
         //List<Boolean> expectedResults = new ArrayList<Boolean>();
 
         expect:
         Joiner.on(", ").useForNull("null").join(actualResults).equals( expectedResults )
 
         where:
-        filename                | expectedResults
-        '/definition_w_01.al'   | 'true, true, true, true, true, true'
-        '/definition_w_02.al'   | 'true, true, false, true, true, true, true, true'
-        '/definition_w_06.al'   | 'true, true, true, true, false, false, false'
-        '/definition_w_12.al'   | 'true, true'
-        '/definition_w_14.al'   | 'true, true, false, true, true, true, true, true'
+        filename                |tMax   | expectedResults
+        '/definition_w_01.al'   | 15    | 'true, true, true, true, true, true'
+        '/definition_w_02.al'   | 15    | 'true, true, false, true, true, true, true, true'
+        '/definition_w_06.al'   | 15    | 'true, true, true, true, false, false, false'
+        '/definition_w_12.al'   | 15    | 'true, true'
+        '/definition_w_14.al'   | 15    | 'true, true, false, true, true, true, true, true'
     }
 }

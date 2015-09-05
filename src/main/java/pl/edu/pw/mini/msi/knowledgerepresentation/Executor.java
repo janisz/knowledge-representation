@@ -44,6 +44,11 @@ public class Executor {
     }
 
     public List<Boolean> getResults(String input, InputStream inputStream) {
+        return getResults(input, inputStream, 5);
+    }
+
+    public List<Boolean> getResults(String input, InputStream inputStream, int tMaxArg) {
+        byte tMax = (byte)tMaxArg;
         //log.debug("Create a lexer and parser for input", input);
         ActionLanguageLexer lexer = null;
         if (input != null) {
@@ -65,7 +70,7 @@ public class Executor {
         //CommonTree tree = (CommonTree)parser.parse().getTree();
         //parser.programm().instruction(1)
 
-        byte tMax = 15; //important
+        //byte tMax = 4; //important
         HashMap<Integer, Boolean> resultsHM = new HashMap<Integer,Boolean>();
         for (String scenarioName : actionDomain.mappedQueries.keySet()) {
             ArrayList<Query> queriesForScenario = actionDomain.mappedQueries.get(scenarioName);
