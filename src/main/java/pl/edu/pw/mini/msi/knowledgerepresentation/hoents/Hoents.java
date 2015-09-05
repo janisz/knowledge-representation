@@ -182,8 +182,8 @@ public class Hoents {
                 else {
                     String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
                     ArrayList<String> newHs =
-                            Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex),
-                                    modelOfTypeOne.sysElemH.get(timeIndex + 1), fluentsInO);
+                            Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                                    modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO);
                     for( String newH : newHs) {
                         Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                         newModelOfTypeOne.sysElemH.remove(timeIndex);

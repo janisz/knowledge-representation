@@ -57,7 +57,7 @@ public class TriggersSentence extends Sentence {
             boolean isAtLeastOneNewStructure = false;
             //boolean addedIdenticalStructure = false;
 
-            newStructures.add(structure.copy()); //important
+            //newStructures.add(structure.copy()); //important //20150905
 
             for (String posEvaluate : posEvaluates) {
                 boolean leftConditions = true;
@@ -70,7 +70,7 @@ public class TriggersSentence extends Sentence {
                 }
 
                 if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
-                    //newStructures.add(structure.copy());
+                    newStructures.add(structure.copy()); //20150905
                     continue;
                 }
 

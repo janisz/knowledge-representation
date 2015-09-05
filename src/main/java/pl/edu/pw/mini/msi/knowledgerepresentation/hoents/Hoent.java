@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class Hoent {
     public ArrayList<String> sysElemH;
-    public ArrayList<HashMap<Byte, String>> sysElemO;
+    public ArrayList<HashMap<Byte, String>> sysElemO; //timeID actionID fluents
     public ArrayList<SysElemEAtTimeUnit> sysElemE;
     public ArrayList<SysElemNAtTimeUnit> sysElemN;
     public short tMax;

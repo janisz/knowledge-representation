@@ -75,16 +75,17 @@ public class InvokesSentence extends Sentence {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
-                newStructures.add(structure.copy()); //TODO TOMEKL important
+                //newStructures.add(structure.copy()); //TODO TOMEKL important //20150905
 
                 if (structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
+                    newStructures.add(structure.copy()); //20150905
                     continue;
                 }
 
                 for (String posEvaluate : posEvaluates) {
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
-                        //newStructures.add(structure.copy());
+                        newStructures.add(structure.copy()); //20150905
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
@@ -215,7 +216,7 @@ public class InvokesSentence extends Sentence {
                     //throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
                 }
                 newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
-                newStructure.nSetToTrue((byte)(timeID + this.time.timeID), this.resultingAction.actionID);
+                newStructure.nSetToTrue((byte) (timeID + this.time.timeID), this.resultingAction.actionID);
 
                 newStructures.add(newStructure);
 

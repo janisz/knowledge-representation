@@ -66,19 +66,19 @@ public class ReleasesSentence extends Sentence {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
-                newStructures.add(structure.copy());
+                //newStructures.add(structure.copy()); //20150905
 
                 for (String posEvaluate : posEvaluates) {
                     boolean leftConditions = true;
 
                     if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
-                        //newStructures.add(structure.copy());
+                        newStructures.add(structure.copy()); //20150905
                         continue;
                     }
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
-                        //newStructures.add(structure.copy());
+                        newStructures.add(structure.copy()); //20150905
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);

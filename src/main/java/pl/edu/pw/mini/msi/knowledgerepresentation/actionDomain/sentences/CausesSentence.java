@@ -64,9 +64,9 @@ public class CausesSentence extends Sentence {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
-                newStructures.add(structure.copy());
+                //newStructures.add(structure.copy()); //20150905
                 if(structure.eIsActionAtTime(this.action.actionID, timeID)  == false) {
-                    //newStructures.add(structure.copy());
+                    newStructures.add(structure.copy()); //20150905
                     continue;
                 }
 
@@ -75,7 +75,7 @@ public class CausesSentence extends Sentence {
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
-                        //newStructures.add(structure.copy());
+                        newStructures.add(structure.copy()); //20150905
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
