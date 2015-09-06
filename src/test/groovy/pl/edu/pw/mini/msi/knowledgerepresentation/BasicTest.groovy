@@ -107,5 +107,7 @@ class BasicTest extends Specification {
         '/3-implikacja'  	  | 5     | 'true, true, true, true, true'
         '/4-prostyTrigger'  	  | 5     | 'true, true, true, false, true'
         '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
+        '/6-occurs'     	  | 5     | 'true, true, false, false'
+        '/7-occursTypically'      | 5     | 'true, true, true, false'
     }
 }
