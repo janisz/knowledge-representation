@@ -102,5 +102,10 @@ class BasicTest extends Specification {
         '/definition_o_05a.al'    | 4     | 'true'
         '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
         '/definition_fapr96_02.al'| 5     | 'true, true, true, true, true, true, true'
+	'/1-alternatywa'	  | 5     | 'true, true, true, true, true, false'
+        '/2-koniunkcja'  	  | 5     | 'true, true, true, true, true'
+        '/3-implikacja'  	  | 5     | 'true, true, true, true, true'
+        '/4-prostyTrigger'  	  | 5     | 'true, true, true, false, true'
+        '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
     }
 }
