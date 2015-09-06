@@ -16,7 +16,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.Executor;
-import pl.edu.pw.mini.msi.knowledgerepresentation.Interpreter;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +27,7 @@ public class Gui extends Application {
     private FileChooser fileChooser;
     private TextArea definitionsTextArea;
     private TextArea queriesTextArea;
+    private Spinner maxTimeSpinner;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -57,7 +57,14 @@ public class Gui extends Application {
         ProgressBar bar = new ProgressBar();
         bar.setVisible(false);
         buttonsBox.getChildren().addAll(openButton, computeButton, bar);
-        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, buttonsBox);
+
+        HBox maxTimeBox = new HBox(10);
+        maxTimeSpinner = new Spinner(1, 99, 5, 1);
+        maxTimeSpinner.setMaxWidth(60);
+        Label maxTimeLabel = new Label("Maximum time to render");
+        maxTimeBox.getChildren().addAll(maxTimeLabel, maxTimeSpinner);
+
+        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, maxTimeBox, buttonsBox);
 
         HBox.setHgrow(vbox2, Priority.ALWAYS);
 
@@ -96,8 +103,9 @@ public class Gui extends Application {
                 e -> {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
+                        int maxTime = (int) maxTimeSpinner.getValue();
                         //List<Boolean> returns = new Interpreter().eval(code);
-                        List<Boolean> returns = new Executor().getResults(code, null);
+                        List<Boolean> returns = new Executor().getResults(code, null, maxTime);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

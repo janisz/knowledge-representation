@@ -43,10 +43,6 @@ public class Executor {
         return errorInformation;
     }
 
-    public List<Boolean> getResults(String input, InputStream inputStream) {
-        return getResults(input, inputStream, 5);
-    }
-
     public List<Boolean> getResults(String input, InputStream inputStream, int tMaxArg) {
         byte tMax = (byte)tMaxArg;
         //log.debug("Create a lexer and parser for input", input);

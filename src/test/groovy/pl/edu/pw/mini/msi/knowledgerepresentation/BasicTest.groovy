@@ -57,6 +57,25 @@ class BasicTest extends Specification {
     }
 
     @Unroll
+    def "should find max time"() {
+        given:
+        InputStream resourceAsStream = getClass().getResourceAsStream("/example_2.1.al");
+        ANTLRInputStream antlrInputStream = new ANTLRInputStream(resourceAsStream);
+        lexer = new ActionLanguageLexer(antlrInputStream);
+        tokenStream = new CommonTokenStream(lexer);
+        parser = new ActionLanguageParser(tokenStream)
+        tree = parser.programm()
+        expect:
+        tree.toStringTree(parser).count(node) == count
+
+        where:
+        node        | count
+        'entry '    | 7
+        'scenario ' | 2
+        'query '    | 3
+    }
+
+    @Unroll
     def "proceeding file '#filename' returned #expectedResults"() {
         given:
         InputStream resourceAsStream = getClass().getResourceAsStream(filename);
