@@ -85,12 +85,15 @@ public class TriggersSentence extends Sentence {
                 if (this.action.task.negated == true) {
                     Hoent newStructure = structure.copy();
                     newStructure.eAddNegatedActionAtTime(this.action.actionID, timeID);
+                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                     newStructures.add(newStructure);
                     continue;
                 }
 
                 if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
-                    newStructures.add(structure.copy()); //20150905
+                    Hoent newStructure = structure.copy();
+                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
+                    newStructures.add(newStructure); //20150905
                     continue;
                 }
 
@@ -105,6 +108,7 @@ public class TriggersSentence extends Sentence {
 
                 Hoent newStructure = structure.copy();
                 newStructure.eAddAction(this.action.actionID, timeID);
+                newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                 newStructures.add(newStructure);
 
                 //newStructures.add(newStructure);
@@ -160,7 +164,12 @@ public class TriggersSentence extends Sentence {
                 //    continue;
                 //}
 
-                //String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
+                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906_3
+                //    newStructures.add(structure.copy());
+                    continue;
+                }
+
+                String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
                 //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
                 //if (zerosAndOnesCounter != 0) { //20150906_02
                 //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
@@ -180,6 +189,7 @@ public class TriggersSentence extends Sentence {
                 }
 
                 Hoent newStructure = structure.copy();
+                newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                 newStructure.eAddAction(this.action.actionID, timeID);
                 newStructure.nSetToTrue(timeID, this.action.actionID);
                 newStructures.add(newStructure);

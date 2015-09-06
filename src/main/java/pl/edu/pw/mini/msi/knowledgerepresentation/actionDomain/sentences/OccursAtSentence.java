@@ -108,9 +108,10 @@ public class OccursAtSentence extends Sentence {
             //change compared to applyCertainSentence
             Hoent newStructure = structure.copy();
             newStructure.nSetToTrue(time, this.action.actionID);
+            newStructure.eAddAction(this.action.actionID, time); //20150906_2
             newStructures.add(newStructure);
 
-            eAtTime.occuringAction = this.action.actionID;
+            //eAtTime.occuringAction = this.action.actionID; //20150906_2
 
             //Hoent newHoent = structure.copy();
             //newHoent.hAddNewEvaluates(newEvaluates, time);
@@ -123,6 +124,6 @@ public class OccursAtSentence extends Sentence {
         //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
         //}
 
-        return structures;
+        return newStructures;
     }
 }

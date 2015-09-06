@@ -364,4 +364,74 @@ public class Hoent {
         boolean result = Action.isAgentInActionString(actionString, agentToCheck);
         return result;
     }
+
+    public boolean eIsIn(ArrayList<SysElemEAtTimeUnit> otherE) {
+        boolean equals = true;
+        ArrayList<SysElemEAtTimeUnit> thisE = this.sysElemE;
+        for (byte timeIndex = 0; timeIndex < thisE.size(); timeIndex++) {
+            if (thisE.get(timeIndex).occuringAction == -1) {
+                if (otherE.get(timeIndex).occuringAction == -1) {
+                    ; //empty (equal)
+                }
+                else {
+                    equals = false;
+                }
+            }
+            else {
+                if (thisE.get(timeIndex).occuringAction == otherE.get(timeIndex).occuringAction) {
+                    ; //empty (equals)
+                }
+                else {
+                    return false; //different
+                }
+            }
+        }
+        if (equals) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //ArrayList<HashMap<Byte, String>> sysElemO; //timeID actionID fluents
+    public boolean oAreSysElemOsTheSame(ArrayList<HashMap<Byte, String>> otherSysElemO) {
+        for (byte index = 0; index < this.sysElemN.size(); index++) {
+            if (this.sysElemO.get(index).keySet().size() == 0 &&
+                    otherSysElemO.get(index).keySet().size() == 0) {
+                ;//do nothing
+            }
+            else if (this.sysElemO.get(index).keySet().size() == 0 ||
+                    otherSysElemO.get(index).keySet().size() == 0) {
+                return false;
+            }
+            //compare actionID
+            else if (this.sysElemO.get(index).keySet().iterator().next() == otherSysElemO.get(index).keySet().iterator().next()) {
+                byte thisActionIDAtTime = this.sysElemO.get(index).keySet().iterator().next();
+                if (this.sysElemO.get(index).get( thisActionIDAtTime ).equals(
+                        otherSysElemO.get(index).get( thisActionIDAtTime ))) {
+                    ;//do nothing
+                }
+                else {
+                    return false;
+                }
+
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int nCountNs() {
+        int result = 0;
+        for (byte index = 0; index < tMax; index++) {
+            SysElemNAtTimeUnit sysElemN = this.sysElemN.get(index);
+            if (sysElemN.actionID != -1) {
+                result++;
+            }
+        }
+        return result;
+    }
 }

@@ -75,6 +75,8 @@ public class Hoents {
     private void calculateStructures() throws Exception {
         boolean isCurrentlyProcessingTypicalSentences = false; //Yes, I know it's a long name.
         ArrayList<Sentence> certainSentences = getSentences(isCurrentlyProcessingTypicalSentences);
+        isCurrentlyProcessingTypicalSentences = true;
+        ArrayList<Sentence> typicallySentences = getSentences(isCurrentlyProcessingTypicalSentences);
 
         //1. proceed atSentence and occursAt sentences=================================================================
         for (Sentence sentence : certainSentences) {
@@ -83,6 +85,15 @@ public class Hoents {
                 structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1);
             }
         }
+
+        //3. proceed occursAt "typically" sentences=================================================================
+        for (Sentence sentence : typicallySentences) {
+            if ( (sentence instanceof AtSentence)
+                    || (sentence instanceof OccursAtSentence) ){
+                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false);
+            }
+        }
+
         //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
         //Boolean hasChanged = true;
         for (byte timeID = 0; timeID < tMax; timeID++) {
@@ -92,32 +103,23 @@ public class Hoents {
                     structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
                 }
             }
-        }
+        //}
 
-        isCurrentlyProcessingTypicalSentences = true;
-        ArrayList<Sentence> typicallySentences = getSentences(isCurrentlyProcessingTypicalSentences);
-        //3. proceed occursAt "typically" sentences=================================================================
-        for (Sentence sentence : typicallySentences) {
-            if ( (sentence instanceof AtSentence)
-                    || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false);
-            }
-        }
         //4. proceed "typically" sentences other than occursAtSentence=======================================
         //Boolean hasChanged = true;
-        for (byte timeID = 0; timeID < tMax; timeID++) {
+        //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
                     structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
                 }
             }
-        }
+        //}
 
         //20150906
         //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
         //Boolean hasChanged = true;
-        for (byte timeID = 0; timeID < tMax; timeID++) {
+        //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
@@ -226,6 +228,7 @@ public class Hoents {
         }
 
         //20150906
+        //after filling '?' with values (using occlusion) check if new HOENT's are compatible with sentences
         //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
         //Boolean hasChanged = true;
         ArrayList<Sentence> certainSentences = getSentences(false);
@@ -237,6 +240,38 @@ public class Hoents {
                 }
             }
         }
+
+        //20150906
+        //minimal set of occured actions
+        int deletionsOfEMinimalModelsCounter = 0;
+
+        ArrayList<Hoent> newModelsOfTypeOne = (ArrayList<Hoent>)modelsOfTypeOne.clone();
+        for (int index1 = 0; index1 < modelsOfTypeOne.size(); index1++) {
+            for (int index2 = index1 + 1; index2 < modelsOfTypeOne.size(); index2++) {
+                Hoent firstHoent = modelsOfTypeOne.get(index1);
+                Hoent secondHoent = modelsOfTypeOne.get(index2);
+
+                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) == false) {
+                    continue;
+                }
+                if (firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO) == false) {
+                    continue;
+                }
+                if (firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) == false) {
+                    continue;
+                }
+                if (firstHoent.eIsIn(secondHoent.sysElemE)) {
+                    newModelsOfTypeOne.remove(secondHoent);
+                    deletionsOfEMinimalModelsCounter++;
+                }
+                else if (secondHoent.eIsIn(firstHoent.sysElemE)) {
+                    newModelsOfTypeOne.remove(firstHoent);
+                    deletionsOfEMinimalModelsCounter++;
+                }
+            }
+        }
+        modelsOfTypeOne = newModelsOfTypeOne;
+        log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
     }
 
@@ -266,6 +301,24 @@ public class Hoents {
             }
         }
         log.debug("deletionsOfGMDPreferredModelsCounter: " + String.valueOf(deletionsOfGMDPreferredModelsCounter));
+
+        //preserve hoents with max number of ns===============================================
+        int deletionsOfGMDPreferredModelsCounter_2 = 0;
+        ArrayList<Hoent> newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
+        int maxNs = Integer.MIN_VALUE;
+        for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
+            int ns = modelOfTypeTwo.nCountNs();
+            if (ns >= maxNs) {
+                maxNs = ns;
+            }
+        }
+        for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
+            if (modelOfTypeTwo.nCountNs() < maxNs) {
+                newModelsOfTypeTwo.remove(modelOfTypeTwo);
+            }
+        }
+
+        modelsOfTypeTwo = newModelsOfTypeTwo;
     }
 
     //================================================================================================================

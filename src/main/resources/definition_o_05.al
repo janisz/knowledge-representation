@@ -1,11 +1,5 @@
 typically (Janek, A) occurs at 0
-
-ScenarioOne {
-  ACS = {
-    },
-  OBS = {
-  }
-}
+initially a
 
 ScenarioTwo {
   ACS = {
@@ -15,5 +9,4 @@ ScenarioTwo {
   }
 }
 
-typically performed (Janek, A) at 0 when ScenarioOne
 typically performed (Janek, B) at 0 when ScenarioTwo

@@ -116,10 +116,15 @@ public class CausesSentence extends Sentence {
                     ArrayList<ArrayList<String>> posAndNegEvaluatesOfResultCondition =
                             FormulaUtils.getPositiveAndNegativeEvaluates(this.causesFormula, fluentsCount);
                     ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+                    if (posEvaluatesOfResultCondition.size() == 0) { //20150906
+                        //newStructures.add(structure.copy());
+                        continue;
+                    }
                     for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
                         boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition,
                                 (byte) (timeID + 1));
                         if (hCompatibilityOfResCond == false) {
+                            //newStructures.add(structure.copy()); //20150906
                             continue;
                         }
                         String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
@@ -174,10 +179,15 @@ public class CausesSentence extends Sentence {
                 ArrayList<ArrayList<String>> posAndNegEvaluatesOfResultCondition =
                         FormulaUtils.getPositiveAndNegativeEvaluates(this.causesFormula, fluentsCount);
                 ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+                if (posEvaluatesOfResultCondition.size() == 0) { //20150906
+                    //newStructures.add(structure.copy());
+                    continue;
+                }
                 for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
                     boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition,
                             (byte) (timeID + 1));
                     if (hCompatibilityOfResCond == false) {
+                        //newStructures.add(structure.copy()); //20150906
                         continue;
                     }
                     String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
