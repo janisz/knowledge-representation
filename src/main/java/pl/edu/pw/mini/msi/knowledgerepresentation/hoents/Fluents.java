@@ -103,6 +103,25 @@ public class Fluents {
         return results;
     }
 
+    public static boolean checkCompatibilityUsingMask(String oldFluents, String newFluents, String changingFluents) {
+        ArrayList<String> results = new ArrayList<String>();
+        results.add( new String("") );
+
+        for (byte index = 0; index < oldFluents.length(); index++) {
+            if (newFluents.charAt(index) == '0' || newFluents.charAt(index) == '1') {
+                if (oldFluents.charAt(index) == '0' || oldFluents.charAt(index) == '1') {
+                    if (newFluents.charAt(index) != oldFluents.charAt(index)) {
+                        if (changingFluents == null || changingFluents.charAt(index) == '0') {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public static String evaluationToString(String evaluation, ArrayList<String> fluentsMapping) {
         StringBuilder resultSB = new StringBuilder("");
         for (int index = 0; index < fluentsMapping.size(); index++) {

@@ -260,6 +260,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
 
     @Override public void enterScenario(ActionLanguageParser.ScenarioContext ctx) {
         lastScenarioName = new ScenarioName( ctx.IDENTIFIER().getText() );
+        actionDomain.addEmptyScenario(lastScenarioName.scenarioName); //20150906
     }
 
 

@@ -29,4 +29,9 @@ public class SysElemNAtTimeUnit {
             return false;
         }
     }
+
+    @Override
+    public String toString() {
+        return "ActionID = " + actionID.toString();
+    }
 }

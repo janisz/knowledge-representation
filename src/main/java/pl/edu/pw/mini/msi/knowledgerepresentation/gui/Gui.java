@@ -41,7 +41,7 @@ public class Gui extends Application {
         Label definitionsLabel = new Label("Definitions");
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_fapr96.al")));
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_fapr96_02.al")));
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);

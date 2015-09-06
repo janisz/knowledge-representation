@@ -51,11 +51,19 @@ public class Hoents {
         structures.add(firstHoent);
     }
 
-    public ArrayList<Boolean> getQueriesAnswers() throws Exception {
+    public ArrayList<Boolean> getQueriesAnswers()
+            throws Exception {
         calculateStructures();
         calculateOMinimalStructures();
         calculateModelsOfTypeOne();
         calculateModelsOfTypeTwo();
+
+        if (modelsOfTypeOne.size() == 0) {
+            throw new Exception("Zero models of type one.");
+        }
+        if (modelsOfTypeTwo.size() == 0) {
+            throw new Exception("Zero models of type two.");
+        }
 
         ArrayList<Boolean> results = new ArrayList<Boolean>();
         for (Query query : this.queries) {
@@ -92,7 +100,7 @@ public class Hoents {
         for (Sentence sentence : typicallySentences) {
             if ( (sentence instanceof AtSentence)
                     || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1);
+                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false);
             }
         }
         //4. proceed "typically" sentences other than occursAtSentence=======================================
@@ -101,7 +109,19 @@ public class Hoents {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
-                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID);
+                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
+                }
+            }
+        }
+
+        //20150906
+        //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
+        //Boolean hasChanged = true;
+        for (byte timeID = 0; timeID < tMax; timeID++) {
+            for (Sentence sentence : certainSentences) {
+                if ((sentence instanceof AtSentence) == false
+                        && (sentence instanceof OccursAtSentence) == false) {
+                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
                 }
             }
         }
@@ -149,7 +169,7 @@ public class Hoents {
      * Fluents that changed are in the set O(A,t)
      * FAPR96.pdf site 8 Definition 2
      */
-    private void calculateModelsOfTypeOne() {
+    private void calculateModelsOfTypeOne() throws Exception {
         modelsOfTypeOne = new ArrayList<Hoent>();
 
         //time == 0
@@ -175,12 +195,22 @@ public class Hoents {
                 ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
                 HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
                 if (sysElemOAtTime.keySet().size() == 0){
+                    //20150906
+                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                            modelOfTypeOne.sysElemH.get(timeIndex), null) == false) {
+                        continue;
+                    }
                     Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                     newModelOfTypeOne.hPreserveFluentsAtTime(timeIndex);
                     newModelsOfTypeOne.add( newModelOfTypeOne );
                 }
                 else {
                     String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
+                    ////20150906
+                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO) == false) {
+                        continue;
+                    }
                     ArrayList<String> newHs =
                             Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
                                     modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO);
@@ -194,6 +224,20 @@ public class Hoents {
             }
             modelsOfTypeOne = newModelsOfTypeOne;
         }
+
+        //20150906
+        //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
+        //Boolean hasChanged = true;
+        ArrayList<Sentence> certainSentences = getSentences(false);
+        for (byte timeID = 0; timeID < tMax; timeID++) {
+            for (Sentence sentence : certainSentences) {
+                if ((sentence instanceof AtSentence) == false
+                        && (sentence instanceof OccursAtSentence) == false) {
+                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID);
+                }
+            }
+        }
+
     }
 
     /**

@@ -74,5 +74,12 @@ class BasicTest extends Specification {
         '/definition_w_06.al'   | 15    | 'true, true, true, true, false, false, false'
         '/definition_w_12.al'   | 15    | 'true, true'
         '/definition_w_14.al'   | 15    | 'true, true, false, true, true, true, true, true'
+        '/definition_o_01.al'   | 4     | 'true'
+        '/definition_o_02.al'   | 4     | 'true, true'
+        '/definition_o_03.al'   | 4     | 'true, true'
+        //'/definition_o_03a.al'   | 4     | 'true, true'
+        '/definition_o_04.al'   | 4     | 'true, true'
+        '/definition_o_05.al'   | 4     | 'true, true'
+        '/definition_fapr96.al' | 5     | 'true, true, true, true, true, true'
     }
 }

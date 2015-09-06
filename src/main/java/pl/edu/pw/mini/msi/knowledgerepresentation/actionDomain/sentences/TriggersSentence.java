@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
@@ -16,6 +18,8 @@ public class TriggersSentence extends Sentence {
     public boolean typically;
     public IFormula conditionFormula;
     public Action action;
+
+    private static final Logger log = LoggerFactory.getLogger(TriggersSentence.class);
 
     public TriggersSentence(boolean typically, IFormula conditionFormula, Action action, ActionDomain actionDomain) {
         this.typically = typically;
@@ -59,8 +63,24 @@ public class TriggersSentence extends Sentence {
 
             //newStructures.add(structure.copy()); //important //20150905
 
+            if (posEvaluates.size() == 0) { //20150906
+                newStructures.add(structure.copy());
+                continue;
+            }
+
             for (String posEvaluate : posEvaluates) {
                 boolean leftConditions = true;
+
+                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906
+                    newStructures.add(structure.copy());
+                    continue;
+                }
+
+                String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
+                byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
+                if (zerosAndOnesCounter != 0) { //20150906_02
+                    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
+                } //20150905_02
 
                 if (this.action.task.negated == true) {
                     Hoent newStructure = structure.copy();
@@ -77,7 +97,10 @@ public class TriggersSentence extends Sentence {
                 if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {
                     //newStructures.add(structure.copy());
                     //continue; //TODO TOMEKL throw error information?
-                    throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
+                    //throw new Exception(message); //20150906
+                    log.debug(message);
+                    continue;
                 }
 
                 Hoent newStructure = structure.copy();
@@ -98,7 +121,8 @@ public class TriggersSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception{
         //p triggers A
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -112,6 +136,14 @@ public class TriggersSentence extends Sentence {
             //boolean addedIdenticalStructure = false;
 
             newStructures.add(structure.copy()); //important; not typically, triggers didn't occur
+            if (secondPass) { //20150906
+                continue;
+            }
+
+            //if (posEvaluates.size() == 0) { //20150906
+            //    newStructures.add(structure.copy());
+            //    continue;
+            //}
 
             for (String posEvaluate : posEvaluates) {
 
@@ -122,6 +154,17 @@ public class TriggersSentence extends Sentence {
                 //    newStructures.add(newStructure);
                 //    continue;
                 //}
+
+                //if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906
+                //    newStructures.add(structure.copy());
+                //    continue;
+                //}
+
+                //String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
+                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
+                //if (zerosAndOnesCounter != 0) { //20150906_02
+                //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
+                //} //20150905_02
 
                 if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
                     //newStructures.add(structure.copy());

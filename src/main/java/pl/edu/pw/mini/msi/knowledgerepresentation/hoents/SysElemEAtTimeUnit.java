@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.hoents;
 
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 
 /**
@@ -23,5 +25,12 @@ public class SysElemEAtTimeUnit {
         }
 
         return newSysElemEAtTimeUnit;
+    }
+
+    @Override
+    public String toString() {
+        String result = "Occurring: " + this.occuringAction + ", disallowed: " +
+                Joiner.on(", ").useForNull("null").join(this.disallowedActions);
+        return result;
     }
 }

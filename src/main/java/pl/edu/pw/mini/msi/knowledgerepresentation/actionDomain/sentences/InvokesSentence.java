@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class InvokesSentence extends Sentence {
+
+    private static final Logger log = LoggerFactory.getLogger(TriggersSentence.class);
+
     public boolean typically;
     public Action causalAction;
     public Action resultingAction;
@@ -82,6 +87,10 @@ public class InvokesSentence extends Sentence {
                     continue;
                 }
 
+                if (posEvaluates.size() == 0) {
+                   newStructures.add(structure.copy());
+                }
+
                 for (String posEvaluate : posEvaluates) {
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
@@ -104,7 +113,11 @@ public class InvokesSentence extends Sentence {
                     if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                         == false) {
                         //continue; //TODO TOMEKL throw error information?
-                        throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "."; //20150906
+                        //throw new Exception(message); //20150906
+                        log.debug(message);
+                        continue;
+
                     }
                     newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
 
@@ -134,9 +147,12 @@ public class InvokesSentence extends Sentence {
                 if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                         == false) {
                     //continue; //TODO TOMEKL throw error information?
-                    throw new Exception("Error in applying sentence: [" + this.toString() + "] - can't insert resulting action.");
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "."; //20150906
+                    //throw new Exception(message); //20150906
+                    log.debug(message);
+                    continue;
                 }
-                newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
+                newStructure.eAddAction(this.resultingAction.actionID, (byte) (timeID + this.time.timeID));
 
                 newStructures.add(newStructure);
 
@@ -148,7 +164,8 @@ public class InvokesSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception{
         //A invokes B after t if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -163,6 +180,9 @@ public class InvokesSentence extends Sentence {
                 //boolean addedIdenticalStructure = false;
 
                 newStructures.add(structure.copy()); //TODO TOMEKL important; not typically resulting action wasn't invoked
+                if (secondPass) { //20150906
+                    continue;
+                }
 
                 if (structure.eIsActionAtTime(this.causalAction.actionID, timeID) == false) {
                     continue;

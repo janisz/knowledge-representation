@@ -53,6 +53,10 @@ public class Hoent {
     }
 
     public boolean hCheckCompatibility(String evaluationToTest, byte time) {
+        if (time >= tMax) {
+            return false;
+        }
+
         String actualEvaluation = sysElemH.get(time);
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
             char charAtIndexInActEval = actualEvaluation.charAt(fluentIndex);
@@ -88,6 +92,14 @@ public class Hoent {
     }
 
     public String hGetNewEvaluates(String posEvaluate, byte time) {
+        if (time >= tMax) {
+            StringBuilder resultSB = new StringBuilder("");
+            for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
+                resultSB.append("-");
+            }
+            return resultSB.toString();
+        }
+
         StringBuilder resultSB = new StringBuilder("");
         String evaluationInH = sysElemH.get(time);
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
@@ -120,6 +132,10 @@ public class Hoent {
     }
 
     public void hAddNewEvaluates(String newEvaluates, byte time) {
+        if (time >= tMax) {
+            return;
+        }
+
         //Hoent newHoent = this.copy();
         String evaluationInH = sysElemH.get(time);
         StringBuilder newEvaluationInH = new StringBuilder("");
@@ -140,11 +156,19 @@ public class Hoent {
     }
 
     public boolean eIsActionAtTime(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return false;
+        }
+
         return (this.sysElemE.get(timeID).occuringAction == actionID);
     }
 
     //    public ArrayList<HashMap<Byte, String>> sysElemO;
     public void oAddFluents(byte actionID, ArrayList<Byte> fluentsIDs, byte timeID) {
+        if (timeID >= tMax) {
+            return;
+        }
+
         HashMap<Byte, String> oldSysElemO = this.sysElemO.get(timeID);
 
         if (oldSysElemO.containsKey(actionID)) {
@@ -198,10 +222,18 @@ public class Hoent {
      * @param timeID
      */
     public void eAddAction(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return;
+        }
+
         this.sysElemE.get(timeID).occuringAction = actionID;
     }
 
     public void eAddNegatedActionAtTime(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return;
+        }
+
         ArrayList<Byte> disallowedActionsAL = this.sysElemE.get(timeID).disallowedActions;
         if (ArrayListOfByteUtils.contains(disallowedActionsAL, actionID) ) {
             return;

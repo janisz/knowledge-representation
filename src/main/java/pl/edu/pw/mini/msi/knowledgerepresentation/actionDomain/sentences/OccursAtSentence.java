@@ -77,7 +77,8 @@ public class OccursAtSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse)
+    public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
+                                                 boolean secondPass)
             throws Exception {
         byte time = this.time.timeID;
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -90,6 +91,12 @@ public class OccursAtSentence extends Sentence {
             //    ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
             //    continue;
             //}
+
+            //change compared to applyCertainSentence
+            newStructures.add(structure.copy()); //not typically, action doesn't occur
+            if (secondPass) { //20150906
+                continue;
+            }
 
             //negated == false
             if (eAtTime.occuringAction != -1) {
@@ -110,8 +117,7 @@ public class OccursAtSentence extends Sentence {
             //newHoents.add(newHoent);
         }
 
-        //change compared to applyCertainSentence
-        structures.addAll(newStructures);
+        //structures.addAll(newStructures);
 
         //if (newHoents.size() == 0) {
         //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");

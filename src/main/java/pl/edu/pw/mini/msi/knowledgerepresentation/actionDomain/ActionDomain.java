@@ -70,6 +70,12 @@ public class ActionDomain {
         log.debug("Added scenario: [" + scenarioName.toString() + "][" + sentence.toString() + "]");
     }
 
+    public void addEmptyScenario(String scenarioName) {
+        if (scenarios.containsKey(scenarioName) == false) {
+            scenarios.put(scenarioName, new ArrayList<Sentence>());
+        }
+    }
+
     public void calculateFullScenarios() {
         for (String scenarioName : scenarios.keySet()) {
             ArrayList<Sentence> fullScenarioSentences = new ArrayList<Sentence>();

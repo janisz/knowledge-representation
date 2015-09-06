@@ -59,7 +59,7 @@ public class CausesSentence extends Sentence {
             ArrayList<ArrayList<String>> posAndNegEvaluates =
                     FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
             ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
-            ArrayList<String> negEvaluates = posAndNegEvaluates.get(1);
+            //ArrayList<String> negEvaluates = posAndNegEvaluates.get(1);
 
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
@@ -68,6 +68,11 @@ public class CausesSentence extends Sentence {
                 //newStructures.add(structure.copy()); //20150905
                 if(structure.eIsActionAtTime(this.action.actionID, timeID)  == false) {
                     newStructures.add(structure.copy()); //20150905
+                    continue;
+                }
+
+                if(posEvaluates.size() == 0) {
+                    newStructures.add(structure.copy()); //20150906
                     continue;
                 }
 
@@ -213,4 +218,5 @@ public class CausesSentence extends Sentence {
 
         return newStructures;
     }
+
 }
