@@ -111,5 +111,6 @@ class BasicTest extends Specification {
         '/7-occursTypically'      | 5     | 'true, true, true, false'
         '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, true'
         '/9-occursTypicallyQ'     | 5     | 'true, true, true, true, false, true, true, true, false, true'
+        '/10-XOR_Typically'       | 5     | 'true, true, true, true, true, true, true, true, true, true'
     }
 }
