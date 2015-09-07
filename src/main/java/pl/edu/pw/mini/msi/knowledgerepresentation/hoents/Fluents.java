@@ -105,7 +105,8 @@ public class Fluents {
         return results;
     }
 
-    public static boolean checkCompatibilityUsingMask(String oldFluents, String newFluents, String changingFluents) {
+    public static boolean checkCompatibilityUsingMask(String oldFluents, String newFluents, String changingFluents,
+                                                      ArrayList<String>  posEvalsFromAtSentences) {
         ArrayList<String> results = new ArrayList<String>();
         results.add( new String("") );
 
@@ -113,7 +114,13 @@ public class Fluents {
             if (newFluents.charAt(index) == '0' || newFluents.charAt(index) == '1') {
                 if (oldFluents.charAt(index) == '0' || oldFluents.charAt(index) == '1') {
                     if (newFluents.charAt(index) != oldFluents.charAt(index)) {
-                        if (changingFluents == null || changingFluents.charAt(index) == '0') {
+                        if (posEvalsFromAtSentences != null && posEvalsFromAtSentences.size() > 0 &&
+                                isNewValueisInOneOfChangedFluents( newFluents.charAt(index), index, //20150907
+                                posEvalsFromAtSentences)) {
+                            ; //do nothing
+                        }
+                        else if (changingFluents == null || changingFluents.charAt(index) == '0') {
+
                             return false;
                         }
                     }
@@ -150,7 +157,6 @@ public class Fluents {
                 }
             }
         }
-        //TODO TOMEKL
         return results;
     }
 
@@ -230,4 +236,16 @@ public class Fluents {
         return newEvaluationInH.toString();
     }
 
+    public static boolean isNewValueisInOneOfChangedFluents(char newValue, byte fluentIndex,
+                                                              ArrayList<String> posEvaluationsFromAtSentences) {
+        if (posEvaluationsFromAtSentences == null || posEvaluationsFromAtSentences.size() == 0) {
+            return true;
+        }
+        for (String posEvaluationFromAtSentences : posEvaluationsFromAtSentences) {
+            if (newValue == posEvaluationFromAtSentences.charAt(fluentIndex)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

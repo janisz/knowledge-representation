@@ -208,11 +208,11 @@ public class Hoents {
             for (Hoent modelOfTypeOne : modelsOfTypeOne) {
                 ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
                 HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
-                //ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences);
+                ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences, timeIndex);
                 if (sysElemOAtTime.keySet().size() == 0){
                     //20150906
                     if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), null) == false) {
+                            modelOfTypeOne.sysElemH.get(timeIndex), null, posEvalsFromAtSentences) == false) {
                         continue;
                     }
                     Hoent newModelOfTypeOne = modelOfTypeOne.copy();
@@ -223,7 +223,7 @@ public class Hoents {
                     String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
                     ////20150906
                     if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO) == false) {
+                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, posEvalsFromAtSentences) == false) {
                         continue;
                     }
                     //-------------------------------------------------------------------------------------------------
@@ -294,11 +294,14 @@ public class Hoents {
 
     }
 
-    private ArrayList<String> getPosEvalsFromAtSentences(ArrayList<Sentence> sentences) {
+    private ArrayList<String> getPosEvalsFromAtSentences(ArrayList<Sentence> sentences, byte timeIndex) {
         ArrayList<String> posEvaluates = null;
         for (Sentence sentence : sentences) {
             if (sentence instanceof AtSentence) {
                 AtSentence atSentence = (AtSentence)sentence;
+                if (atSentence.time.timeID != timeIndex) {
+                    continue;
+                }
                 ArrayList<ArrayList<String>> posAndNegEvaluatesForSentence =
                         FormulaUtils.getPositiveAndNegativeEvaluates(atSentence.formula, fluentsCount);
                 ArrayList<String> posEvaluatesForSentence = posAndNegEvaluatesForSentence.get(0);
@@ -353,10 +356,32 @@ public class Hoents {
         for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
             if (modelOfTypeTwo.nCountNs() < maxNs) {
                 newModelsOfTypeTwo.remove(modelOfTypeTwo);
+                deletionsOfGMDPreferredModelsCounter_2++;
             }
         }
 
         modelsOfTypeTwo = newModelsOfTypeTwo;
+        log.debug("preserve hoents with max number of ns deletions: " + String.valueOf(deletionsOfGMDPreferredModelsCounter_2));
+
+        //remove duplicate HOENTs===============================================
+        int deletionsOfGMDPreferredModelsCounter_3 = 0;
+        newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
+        for (int firstIndex = 0; firstIndex < modelsOfTypeTwo.size(); firstIndex++) {
+            for (int secondIndex = firstIndex + 1; secondIndex < modelsOfTypeTwo.size(); secondIndex++) {
+                Hoent firstHoent = modelsOfTypeTwo.get(firstIndex);
+                Hoent secondHoent = modelsOfTypeTwo.get(secondIndex);
+                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) &&
+                        firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO) &&
+                        firstHoent.eAreSysElemEsTheSame(secondHoent.sysElemE) &&
+                        firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN)) {
+                    newModelsOfTypeTwo.remove(secondHoent);
+                    deletionsOfGMDPreferredModelsCounter_3++;
+                }
+            }
+        }
+
+        modelsOfTypeTwo = newModelsOfTypeTwo;
+        log.debug("remove duplicate HOENTs deletions: " + String.valueOf(deletionsOfGMDPreferredModelsCounter_3));
     }
 
     //================================================================================================================

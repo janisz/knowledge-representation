@@ -96,7 +96,7 @@ class BasicTest extends Specification {
         '/definition_o_01.al'     | 4     | 'true'
         '/definition_o_02.al'     | 4     | 'true, true'
         '/definition_o_03.al'     | 4     | 'true, true'
-        //'/definition_o_03a.al'     | 4     | 'true, true'
+        '/definition_o_03a.al'    | 4     | 'true, true, true'
         '/definition_o_04.al'     | 4     | 'true, true'
         '/definition_o_05.al'     | 4     | 'true'
         '/definition_o_05a.al'    | 4     | 'true'

@@ -434,4 +434,17 @@ public class Hoent {
         }
         return result;
     }
+
+    //ArrayList<SysElemEAtTimeUnit> sysElemE
+    public boolean eAreSysElemEsTheSame(ArrayList<SysElemEAtTimeUnit> otherSysElemE) {
+        for (byte index = 0; index < this.sysElemN.size(); index++) {
+            if (this.sysElemE.get(index).areSame(otherSysElemE.get(index)) == false) {
+                return false;
+            }
+            else {
+                ;//empty
+            }
+        }
+        return true;
+    }
 }
