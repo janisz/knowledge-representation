@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation
 
-import com.google.common.base.Joiner
 import org.antlr.v4.runtime.ANTLRInputStream
 import org.antlr.v4.runtime.CommonTokenStream
 import org.antlr.v4.runtime.tree.ParseTree
@@ -78,45 +77,45 @@ class BasicTest extends Specification {
     @Unroll
     def "proceeding file '#filename' returned #expectedResults"() {
         given:
-        InputStream resourceAsStream = getClass().getResourceAsStream(filename);
+        def code = getClass().getResourceAsStream(filename).text;
 
-        List<Boolean> actualResults = new Executor().getResults(null, resourceAsStream, tMax);
-        //List<Boolean> expectedResults = new ArrayList<Boolean>();
+        when:
+        List<Boolean> actualResults = new Executor().getResults(code, tMax);
 
-        expect:
-        Joiner.on(", ").useForNull("null").join(actualResults).equals( expectedResults )
+        then:
+        actualResults == expectedResults
 
         where:
-        filename                  |tMax   | expectedResults
-        '/definition_w_01.al'     | 15    | 'true, true, true, true, true, true'
-        '/definition_w_02.al'     | 15    | 'true, true, false, true, true, true, true, true'
-        '/definition_w_06.al'     | 15    | 'true, true, true, true, false, false, false'
-        '/definition_w_12.al'     | 15    | 'true, true'
-        '/definition_w_14.al'     | 15    | 'true, true, false, true, true, true, true, true'
-        '/definition_o_01.al'     | 4     | 'true'
-        '/definition_o_02.al'     | 4     | 'true, true'
-        '/definition_o_03.al'     | 4     | 'true, true'
-        '/definition_o_03a.al'    | 4     | 'true, true, true'
-        '/definition_o_04.al'     | 4     | 'true, true'
-        '/definition_o_05.al'     | 4     | 'true'
-        '/definition_o_05a.al'    | 4     | 'true'
-        '/definition_o_06.al'     | 4     | 'true, true, true, true'
-        '/definition_o_07.al'     | 4     | 'true, true, true, false, false, false'
-        '/definition_o_08.al'     | 4     | 'true'
-        '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
-        '/definition_fapr96_02.al'| 5     | 'true, true, true, true, true, true, true'
-	'/1-alternatywa'	  | 5     | 'true, true, true, true, true, false'
-        '/2-koniunkcja'  	  | 5     | 'true, true, true, true, true'
-        '/3-implikacja'  	  | 5     | 'true, true, true, true, true'
-        '/4-prostyTrigger'  	  | 5     | 'true, true, true, false, true'
-        '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
-        '/6-occurs'     	  | 5     | 'true, true, false, false'
-        '/7-occursTypically'      | 5     | 'true, true, true, false, true'
-        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, false' //changed last result to false
-        '/9-occursTypicallyQ'     | 5     | 'true, true, true, true, false, true, true, true, false, true'
-        '/10-XOR_Typically'       | 5     | 'true, true, true, true, true, true, true, true, true, true'
-        '/11-typicallyInChain'    | 5     | 'true, false, true, true, true, false, false, false, true, false, false' //changed two last to false, false
-        '/12-typicallyInChain2'   | 5     | 'true, false, true, true, true, false, false, false, true, true, true'
-        '/13-invokes'             | 5     | 'true, true, true, true'
+        filename                   | tMax | expectedResults
+        '/definition_w_01.al'      | 15   | [true, true, true, true, true, true]
+        '/definition_w_02.al'      | 15   | [true, true, false, true, true, true, true, true]
+        '/definition_w_06.al'      | 15   | [true, true, true, true, false, false, false]
+        '/definition_w_12.al'      | 15   | [true, true]
+        '/definition_w_14.al'      | 15   | [true, true, false, true, true, true, true, true]
+        '/definition_o_01.al'      | 4    | [true]
+        '/definition_o_02.al'      | 4    | [true, true]
+        '/definition_o_03.al'      | 4    | [true, true]
+        '/definition_o_03a.al'     | 4    | [true, true, true]
+        '/definition_o_04.al'      | 4    | [true, true]
+        '/definition_o_05.al'      | 4    | [true]
+        '/definition_o_05a.al'     | 4    | [true]
+        '/definition_o_06.al'      | 4    | [true, true, true, true]
+        '/definition_o_07.al'      | 4    | [true, true, true, false, false, false]
+        '/definition_o_08.al'      | 4    | [true]
+        '/definition_fapr96.al'    | 5    | [true, true, true, true, true, true]
+        '/definition_fapr96_02.al' | 5    | [true, true, true, true, true, true, true]
+        '/1-alternatywa'           | 5    | [true, true, true, true, true, false]
+        '/2-koniunkcja'            | 5    | [true, true, true, true, true]
+        '/3-implikacja'            | 5    | [true, true, true, true, true]
+        '/4-prostyTrigger'         | 5    | [true, true, true, false, true]
+        '/5-releases'              | 5    | [true, true, true, true, true, false]
+        '/6-occurs'                | 5    | [true, true, false, false]
+        '/7-occursTypically'       | 5    | [true, true, true, false, true]
+        '/8-triggerTypically'      | 5    | [true, true, true, true, false, false, true, false, false] //changed last result to false
+        '/9-occursTypicallyQ'      | 5    | [true, true, true, true, false, true, true, true, false, true]
+        '/10-XOR_Typically'        | 5    | [true, true, true, true, true, true, true, true, true, true]
+        '/11-typicallyInChain'     | 5    | [true, false, true, true, true, false, false, false, true, false, false] //changed two last to false, false
+        '/12-typicallyInChain2'    | 5    | [true, false, true, true, true, false, false, false, true, true, true]
+        '/13-invokes'              | 5    | [true, true, true, true]
     }
 }

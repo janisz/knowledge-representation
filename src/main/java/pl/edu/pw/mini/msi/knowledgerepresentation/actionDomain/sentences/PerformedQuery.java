@@ -48,11 +48,8 @@ public class PerformedQuery extends Query {
         if (queryType == EQueryType.always) {
             for (Hoent model : modelsOfTypeOne) {
                 boolean result = model.eIsActionAtTime(actionID, this.time.timeID);
-                if (result == false) {
+                if (!result) {
                     return false;
-                }
-                else {
-                    ; //empty
                 }
             }
             return true;
@@ -60,11 +57,8 @@ public class PerformedQuery extends Query {
         else if (queryType == EQueryType.ever) {
             for (Hoent model : modelsOfTypeOne) {
                 boolean result = model.eIsActionAtTime(actionID, this.time.timeID);
-                if (result == true) {
+                if (result) {
                     return true;
-                }
-                else {
-                    ; //empty
                 }
             }
             return false;
@@ -72,11 +66,8 @@ public class PerformedQuery extends Query {
         else {//if (queryType == EQueryType.typically) {
             for (Hoent model : modelsOfTypeTwo) {
                 boolean result = model.eIsActionAtTime(actionID, this.time.timeID);
-                if (result == false) {
+                if (!result) {
                     return false;
-                }
-                else {
-                    ; //empty
                 }
             }
             return true;

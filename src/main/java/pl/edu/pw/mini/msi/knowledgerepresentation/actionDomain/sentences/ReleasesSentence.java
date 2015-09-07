@@ -64,29 +64,21 @@ public class ReleasesSentence extends Sentence {
 
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
-                //boolean addedIdenticalStructure = false;
-
-                //newStructures.add(structure.copy()); //20150905
 
                 for (String posEvaluate : posEvaluates) {
                     boolean leftConditions = true;
 
-                    if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
+                    if (!structure.eIsActionAtTime(this.action.actionID, timeID)) {
                         newStructures.add(structure.copy()); //20150905
                         continue;
                     }
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
-                    if (hCompatibility == false) {
+                    if (!hCompatibility) {
                         newStructures.add(structure.copy()); //20150905
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
-                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                    //if (zerosAndOnesCounter == 0) {
-                    //    //newStructures.add(structure.copy());
-                    //    continue;
-                    //}
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                     ArrayList<Byte> oneFLuentAL = new ArrayList<Byte>();
@@ -106,20 +98,17 @@ public class ReleasesSentence extends Sentence {
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
-                if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
+                if (!structure.eIsActionAtTime(this.action.actionID, timeID)) {
                     newStructures.add(structure.copy());
                     continue;
                 }
 
                 Hoent newStructure = structure.copy();
-                //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
                 ArrayList<Byte> oneFLuentAL = new ArrayList<Byte>();
                 oneFLuentAL.add(this.fluent.fluentID);
                 newStructure.oAddFluents(this.action.actionID, oneFLuentAL, timeID);
 
                 newStructures.add(newStructure);
-
-                //newStructures.add(structure.copy()); //TODO comment this?
             }
         }
 

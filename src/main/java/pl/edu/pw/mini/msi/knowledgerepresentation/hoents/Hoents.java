@@ -2,22 +2,20 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.hoents;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.AtSentence;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.OccursAtSentence;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
-import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
-import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * Usage:
- *      1. create
- *      2. getQueriesAnswers
+ * 1. create
+ * 2. getQueriesAnswers
  * Created by Tomek on 2015-08-31.
  */
 public class Hoents {
@@ -35,8 +33,8 @@ public class Hoents {
     public ArrayList<Hoent> modelsOfTypeOne; //fluents that were changed are in the set O(A,t)
     public ArrayList<Hoent> modelsOfTypeTwo; //maximization of typicalities
 
-    public Hoents( ArrayList<Sentence> sentences, ArrayList<Query> queries, byte tMax, byte fluentsCount,
-                   ArrayList<String> actions) {
+    public Hoents(ArrayList<Sentence> sentences, ArrayList<Query> queries, byte tMax, byte fluentsCount,
+                  ArrayList<String> actions) {
         this.sentences = sentences;
         this.queries = queries;
         this.tMax = tMax;
@@ -44,7 +42,7 @@ public class Hoents {
         this.actions = actions;
 
         structures = new ArrayList<Hoent>();
-        oMinimalStructures= new ArrayList<Hoent>();
+        oMinimalStructures = new ArrayList<Hoent>();
         modelsOfTypeOne = new ArrayList<Hoent>();
         modelsOfTypeTwo = new ArrayList<Hoent>();
 
@@ -68,7 +66,7 @@ public class Hoents {
 
         ArrayList<Boolean> results = new ArrayList<Boolean>();
         for (Query query : this.queries) {
-            results.add( query.getAnswer(modelsOfTypeOne, modelsOfTypeTwo, actions) );
+            results.add(query.getAnswer(modelsOfTypeOne, modelsOfTypeTwo, actions));
         }
         return results;
     }
@@ -81,16 +79,16 @@ public class Hoents {
 
         //1. proceed atSentence and occursAt sentences=================================================================
         for (Sentence sentence : certainSentences) {
-            if ( (sentence instanceof AtSentence)
-                    || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1);
+            if ((sentence instanceof AtSentence)
+                    || (sentence instanceof OccursAtSentence)) {
+                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte) -1);
             }
         }
 
         //3. proceed occursAt "typically" sentences=================================================================
         for (Sentence sentence : typicallySentences) {
-            if ( (sentence instanceof AtSentence)
-                    || (sentence instanceof OccursAtSentence) ){
+            if ((sentence instanceof AtSentence)
+                    || (sentence instanceof OccursAtSentence)) {
                 structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false);
             }
         }
@@ -104,34 +102,34 @@ public class Hoents {
                     structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
                 }
             }
-        //}
+            //}
 
-        //4. proceed "typically" sentences other than occursAtSentence=======================================
-        //Boolean hasChanged = true;
-        //for (byte timeID = 0; timeID < tMax; timeID++) {
+            //4. proceed "typically" sentences other than occursAtSentence=======================================
+            //Boolean hasChanged = true;
+            //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
                     structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
                 }
             }
-        //}
+            //}
 
-        //20150906
-        //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
-        //Boolean hasChanged = true;
-        //for (byte timeID = 0; timeID < tMax; timeID++) {
+            //20150906
+            //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
+            //Boolean hasChanged = true;
+            //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
                     structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
                 }
             }
-        //}
+            //}
 
-        //4. proceed "typically" sentences other than occursAtSentence=======================================
-        //Boolean hasChanged = true;
-        //for (byte timeID = 0; timeID < tMax; timeID++) {
+            //4. proceed "typically" sentences other than occursAtSentence=======================================
+            //Boolean hasChanged = true;
+            //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
@@ -141,7 +139,6 @@ public class Hoents {
         }
 
 
-
     }
 
     /**
@@ -149,7 +146,7 @@ public class Hoents {
      * H=H', N=N' forall (timeid, actionid), fluents are in (strictly in) fluents'
      */
     private void calculateOMinimalStructures() {
-        oMinimalStructures = (ArrayList<Hoent>)structures.clone();//new ArrayList<Hoent>();
+        oMinimalStructures = (ArrayList<Hoent>) structures.clone();//new ArrayList<Hoent>();
         //boolean isStrictlyIn = false;
         //int deletionsOfSameStructuresCounter = 0;
         int deletionsOfNotOMinimalStructuresCounter = 0;
@@ -159,17 +156,16 @@ public class Hoents {
                 Hoent firstHoent = structures.get(index1);
                 Hoent secondHoent = structures.get(index2);
 
-                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) == false) {
+                if (!firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH)) {
                     continue;
                 }
-                if (firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) == false) {
+                if (!firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN)) {
                     continue;
                 }
                 if (firstHoent.oIsIn(secondHoent.sysElemO)) {
                     oMinimalStructures.remove(secondHoent);
                     deletionsOfNotOMinimalStructuresCounter++;
-                }
-                else if (secondHoent.oIsIn(firstHoent.sysElemO)) {
+                } else if (secondHoent.oIsIn(firstHoent.sysElemO)) {
                     oMinimalStructures.remove(firstHoent);
                     deletionsOfNotOMinimalStructuresCounter++;
                 }
@@ -209,21 +205,20 @@ public class Hoents {
                 ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
                 HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
                 ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences, timeIndex);
-                if (sysElemOAtTime.keySet().size() == 0){
+                if (sysElemOAtTime.keySet().size() == 0) {
                     //20150906
-                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), null, posEvalsFromAtSentences) == false) {
+                    if (!Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                            modelOfTypeOne.sysElemH.get(timeIndex), null, posEvalsFromAtSentences)) {
                         continue;
                     }
                     Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                     newModelOfTypeOne.hPreserveFluentsAtTime(timeIndex);
-                    newModelsOfTypeOne.add( newModelOfTypeOne );
-                }
-                else {
+                    newModelsOfTypeOne.add(newModelOfTypeOne);
+                } else {
                     String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
                     ////20150906
-                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, posEvalsFromAtSentences) == false) {
+                    if (!Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, posEvalsFromAtSentences)) {
                         continue;
                     }
                     //-------------------------------------------------------------------------------------------------
@@ -235,7 +230,7 @@ public class Hoents {
                     ArrayList<String> newHsFromOcclusion =
                             Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
                                     modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO);
-                   for( String newH : newHsFromOcclusion) {
+                    for (String newH : newHsFromOcclusion) {
                         Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                         newModelOfTypeOne.sysElemH.remove(timeIndex);
                         newModelOfTypeOne.sysElemH.add(timeIndex, newH);
@@ -253,8 +248,8 @@ public class Hoents {
         ArrayList<Sentence> certainSentences = getSentences(false);
         for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
+                if (!(sentence instanceof AtSentence)
+                        && !(sentence instanceof OccursAtSentence)) {
                     modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID);
                 }
             }
@@ -264,28 +259,22 @@ public class Hoents {
         //minimal set of occured actions
         int deletionsOfEMinimalModelsCounter = 0;
 
-        ArrayList<Hoent> newModelsOfTypeOne = (ArrayList<Hoent>)modelsOfTypeOne.clone();
+        ArrayList<Hoent> newModelsOfTypeOne = (ArrayList<Hoent>) modelsOfTypeOne.clone();
         for (int index1 = 0; index1 < modelsOfTypeOne.size(); index1++) {
             for (int index2 = index1 + 1; index2 < modelsOfTypeOne.size(); index2++) {
                 Hoent firstHoent = modelsOfTypeOne.get(index1);
                 Hoent secondHoent = modelsOfTypeOne.get(index2);
 
-                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) == false) {
-                    continue;
-                }
-                if (firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO) == false) {
-                    continue;
-                }
-                if (firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) == false) {
-                    continue;
-                }
-                if (firstHoent.eIsIn(secondHoent.sysElemE)) {
-                    newModelsOfTypeOne.remove(secondHoent);
-                    deletionsOfEMinimalModelsCounter++;
-                }
-                else if (secondHoent.eIsIn(firstHoent.sysElemE)) {
-                    newModelsOfTypeOne.remove(firstHoent);
-                    deletionsOfEMinimalModelsCounter++;
+                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH)
+                        && firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO)
+                        && firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN)) {
+                    if (firstHoent.eIsIn(secondHoent.sysElemE)) {
+                        newModelsOfTypeOne.remove(secondHoent);
+                        deletionsOfEMinimalModelsCounter++;
+                    } else if (secondHoent.eIsIn(firstHoent.sysElemE)) {
+                        newModelsOfTypeOne.remove(firstHoent);
+                        deletionsOfEMinimalModelsCounter++;
+                    }
                 }
             }
         }
@@ -298,7 +287,7 @@ public class Hoents {
         ArrayList<String> posEvaluates = null;
         for (Sentence sentence : sentences) {
             if (sentence instanceof AtSentence) {
-                AtSentence atSentence = (AtSentence)sentence;
+                AtSentence atSentence = (AtSentence) sentence;
                 if (atSentence.time.timeID != timeIndex) {
                     continue;
                 }
@@ -307,8 +296,7 @@ public class Hoents {
                 ArrayList<String> posEvaluatesForSentence = posAndNegEvaluatesForSentence.get(0);
                 if (posEvaluates == null) {
                     posEvaluates = posEvaluatesForSentence;
-                }
-                else {
+                } else {
                     posEvaluates = Fluents.getFluentsConjunction(posEvaluates, posEvaluatesForSentence);
                 }
             }
@@ -321,7 +309,7 @@ public class Hoents {
      * FAPR96.pdf site 9 Definition 3
      */
     private void calculateModelsOfTypeTwo() {
-        modelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeOne.clone();//new ArrayList<Hoent>();
+        modelsOfTypeTwo = (ArrayList<Hoent>) modelsOfTypeOne.clone();//new ArrayList<Hoent>();
         //boolean isStrictlyIn = false;
         //int deletionsOfSameStructuresCounter = 0;
         int deletionsOfGMDPreferredModelsCounter = 0;
@@ -334,8 +322,7 @@ public class Hoents {
                 if (firstHoent.nIsIn(secondHoent.sysElemN)) {
                     modelsOfTypeTwo.remove(firstHoent);
                     deletionsOfGMDPreferredModelsCounter++;
-                }
-                else if (secondHoent.nIsIn(firstHoent.sysElemN)) {
+                } else if (secondHoent.nIsIn(firstHoent.sysElemN)) {
                     modelsOfTypeTwo.remove(secondHoent);
                     deletionsOfGMDPreferredModelsCounter++;
                 }
@@ -345,7 +332,7 @@ public class Hoents {
 
         //preserve hoents with max number of ns===============================================
         int deletionsOfGMDPreferredModelsCounter_2 = 0;
-        ArrayList<Hoent> newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
+        ArrayList<Hoent> newModelsOfTypeTwo = (ArrayList<Hoent>) modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
         int maxNs = Integer.MIN_VALUE;
         for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
             int ns = modelOfTypeTwo.nCountNs();
@@ -365,7 +352,7 @@ public class Hoents {
 
         //remove duplicate HOENTs===============================================
         int deletionsOfGMDPreferredModelsCounter_3 = 0;
-        newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
+        newModelsOfTypeTwo = (ArrayList<Hoent>) modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
         for (int firstIndex = 0; firstIndex < modelsOfTypeTwo.size(); firstIndex++) {
             for (int secondIndex = firstIndex + 1; secondIndex < modelsOfTypeTwo.size(); secondIndex++) {
                 Hoent firstHoent = modelsOfTypeTwo.get(firstIndex);
@@ -386,14 +373,9 @@ public class Hoents {
 
     //================================================================================================================
     private ArrayList<Sentence> getSentences(boolean isTypical) {
-        ArrayList<Sentence> result = new ArrayList<Sentence>();
 
-        for (Sentence sentence : this.sentences) {
-            if (sentence.isTypical() == isTypical) {
-                result.add(sentence);
-            }
-        }
-
-        return result;
+        return this.sentences.stream()
+                .filter(sentence -> sentence.isTypical() == isTypical)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

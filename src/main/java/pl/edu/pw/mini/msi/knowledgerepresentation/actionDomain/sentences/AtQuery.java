@@ -49,9 +49,6 @@ public class AtQuery extends Query {
                 if (result == '0') {
                     return false;
                 }
-                else {
-                    ; //empty
-                }
             }
             return true;
         }
@@ -61,9 +58,6 @@ public class AtQuery extends Query {
                 if (result == '1') {
                     return true;
                 }
-                else {
-                    ; //empty
-                }
             }
             return false;
         }
@@ -72,9 +66,6 @@ public class AtQuery extends Query {
                 char result = this.formula.evaluateForValues( model.sysElemH.get( this.time.timeID ) );
                 if (result == '0') {
                     return false;
-                }
-                else {
-                    ; //empty
                 }
             }
             return true;

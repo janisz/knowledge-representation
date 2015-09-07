@@ -71,7 +71,7 @@ public class TriggersSentence extends Sentence {
             for (String posEvaluate : posEvaluates) {
                 boolean leftConditions = true;
 
-                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906
+                if (!structure.hCheckCompatibility(posEvaluate, timeID)) { //20150906
                     newStructures.add(structure.copy());
                     continue;
                 }
@@ -82,7 +82,7 @@ public class TriggersSentence extends Sentence {
                     newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
                 } //20150905_02
 
-                if (this.action.task.negated == true) {
+                if (this.action.task.negated) {
                     Hoent newStructure = structure.copy();
                     newStructure.eAddNegatedActionAtTime(this.action.actionID, timeID);
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
@@ -90,14 +90,14 @@ public class TriggersSentence extends Sentence {
                     continue;
                 }
 
-                if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
+                if (structure.eIsActionAtTime(this.action.actionID, timeID)) {
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                     newStructures.add(newStructure); //20150905
                     continue;
                 }
 
-                if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {
+                if (!structure.eCanInsertActionAtTime(this.action.actionID, timeID)) {
                     //newStructures.add(structure.copy());
                     //continue; //TODO TOMEKL throw error information?
                     String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
@@ -110,9 +110,6 @@ public class TriggersSentence extends Sentence {
                 newStructure.eAddAction(this.action.actionID, timeID);
                 newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                 newStructures.add(newStructure);
-
-                //newStructures.add(newStructure);
-                //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
             }
         }
 
@@ -136,52 +133,25 @@ public class TriggersSentence extends Sentence {
         ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
 
         for (Hoent structure : structures) {
-            //boolean isAtLeastOneNewStructure = false;
-            //boolean addedIdenticalStructure = false;
 
             newStructures.add(structure.copy()); //important; not typically, triggers didn't occur
             if (secondPass) { //20150906
                 continue;
             }
 
-            //if (posEvaluates.size() == 0) { //20150906
-            //    newStructures.add(structure.copy());
-            //    continue;
-            //}
 
             for (String posEvaluate : posEvaluates) {
 
-                //change compared to applyCertainSentence
-                //if (this.action.task.negated == true) {
-                //    Hoent newStructure = structure.copy();
-                //    newStructure.eAddNegatedActionAtTime(this.action.actionID, timeID);
-                //    newStructures.add(newStructure);
-                //    continue;
-                //}
-
-                //if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906
-                //    newStructures.add(structure.copy());
-                //    continue;
-                //}
-
-                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906_3
-                //    newStructures.add(structure.copy());
+                if (!structure.hCheckCompatibility(posEvaluate, timeID)) { //20150906_3
                     continue;
                 }
 
                 String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
-                //if (zerosAndOnesCounter != 0) { //20150906_02
-                //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
-                //} //20150905_02
-
-                if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
-                    //newStructures.add(structure.copy());
-                    //ARBITRARY WHAT TO DO IN SUCH A SITUATION
+                if (structure.eIsActionAtTime(this.action.actionID, timeID)) {
                     continue;
                 }
 
-                if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {
+                if (!structure.eCanInsertActionAtTime(this.action.actionID, timeID)) {
                     //newStructures.add(structure.copy());
                     //change compared to applyCertainSentence
                     continue;
@@ -194,8 +164,6 @@ public class TriggersSentence extends Sentence {
                 newStructure.nSetToTrue(timeID, this.action.actionID);
                 newStructures.add(newStructure);
 
-                //newStructures.add(newStructure);
-                //leftConditions = leftConditions && structure.hCheckCompatibility(posEvaluate, timeID);
             }
         }
 

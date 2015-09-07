@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfByteUtils;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tomek on 2015-08-31.
@@ -21,18 +22,17 @@ public class SysElemEAtTimeUnit {
         SysElemEAtTimeUnit newSysElemEAtTimeUnit = new SysElemEAtTimeUnit();
 
         newSysElemEAtTimeUnit.occuringAction = this.occuringAction;
-        for (Byte by : this.disallowedActions) {
-            newSysElemEAtTimeUnit.disallowedActions.add( new Byte(by) );
-        }
+        newSysElemEAtTimeUnit.disallowedActions.addAll(
+                this.disallowedActions.stream().map(Byte::new).collect(Collectors.toList())
+        );
 
         return newSysElemEAtTimeUnit;
     }
 
     @Override
     public String toString() {
-        String result = "Occurring: " + this.occuringAction + ", disallowed: " +
+        return "Occurring: " + this.occuringAction + ", disallowed: " +
                 Joiner.on(", ").useForNull("null").join(this.disallowedActions);
-        return result;
     }
 
     public boolean areSame(SysElemEAtTimeUnit otherE) {
@@ -43,7 +43,7 @@ public class SysElemEAtTimeUnit {
             return false;
         }
         for (byte thisDisallowedAction : this.disallowedActions) {
-            if (ArrayListOfByteUtils.contains(otherE.disallowedActions, thisDisallowedAction) == false) {
+            if (!ArrayListOfByteUtils.contains(otherE.disallowedActions, thisDisallowedAction)) {
                 return false;
             }
         }

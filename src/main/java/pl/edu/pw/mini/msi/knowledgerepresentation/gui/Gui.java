@@ -104,8 +104,7 @@ public class Gui extends Application {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
                         int maxTime = (int) maxTimeSpinner.getValue();
-                        //List<Boolean> returns = new Interpreter().eval(code);
-                        List<Boolean> returns = new Executor().getResults(code, null, maxTime);
+                        List<Boolean> returns = new Executor().getResults(code, maxTime);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

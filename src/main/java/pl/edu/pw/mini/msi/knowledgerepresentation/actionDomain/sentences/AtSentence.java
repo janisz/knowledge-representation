@@ -43,23 +43,11 @@ public class AtSentence extends Sentence {
             throws Exception {
         //a at t
         AtSentence atSentence = this;
-        //String mask = atSentence.formula.getFluentsMask(fluentsCount);
 
         ArrayList<ArrayList<String>> posAndNegEvaluates =
                 FormulaUtils.getPositiveAndNegativeEvaluates(atSentence.formula, fluentsCount);
         ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
-        //foreach H
-        //      check compatibility, if not compatible - return error
-        //foreach H
-        //      clone if not already present in newSysElemH
-//                for (String posEvaluate : posEvaluates) {
-//                    for (Hoent hoent : structures) {
-//                        boolean result = hoent.hCheckCompatibility(posEvaluate, time);
-//                        if (!result) {
-//                            throw new Exception("HOENT not compatible with sentence: [" + atSentence + "]");
-//                        }
-//                    }
-//                }
+
         byte timeID = this.time.timeID;
 
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -67,13 +55,13 @@ public class AtSentence extends Sentence {
             boolean addedSameStructure = false;
             for (String posEvaluate : posEvaluates) {
                 boolean result = structure.hCheckCompatibility(posEvaluate, timeID);
-                if (result == false) {
+                if (!result) {
                     continue;
                 }
                 String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
                 byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
                 if (zerosAndOnesCounter == 0) {
-                    if (addedSameStructure == false) {
+                    if (!addedSameStructure) {
                         newStructures.add(structure.copy());
                         addedSameStructure = true;
                     }

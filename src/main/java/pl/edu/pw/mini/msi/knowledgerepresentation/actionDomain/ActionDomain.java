@@ -11,6 +11,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentenc
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.stream.Collectors;
 
 /**
  * Usage:
@@ -30,8 +31,6 @@ public class ActionDomain {
     private HashMap<String, ArrayList<Sentence>> scenarios = new HashMap<String, ArrayList<Sentence>>();
 
     public ArrayList<String> actions = new ArrayList<String>(); //e.g., "(student,learn)"
-    //public ArrayList<Actor> actors = new ArrayList<Actor>();
-    //public ArrayList<Task> tasks = new ArrayList<Task>();
     public ArrayList<String> fluents = new ArrayList<String>(); //e.g., "night"
 
     public HashMap<String, ArrayList<Sentence>> fullScenarios = new HashMap<String, ArrayList<Sentence>>();
@@ -39,10 +38,6 @@ public class ActionDomain {
     private ArrayList<Query> queries = new ArrayList<Query>();
     public HashMap<String, ArrayList<Query>> mappedQueries = new HashMap<String, ArrayList<Query>>();
     public int minQueryID = Integer.MAX_VALUE;
-
-    public ActionDomain() {
-        ;//empty for now...
-    }
 
     public void addQuery(Query query) {
         queries.add(query);
@@ -63,28 +58,23 @@ public class ActionDomain {
             scenarios.get(scenarioName).add(sentence);
         }
         else {
-            scenarios.put(scenarioName, new ArrayList<Sentence>());
+            scenarios.put(scenarioName, new ArrayList<>());
             scenarios.get(scenarioName).add(sentence);
         }
 
-        log.debug("Added scenario: [" + scenarioName.toString() + "][" + sentence.toString() + "]");
+        log.debug("Added scenario: [" + scenarioName + "][" + sentence.toString() + "]");
     }
 
     public void addEmptyScenario(String scenarioName) {
-        if (scenarios.containsKey(scenarioName) == false) {
-            scenarios.put(scenarioName, new ArrayList<Sentence>());
+        if (!scenarios.containsKey(scenarioName)) {
+            scenarios.put(scenarioName, new ArrayList<>());
         }
     }
 
     public void calculateFullScenarios() {
         for (String scenarioName : scenarios.keySet()) {
-            ArrayList<Sentence> fullScenarioSentences = new ArrayList<Sentence>();
-            for (Sentence baseSentence : baseSentences) {
-                fullScenarioSentences.add(baseSentence);
-            }
-            for (Sentence scenarioSentence : scenarios.get(scenarioName)) {
-                fullScenarioSentences.add(scenarioSentence);
-            }
+            ArrayList<Sentence> fullScenarioSentences = baseSentences.stream().collect(Collectors.toCollection(ArrayList::new));
+            fullScenarioSentences.addAll(scenarios.get(scenarioName).stream().collect(Collectors.toList()));
             fullScenarios.put(scenarioName, fullScenarioSentences);
         }
     }
@@ -98,7 +88,7 @@ public class ActionDomain {
                 queriesInMap.add(oldQuery);
             }
             else {
-                ArrayList<Query> queriesAL = new ArrayList<Query>();
+                ArrayList<Query> queriesAL = new ArrayList<>();
                 queriesAL.add(oldQuery);
                 mappedQueries.put(queryName, queriesAL);
             }
@@ -119,22 +109,6 @@ public class ActionDomain {
             query.fillFluentAndActionIDs(fluents, actions);
         }
     }
-
-    /*public void calculateElementToIntMappings() {
-        ArrayList<Sentence> tempMergedSentences = new ArrayList<Sentence>();
-        for (Sentence sentence : baseSentences) {
-            tempMergedSentences.add(sentence);
-        }
-        for (String scenarioName : scenarios.keySet()) {
-            for (Sentence sentence : scenarios.get(scenarioName)) {
-                tempMergedSentences.add(sentence);
-            }
-        }
-
-        for (Sentence sentence : tempMergedSentences) {
-
-        }
-    }*/
 
     //calculateIDsInSentences
     //buildFullScenarios

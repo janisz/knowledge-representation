@@ -50,7 +50,6 @@ public class Sentence {
             }
         }
         actionDomain.actions.add(action); //append to end
-        return;
     }
 
     public void addActionToActionDomain(Action action, ActionDomain actionDomain){

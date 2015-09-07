@@ -47,12 +47,11 @@ public class OccursAtSentence extends Sentence {
             throws Exception {
         //A occurs at t
         byte time = this.time.timeID;
-        //ArrayList<Hoent> newHoents = new ArrayList<Hoent>();
 
         for (Hoent structure : structures) {
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
-            if (this.action.task.negated == true) {
+            if (this.action.task.negated) {
                 ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
                 continue;
             }
@@ -64,14 +63,7 @@ public class OccursAtSentence extends Sentence {
 
             eAtTime.occuringAction = this.action.actionID;
 
-            //Hoent newHoent = structure.copy();
-            //newHoent.hAddNewEvaluates(newEvaluates, time);
-            //newHoents.add(newHoent);
         }
-
-        //if (newHoents.size() == 0) {
-        //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
-        //}
 
         return structures;
     }
@@ -87,21 +79,13 @@ public class OccursAtSentence extends Sentence {
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
             //change compared to applyCertainSentence
-            //if (this.action.task.negated == true) {
-            //    ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
-            //    continue;
-            //}
-
-            //change compared to applyCertainSentence
             newStructures.add(structure.copy()); //not typically, action doesn't occur
             if (secondPass) { //20150906
                 continue;
             }
 
-            //negated == false
             if (eAtTime.occuringAction != -1) {
                 //change compared to applyCertainSentence
-                //throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
                 continue;
             }
 
@@ -111,18 +95,8 @@ public class OccursAtSentence extends Sentence {
             newStructure.eAddAction(this.action.actionID, time); //20150906_2
             newStructures.add(newStructure);
 
-            //eAtTime.occuringAction = this.action.actionID; //20150906_2
-
-            //Hoent newHoent = structure.copy();
-            //newHoent.hAddNewEvaluates(newEvaluates, time);
-            //newHoents.add(newHoent);
         }
 
-        //structures.addAll(newStructures);
-
-        //if (newHoents.size() == 0) {
-        //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
-        //}
 
         return newStructures;
     }
