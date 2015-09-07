@@ -1,0 +1,26 @@
+initially (a && b)
+(A,X) causes -a
+(A,X) occurs at 0
+(B,X) causes -b
+typically (B,X) occurs at 2
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+always a at 0 when scenarioEmpty
+always -a at 1 when scenarioEmpty
+
+always b at 2 when scenarioEmpty
+ever -b at 3 when scenarioEmpty
+always -b at 3 when scenarioEmpty
+
+always performed (A,X) at 0 when scenarioEmpty
+typically performed (A,X) at 0 when scenarioEmpty
+
+ever performed (B,X) at 2 when scenarioEmpty
+always performed (B,X) at 2 when scenarioEmpty
+typically performed (B,X) at 2 when scenarioEmpty
