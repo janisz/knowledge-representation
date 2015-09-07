@@ -1,9 +1,12 @@
 language: java
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install --only-upgrade -y oracle-java8-installer
+
 jdk:
   - oraclejdk8
+
+addons:
+  apt:
+    packages:
+      - oracle-java8-installer
 after_success:
   - ./gradlew jacocoTestReport coveralls
 
@@ -21,4 +24,4 @@ addons:
     notification_email: janiszt@gmail.com
     build_command_prepend: "./gradlew clean"
     build_command:   "./gradlew build"
-    branch_pattern: third_version
+    branch_pattern: master
