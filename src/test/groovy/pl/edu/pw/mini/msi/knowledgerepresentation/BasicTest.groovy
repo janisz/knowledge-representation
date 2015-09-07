@@ -109,5 +109,6 @@ class BasicTest extends Specification {
         '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
         '/6-occurs'     	  | 5     | 'true, true, false, false'
         '/7-occursTypically'      | 5     | 'true, true, true, false'
+        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, true'
     }
 }
