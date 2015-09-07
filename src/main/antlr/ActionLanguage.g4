@@ -86,7 +86,6 @@ AT: 'at';
 CAUSES: 'causes';
 EVER: 'ever';
 IF: 'if';
-IMPOSSIBLE: 'impossible';
 INITIALLY: 'initially';
 INVOKES: 'invokes';
 INVOLVED: 'involved';

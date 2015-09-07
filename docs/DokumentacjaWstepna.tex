@@ -68,6 +68,10 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 \begin{description}[style=nextline]
 	\item[$\texttt{initially } \alpha$]
 	stan początkowy fluentów w formule $\alpha$
+	\item[$a_i \texttt{ occurs } \texttt{ at } \pi$]
+	akcja $a_i$\footnote{akcja $a_i$ złożona jest z agenta ($\Lambda$) i zadania ($\tau$), które wykonuje} jest wykonywana w czasie $t$
+	\item[$\texttt{typically } a_i \texttt{ occurs } \texttt{at } \pi$]
+	zazwyczaj akcja $a_i$ jest wykonywana w czasie $t$
 	\item[$a_i \texttt{ causes } \alpha \texttt{ if } \pi$]
 	akcja $a_i$\footnote{akcja $a_i$ złożona jest z agenta ($\Lambda$) i zadania ($\tau$), które wykonuje}
 	powoduje przejście w stan $\alpha$ jeśli zachodzi warunek $\pi$
@@ -79,11 +83,11 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 	\item[$\texttt{typically } a_i \texttt{ invokes } a_j \texttt{ after } d \texttt{ if } \pi$]
 	zazwyczaj akcja $a_i$ powoduje wykonanie akcji $a_j$ po $d$ chwilach od zakończenia akcji $a_i$,
 	jeśli zachodzi warunek $\pi$
-	\item[$a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$]
-	akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
+	\item[$a_i \texttt{ releases } f \texttt{ if } \pi$]
+	akcja $a_i$ powoduje uwolnienie fluentu $f$,
 	jeśli zachodzi warunek $\pi$
-	\item[$\texttt{typically } a_i \texttt{ releases } f \texttt{ after } d \texttt{ if } \pi$]
-	zazwyczaj akcja $a_i$ powoduje uwolnienie fluentu $f$ po $d$ chwilach od zakończenia akcji $a_i$,
+	\item[$\texttt{typically } a_i \texttt{ releases } f \texttt{ if } \pi$]
+	zazwyczaj akcja $a_i$ powoduje uwolnienie fluentu $f$,
 	jeśli zachodzi warunek $\pi$
 	\item[$\pi \texttt{ triggers } a_i$]
 	jeśli zachodzi warunek $\pi$	to wykonywana jest akcja $a_i$
@@ -91,8 +95,6 @@ $\mathcal{A} = \left\lbrace (\Lambda, \tau) : \Lambda \in \textbf{Agents}, \tau 
 	zazwyczaj jeśli zachodzi warunek $\pi$ to wykonywana jest akcja $a_i$
 	\item[$\texttt{impossible } a_i \texttt{ at } t \texttt{ if } \pi$]
 	akcja $a_i$ jest niemożliwa  w chwili $t$, jeśli zachodzi warunek $\pi$
-	\item[$\texttt{always } \pi$]
-	każdy stan spełnia warunek $\pi$
 \end{description}
 
 \begin{example}\label{przyk:syntaktyka_jezyka_akcji}
@@ -160,10 +162,13 @@ Wartość funkcji okluzji będziemy nazywać regionem okluzji.
 Niech: $a_i,a_j$ będą akcjami, $ f $ - fluentem, $\alpha, \pi$ - formułami, a $fl(\alpha)$ zbiorem fluentów
 występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być spełnione następujące warunki:
    \begin{itemize}
+   		\item Dla każdego wyrażenia $ ( \alpha at t)$, wtedy i tylko wtedy, gdy $H(\alpha, t)=1$   	
    		\item Dla każdego wyrażenia $ ( a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
    		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
 		\item Dla każdego wyrażenia $ ( typically\; a_i\;causes\;\alpha\;if\;\pi)\in D $ i dla każdego momentu w czasie
 		 $t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$ oraz $(a_i,t) \in E$, $(a_i,t) \in N$, wtedy $H(\alpha,t + 1)=1$ mamy $fl(\alpha)\subseteq O(a_i,t + 1)$.
+		 \item Dla każdego wyrażenia $ ( a\; occurs\; at \; t)$, wtedy i tylko wtedy, gdy $(A, t) \in E$
+		 \item Dla każdego wyrażenia $ ( typically \; a \; occurs \; at\; t)$, wtedy i tylko wtedy, gdy jeżeli $(A, t) \in N$ to $(A, t) \in E$
  		\item Dla każdego wyrażenia $( a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
  		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i,t)\in E $ oraz $t+1+d\leq T_{\infty}$, wtedy $(a_j,t+1+d) \in E $.
 	 	\item Dla każdego wyrażenia $( typically\; a_i\;invokes\;a_j\;after\;d\;\;if\;\pi)\in D$ i dla każdego momentu czasu
@@ -176,7 +181,6 @@ występujących w $\alpha$. Wtedy dla zdań języka $\mathcal{AL}$  muszą być 
    		jeżeli $H(\pi,t)=1$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
 		\item Dla każdego wyrażenia $(typically\; \pi\;triggers\; a_i)\in D$ i dla każdego momentu czasu
 		$t \in \mathcal{T}$, jeżeli $H(\pi,t)=1$, $(a_i, t)\in N$ oraz $t+1\leq T_{\infty}$, wtedy $(a_i,t)\in E$.
-		\item Dla każdego wyrażenia $(impossible \; a_i \; if\;  \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$,
 		jeżeli $H(\pi,t)=1$, wtedy $(a_i,t) \notin E $.
 		\item Dla każdego wyrażenia $(always \; \pi )$ i dla każdego momentu czasu $t \in \mathcal{T}$, $H(\pi,t)=1$.
    \end{itemize}
