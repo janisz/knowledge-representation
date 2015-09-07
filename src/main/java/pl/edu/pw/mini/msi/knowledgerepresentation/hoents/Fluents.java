@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.hoents;
 
+import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
+
 import java.util.ArrayList;
 
 /** TODO TOMEKL
@@ -132,4 +134,100 @@ public class Fluents {
         }
         return resultSB.toString();
     }
+
+    public static ArrayList<String> getFluentsConjunction(ArrayList<String> posEvaluates,
+                                                          ArrayList<String> posEvaluatesForSentence) {
+        ArrayList<String> results = new ArrayList<String>();
+        for (String posEvaluate : posEvaluates) {
+            for (String posEvaluateForSentence : posEvaluatesForSentence) {
+                if (hCheckCompatibility(posEvaluate, posEvaluateForSentence, (byte)posEvaluate.length()) == false) {
+                    continue;
+                }
+                String newEvaluates = hGetNewEvaluates(posEvaluate, posEvaluateForSentence);
+                newEvaluates = hAddNewEvaluates(posEvaluate, newEvaluates);
+                if (ArrayListOfStringUtils.contains(results, newEvaluates) == false) {
+                    results.add(newEvaluates);
+                }
+            }
+        }
+        //TODO TOMEKL
+        return results;
+    }
+
+    public static boolean hCheckCompatibility(String firstEvaluation, String secondEvaluation, byte fluentsCount) {
+        String actualEvaluation = firstEvaluation;
+        String evaluationToTest = secondEvaluation;
+        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
+            char charAtIndexInActEval = actualEvaluation.charAt(fluentIndex);
+            char charAtIndexInEvalToTest = evaluationToTest.charAt(fluentIndex);
+
+            if (charAtIndexInEvalToTest == '?') {
+                continue;
+            }
+            else if (charAtIndexInEvalToTest == '1') {
+                if (charAtIndexInActEval == '1') {
+                    continue;
+                }
+                else if (charAtIndexInActEval == '0') {
+                    return false;
+                }
+                else if (charAtIndexInActEval == '?') {
+                    continue;
+                }
+            }
+            else if (charAtIndexInEvalToTest == '0') {
+                if (charAtIndexInActEval == '0') {
+                    continue;
+                }
+                else if (charAtIndexInActEval == '1') {
+                    return false;
+                }
+                else if (charAtIndexInActEval == '?') {
+                    continue;
+                }
+            }
+        }
+        return true;
+    }
+
+    public static String hGetNewEvaluates(String firstEvaluation, String secondEvaluation) {
+        byte fluentsCount = (byte) firstEvaluation.length();
+
+        StringBuilder resultSB = new StringBuilder("");
+        String evaluationInH = firstEvaluation;
+        String posEvaluate = secondEvaluation;
+        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
+            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
+            char charAtIndexInEvalToTest = posEvaluate.charAt(fluentIndex);
+            if ( (charAtIndexInEvalToTest == '0' || charAtIndexInEvalToTest == '1')
+                    && (charAtIndexInEvalInH == '?') ){
+                resultSB.append(charAtIndexInEvalToTest);
+            }
+            else {
+                resultSB.append("-");
+            }
+        }
+        return resultSB.toString();
+    }
+
+
+    public static String hAddNewEvaluates(String firstEvaluation, String secondEvaluation) {
+        //Hoent newHoent = this.copy();
+        String evaluationInH = firstEvaluation;
+        String newEvaluates = secondEvaluation;
+        byte fluentsCount = (byte)firstEvaluation.length();
+        StringBuilder newEvaluationInH = new StringBuilder("");
+        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
+            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
+            char charAtIndexInNewEvaluates = newEvaluates.charAt(fluentIndex);
+            if (charAtIndexInNewEvaluates == '0' || charAtIndexInNewEvaluates == '1') {
+                newEvaluationInH.append(charAtIndexInNewEvaluates);
+            }
+            else {
+                newEvaluationInH.append(charAtIndexInEvalInH);
+            }
+        }
+        return newEvaluationInH.toString();
+    }
+
 }

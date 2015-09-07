@@ -1,0 +1,14 @@
+initially ((a && b) && c)
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+always a at 0 when scenarioEmpty
+always b at 0 when scenarioEmpty
+always c at 0 when scenarioEmpty
+always ((a || b) || c) at 0 when scenarioEmpty
+always (a && (b && c)) at 0 when scenarioEmpty

@@ -1,0 +1,23 @@
+initially ((a || b) && (-a || -b))
+(A,XOR) causes (-a && ((a || b) && (-a || -b))) if a
+(A,XOR) causes (-b && ((a || b) && (-a || -b))) if b
+(A,XOR) occurs at 0
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+ever a at 0 when scenarioEmpty
+ever b at 0 when scenarioEmpty
+always (a || b) at 0 when scenarioEmpty
+always (a || b) at 1 when scenarioEmpty
+ever (-a && b) at 1 when scenarioEmpty
+ever (a && -b) at 1 when scenarioEmpty
+always ((a || b) && (-a || -b)) at 1 when scenarioEmpty
+
+ever performed (A,XOR) at  0 when scenarioEmpty
+always performed (A,XOR) at  0 when scenarioEmpty
+typically performed (A,XOR) at  0 when scenarioEmpty

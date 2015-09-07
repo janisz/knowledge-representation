@@ -8,6 +8,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.AtSente
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.OccursAtSentence;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
+import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -126,6 +127,17 @@ public class Hoents {
                     structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
                 }
             }
+        //}
+
+        //4. proceed "typically" sentences other than occursAtSentence=======================================
+        //Boolean hasChanged = true;
+        //for (byte timeID = 0; timeID < tMax; timeID++) {
+            for (Sentence sentence : typicallySentences) {
+                if ((sentence instanceof AtSentence) == false
+                        && (sentence instanceof OccursAtSentence) == false) {
+                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
+                }
+            }
         }
 
 
@@ -196,6 +208,7 @@ public class Hoents {
             for (Hoent modelOfTypeOne : modelsOfTypeOne) {
                 ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
                 HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
+                //ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences);
                 if (sysElemOAtTime.keySet().size() == 0){
                     //20150906
                     if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
@@ -213,10 +226,16 @@ public class Hoents {
                             modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO) == false) {
                         continue;
                     }
-                    ArrayList<String> newHs =
+                    //-------------------------------------------------------------------------------------------------
+                    //ArrayList<ArrayList<String>> posAndNegEvaluates =
+                    //        FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
+                    //ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+
+                    //-------------------------------------------------------------------------------------------------
+                    ArrayList<String> newHsFromOcclusion =
                             Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
                                     modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO);
-                    for( String newH : newHs) {
+                   for( String newH : newHsFromOcclusion) {
                         Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                         newModelOfTypeOne.sysElemH.remove(timeIndex);
                         newModelOfTypeOne.sysElemH.add(timeIndex, newH);
@@ -273,6 +292,25 @@ public class Hoents {
         modelsOfTypeOne = newModelsOfTypeOne;
         log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
+    }
+
+    private ArrayList<String> getPosEvalsFromAtSentences(ArrayList<Sentence> sentences) {
+        ArrayList<String> posEvaluates = null;
+        for (Sentence sentence : sentences) {
+            if (sentence instanceof AtSentence) {
+                AtSentence atSentence = (AtSentence)sentence;
+                ArrayList<ArrayList<String>> posAndNegEvaluatesForSentence =
+                        FormulaUtils.getPositiveAndNegativeEvaluates(atSentence.formula, fluentsCount);
+                ArrayList<String> posEvaluatesForSentence = posAndNegEvaluatesForSentence.get(0);
+                if (posEvaluates == null) {
+                    posEvaluates = posEvaluatesForSentence;
+                }
+                else {
+                    posEvaluates = Fluents.getFluentsConjunction(posEvaluates, posEvaluatesForSentence);
+                }
+            }
+        }
+        return posEvaluates;
     }
 
     /**

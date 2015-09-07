@@ -100,6 +100,7 @@ class BasicTest extends Specification {
         '/definition_o_04.al'     | 4     | 'true, true'
         '/definition_o_05.al'     | 4     | 'true'
         '/definition_o_05a.al'    | 4     | 'true'
+        '/definition_o_06.al'     | 4     | 'true, true, true, true'
         '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
         '/definition_fapr96_02.al'| 5     | 'true, true, true, true, true, true, true'
 	'/1-alternatywa'	  | 5     | 'true, true, true, true, true, false'
@@ -109,10 +110,10 @@ class BasicTest extends Specification {
         '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
         '/6-occurs'     	  | 5     | 'true, true, false, false'
         '/7-occursTypically'      | 5     | 'true, true, true, false'
-        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, true'
+        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, false' //changed last result to false
         '/9-occursTypicallyQ'     | 5     | 'true, true, true, true, false, true, true, true, false, true'
         '/10-XOR_Typically'       | 5     | 'true, true, true, true, true, true, true, true, true, true'
-        '/11-typicallyInChain'    | 5     | 'true, false, true, true, true, false, false, false, true, true, true'
+        '/11-typicallyInChain'    | 5     | 'true, false, true, true, true, false, false, false, true, false, false' //changed two last to false, false
         '/12-typicallyInChain2'   | 5     | 'true, false, true, true, true, false, false, false, true, true, true'
     }
 }

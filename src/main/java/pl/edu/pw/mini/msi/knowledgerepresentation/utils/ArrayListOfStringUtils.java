@@ -51,4 +51,15 @@ public class ArrayListOfStringUtils {
 
         return resultSB.toString();
     }
+
+    public static boolean contains(ArrayList<String> list, String newString) {
+        for (byte index = 0; index < list.size(); index++) {
+            String listElem = list.get(index);
+            if ( listElem.equals(newString) ) {
+                return true;
+            }
+        }
+        return false;
+        //TODO TOMEKL optimize, because list is sorted
+    }
 }
