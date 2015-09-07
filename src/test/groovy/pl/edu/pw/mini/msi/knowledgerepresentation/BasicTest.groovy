@@ -101,6 +101,8 @@ class BasicTest extends Specification {
         '/definition_o_05.al'     | 4     | 'true'
         '/definition_o_05a.al'    | 4     | 'true'
         '/definition_o_06.al'     | 4     | 'true, true, true, true'
+        '/definition_o_07.al'     | 4     | 'true, true, true, false, false, false'
+        '/definition_o_08.al'     | 4     | 'true'
         '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
         '/definition_fapr96_02.al'| 5     | 'true, true, true, true, true, true, true'
 	'/1-alternatywa'	  | 5     | 'true, true, true, true, true, false'
@@ -109,7 +111,7 @@ class BasicTest extends Specification {
         '/4-prostyTrigger'  	  | 5     | 'true, true, true, false, true'
         '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
         '/6-occurs'     	  | 5     | 'true, true, false, false'
-        '/7-occursTypically'      | 5     | 'true, true, true, false'
+        '/7-occursTypically'      | 5     | 'true, true, true, false, true'
         '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, false' //changed last result to false
         '/9-occursTypicallyQ'     | 5     | 'true, true, true, true, false, true, true, true, false, true'
         '/10-XOR_Typically'       | 5     | 'true, true, true, true, true, true, true, true, true, true'

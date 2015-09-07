@@ -13,6 +13,7 @@ ever a at 0 when scenarioEmpty
 always a at 0 when scenarioEmpty
 ever a at 4 when scenarioEmpty
 always a at 4 when scenarioEmpty
+typically performed (A,X) at 3 when scenarioEmpty
 
 
 
