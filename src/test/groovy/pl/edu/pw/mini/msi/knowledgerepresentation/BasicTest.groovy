@@ -117,5 +117,7 @@ class BasicTest extends Specification {
         '/11-typicallyInChain'     | 5    | [true, false, true, true, true, false, false, false, true, false, false] //changed two last to false, false
         '/12-typicallyInChain2'    | 5    | [true, false, true, true, true, false, false, false, true, true, true]
         '/13-invokes'              | 5    | [true, true, true, true]
+        '/1-involved.al'              | 1    | [false, true, false, true]
+        '/2-involved.al'              | 3    | [false, true, false, true, false, true, false, true]
     }
 }
