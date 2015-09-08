@@ -360,6 +360,9 @@ public class Hoent {
     public boolean eIsAgentInvolvedAtTime(String agentToCheck, byte timeID, ArrayList<String> actionsMapping) {
         SysElemEAtTimeUnit e = this.sysElemE.get(timeID);
         byte actionID = e.occuringAction;
+        if (actionID == -1) {
+            return false;
+        }
         String actionString = actionsMapping.get(actionID);
         boolean result = Action.isAgentInActionString(actionString, agentToCheck);
         return result;

@@ -96,13 +96,15 @@ class BasicTest extends Specification {
         '/definition_o_01.al'     | 4     | 'true'
         '/definition_o_02.al'     | 4     | 'true, true'
         '/definition_o_03.al'     | 4     | 'true, true'
-        '/definition_o_03a.al'    | 4     | 'true, true, true'
+        '/definition_o_03a.al'    | 4     | 'true, null, true'
         '/definition_o_04.al'     | 4     | 'true, true'
         '/definition_o_05.al'     | 4     | 'true'
         '/definition_o_05a.al'    | 4     | 'true'
         '/definition_o_06.al'     | 4     | 'true, true, true, true'
         '/definition_o_07.al'     | 4     | 'true, true, true, false, false, false'
         '/definition_o_08.al'     | 4     | 'true'
+        '/definition_r_01.al'     | 6     | 'false'
+        '/definition_r_02.al'     | 7     | 'true'
         '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
         '/definition_fapr96_02.al'| 5     | 'true, true, true, true, true, true, true'
 	'/1-alternatywa'	  | 5     | 'true, true, true, true, true, false'
@@ -118,5 +120,7 @@ class BasicTest extends Specification {
         '/11-typicallyInChain'    | 5     | 'true, false, true, true, true, false, false, false, true, false, false' //changed two last to false, false
         '/12-typicallyInChain2'   | 5     | 'true, false, true, true, true, false, false, false, true, true, true'
         '/13-invokes'             | 5     | 'true, true, true, true'
+        '/1-involved.al'          | 1     | 'false'
+        '/2-involved.al'          | 3     | 'false, true, false, true, false, true, false, true'
     }
 }

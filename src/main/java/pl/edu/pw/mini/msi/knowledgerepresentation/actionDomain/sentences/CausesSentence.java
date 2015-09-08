@@ -223,7 +223,7 @@ public class CausesSentence extends Sentence {
         }
 
         if (newStructures.size() == 0) {
-            throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + this.toString() + "]");
+            throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + this.toString() + "] at time =[" + timeID + "]." );
         }
 
         return newStructures;

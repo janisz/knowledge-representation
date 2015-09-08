@@ -8,6 +8,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Flu
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
+import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,6 +119,9 @@ public class ActionDomain {
         for (Query query : queries) {
             query.fillFluentAndActionIDs(fluents, actions);
         }
+
+        log.debug("Added [" + fluents.size() + "] fluents: [" + ArrayListOfStringUtils.myToString(fluents) + "]");
+        log.debug("Added [" + actions.size() + "] actions: [" + ArrayListOfStringUtils.myToString(actions) + "]");
     }
 
     /*public void calculateElementToIntMappings() {

@@ -208,24 +208,23 @@ public class Hoents {
             for (Hoent modelOfTypeOne : modelsOfTypeOne) {
                 ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
                 HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
-                ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences, timeIndex);
+                //ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences, timeIndex);
                 if (sysElemOAtTime.keySet().size() == 0){
                     //20150906
-                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), null, posEvalsFromAtSentences) == false) {
-                        continue;
-                    }
                     Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                     newModelOfTypeOne.hPreserveFluentsAtTime(timeIndex);
+                    //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
+                        //continue;
+                    //}
+                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                            modelOfTypeOne.sysElemH.get(timeIndex), null, null) == false ) {
+                        continue;
+                    }
                     newModelsOfTypeOne.add( newModelOfTypeOne );
                 }
                 else {
                     String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
                     ////20150906
-                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, posEvalsFromAtSentences) == false) {
-                        continue;
-                    }
                     //-------------------------------------------------------------------------------------------------
                     //ArrayList<ArrayList<String>> posAndNegEvaluates =
                     //        FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
@@ -239,6 +238,14 @@ public class Hoents {
                         Hoent newModelOfTypeOne = modelOfTypeOne.copy();
                         newModelOfTypeOne.sysElemH.remove(timeIndex);
                         newModelOfTypeOne.sysElemH.add(timeIndex, newH);
+                        //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
+                        //   continue;
+                        //}
+                        if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                               modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, null) == false) {
+                            continue;
+                        }
+
                         newModelsOfTypeOne.add(newModelOfTypeOne);
                     }
                 }

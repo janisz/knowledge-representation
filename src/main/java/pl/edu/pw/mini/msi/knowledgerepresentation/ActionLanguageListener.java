@@ -74,7 +74,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
      */
     @Override public void exitProgramm(ActionLanguageParser.ProgrammContext ctx) { }
 
-    @Override public void enterInstruction(ActionLanguageParser.InstructionContext ctx) {
+    private void clear(boolean clearLastScenarioName) {
         lastAction = null;
         preLastAction = null;
         lastActor = null;
@@ -83,7 +83,9 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         lastFluent = null;
         lastFormula = null;
         preLastFormula = null;
-        lastScenarioName = null;
+        if (clearLastScenarioName) {
+            lastScenarioName = null;
+        }
         lastScenario = null;
         lastTask = null;
         lastTime = null;
@@ -94,6 +96,10 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
         addedLogExprInUnderCondition = false;
         lastUnderConditionFormula = null;
         isInUnderCondition = false;
+    }
+
+    @Override public void enterInstruction(ActionLanguageParser.InstructionContext ctx) {
+        clear(true);
     }
 
     @Override public void exitInstruction(ActionLanguageParser.InstructionContext ctx) {
@@ -299,6 +305,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override public void exitEvent(ActionLanguageParser.EventContext ctx) {
         OccursAtSentence occursAtSentence = new OccursAtSentence(false, lastAction, lastTime, actionDomain);
         actionDomain.addScenarioSentence(lastScenarioName.toString(), occursAtSentence);
+        clear(false);
     }
     /**
      * {@inheritDoc}
@@ -333,6 +340,7 @@ public class ActionLanguageListener extends ActionLanguageBaseListener {
     @Override public void exitObservation(ActionLanguageParser.ObservationContext ctx) {
         AtSentence atSentence = new AtSentence(lastFormula, lastTime, actionDomain);
         actionDomain.addScenarioSentence(lastScenarioName.toString(), atSentence);
+        clear(false);
     }
 
 

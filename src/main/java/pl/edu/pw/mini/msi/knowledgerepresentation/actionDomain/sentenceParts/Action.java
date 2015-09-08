@@ -31,6 +31,6 @@ public class Action {
     public static boolean isAgentInActionString(String actionString, String actorStringToCheck) {
         int commaIndex = actionString.indexOf(',');
         String actorString = actionString.substring(1, commaIndex);
-        return actionString.equals(actorStringToCheck);
+        return actorString.equals(actorStringToCheck);
     }
 }
