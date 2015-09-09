@@ -58,7 +58,8 @@ public class OccursAtSentence extends Sentence {
             }
 
             //negated == false
-            if (eAtTime.occuringAction != -1) {
+            if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
+            //if (eAtTime.occuringAction != -1) {
                 throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
             }
 
@@ -99,7 +100,8 @@ public class OccursAtSentence extends Sentence {
             }
 
             //negated == false
-            if (eAtTime.occuringAction != -1) {
+            if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
+            //if (eAtTime.occuringAction != -1) {
                 //change compared to applyCertainSentence
                 //throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
                 continue;

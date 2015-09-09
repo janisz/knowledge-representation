@@ -68,13 +68,18 @@ public class ReleasesSentence extends Sentence {
 
                 //newStructures.add(structure.copy()); //20150905
 
+                if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) { //20150909 moved from the inside of "for (String posEvaluate : posEvaluates) {"
+                    newStructures.add(structure.copy()); //20150905
+                    continue;
+                }
+
+                if (posEvaluates.size() == 0) { //20150909
+                    newStructures.add(structure.copy()); //20150905
+                    continue;
+                }
+
                 for (String posEvaluate : posEvaluates) {
                     boolean leftConditions = true;
-
-                    if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
-                        newStructures.add(structure.copy()); //20150905
-                        continue;
-                    }
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
