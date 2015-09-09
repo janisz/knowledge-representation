@@ -1,0 +1,15 @@
+initially a
+a triggers (A,X)
+(A,X) causes -a
+
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+	(a,1)
+  }
+}
+
+ever a at 0 when scenarioEmpty
+
