@@ -297,6 +297,13 @@ public class Hoents {
             }
         }
         modelsOfTypeOne = newModelsOfTypeOne;
+
+        for (Hoent modelofTypeOne : modelsOfTypeOne) {
+            if (modelofTypeOne.hasExceededTimeLimit == true) {
+                throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
+            }
+        }
+
         log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
     }

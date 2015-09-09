@@ -43,7 +43,7 @@ public class PerformedQuery extends Query {
 
     @Override
     public Boolean getAnswer(ArrayList<Hoent> modelsOfTypeOne, ArrayList<Hoent> modelsOfTypeTwo, ArrayList<String> actions) {
-        byte actionID = ArrayListOfStringUtils.getIndexOfString(actions, this.action.toString());
+        byte actionID = ArrayListOfStringUtils.getIndexOfString(actions, this.action.toStringWithoutNegation());
 
         if (queryType == EQueryType.always) {
             for (Hoent model : modelsOfTypeOne) {

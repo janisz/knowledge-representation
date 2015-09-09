@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class OccursAtSentence extends Sentence {
+
+    private static final Logger log = LoggerFactory.getLogger(OccursAtSentence.class);
+
     public boolean typically;
     public Action action;
     public Time time;
@@ -53,6 +58,10 @@ public class OccursAtSentence extends Sentence {
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
             if (this.action.task.negated == true) {
+                if (structure.eCanAddNegatedActionAtTime(this.action.actionID, time) == false) {
+                    throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
+                    //continue; //20150909
+                }
                 ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
                 continue;
             }
@@ -61,6 +70,7 @@ public class OccursAtSentence extends Sentence {
             if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
             //if (eAtTime.occuringAction != -1) {
                 throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
+                //continue; //20150909
             }
 
             eAtTime.occuringAction = this.action.actionID;
@@ -85,6 +95,7 @@ public class OccursAtSentence extends Sentence {
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
         for (Hoent structure : structures) {
+            structure.addTypicalActionIndex(this.time.timeID);
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
             //change compared to applyCertainSentence

@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.IFormula;
@@ -13,6 +15,9 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class AtSentence extends Sentence {
+
+    private static final Logger log = LoggerFactory.getLogger(AtSentence.class);
+
     public IFormula formula;
     public Time time;
 
@@ -65,11 +70,12 @@ public class AtSentence extends Sentence {
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
         for (Hoent structure : structures) {
             boolean addedSameStructure = false;
+            boolean isAtLEastOnePosEvalCompatible = false;
             for (String posEvaluate : posEvaluates) {
-                boolean result = structure.hCheckCompatibility(posEvaluate, timeID);
-                if (result == false) {
+                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) {
                     continue;
                 }
+                isAtLEastOnePosEvalCompatible = true;
                 String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
                 byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
                 if (zerosAndOnesCounter == 0) {
@@ -82,6 +88,16 @@ public class AtSentence extends Sentence {
                 Hoent newStructure = structure.copy();
                 newStructure.hAddNewEvaluates(newEvaluates, timeID);
                 newStructures.add(newStructure);
+            }
+            if (isAtLEastOnePosEvalCompatible == false) {
+                String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Byte(timeID).toString() + "]."; //20150906
+                log.debug(message);
+                if (structure.isTypicalAtTime(timeID) == false) {
+                    throw new Exception(message);
+                }
+                else {
+                    continue; //not relevant
+                }
             }
         }
         if (newStructures.size() == 0) {

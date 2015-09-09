@@ -11,10 +11,12 @@ import java.util.ArrayList;
 public class SysElemEAtTimeUnit {
     public byte occuringAction;
     public ArrayList<Byte> disallowedActions = new ArrayList<Byte>();
+    //boolean isOccuringActionTriggeredByQuestionMark;
 
     public SysElemEAtTimeUnit() {
         this.occuringAction = -1;
-        disallowedActions = new ArrayList<Byte>();
+        this.disallowedActions = new ArrayList<Byte>();
+        //this.isOccuringActionTriggeredByQuestionMark = false;
     }
 
     public SysElemEAtTimeUnit copy() {
@@ -24,6 +26,7 @@ public class SysElemEAtTimeUnit {
         for (Byte by : this.disallowedActions) {
             newSysElemEAtTimeUnit.disallowedActions.add( new Byte(by) );
         }
+        //newSysElemEAtTimeUnit.isOccuringActionTriggeredByQuestionMark = this.isOccuringActionTriggeredByQuestionMark;
 
         return newSysElemEAtTimeUnit;
     }

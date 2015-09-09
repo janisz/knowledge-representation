@@ -84,25 +84,31 @@ public class TriggersSentence extends Sentence {
 
                 if (this.action.task.negated == true) {
                     Hoent newStructure = structure.copy();
+                    if (newStructure.eCanAddNegatedActionAtTime(this.action.actionID, timeID) == false){
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
+                        log.debug(message);
+                        //throw new Exception(message);
+                        continue;
+                    }
                     newStructure.eAddNegatedActionAtTime(this.action.actionID, timeID);
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                     newStructures.add(newStructure);
                     continue;
                 }
 
-                if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
-                    Hoent newStructure = structure.copy();
-                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
-                    newStructures.add(newStructure); //20150905
-                    continue;
-                }
+                //if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
+                //    Hoent newStructure = structure.copy();
+                //    newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
+                //    newStructures.add(newStructure); //20150905
+                //    continue;
+                //}
 
                 if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {
                     //newStructures.add(structure.copy());
                     //continue; //TODO TOMEKL throw error information?
                     String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
-                    //throw new Exception(message); //20150906
                     log.debug(message);
+                    //throw new Exception(message); //20150906
                     continue;
                 }
 
@@ -136,6 +142,7 @@ public class TriggersSentence extends Sentence {
         ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
 
         for (Hoent structure : structures) {
+            structure.addTypicalActionIndex(timeID);
             //boolean isAtLeastOneNewStructure = false;
             //boolean addedIdenticalStructure = false;
 

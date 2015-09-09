@@ -19,13 +19,17 @@ public class Action {
     }
 
     public void fillFluentsIDs(ArrayList<String> actionsMapping) {
-        String actionString = this.toString();
+        String actionString = this.toStringWithoutNegation();
         actionID = ArrayListOfStringUtils.getIndexOfString(actionsMapping, actionString);
     }
 
     @Override
     public String toString() {
         return "(" + actor.toString() + "," + task.toString() + ")";
+    }
+
+    public String toStringWithoutNegation() {
+        return "(" + actor.toString() + "," + task.toStringWithoutNegation() + ")";
     }
 
     public static boolean isAgentInActionString(String actionString, String actorStringToCheck) {

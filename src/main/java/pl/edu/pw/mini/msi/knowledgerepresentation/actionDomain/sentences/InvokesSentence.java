@@ -88,7 +88,8 @@ public class InvokesSentence extends Sentence {
                 }
 
                 if (posEvaluates.size() == 0) {
-                   newStructures.add(structure.copy());
+                    newStructures.add(structure.copy());
+                    continue;
                 }
 
                 for (String posEvaluate : posEvaluates) {
@@ -110,14 +111,34 @@ public class InvokesSentence extends Sentence {
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
+                    if (structure.isFullTime((byte)(timeID + this.time.timeID))) { //20150909
+                        Hoent newNewStructure = newStructure.copy();
+                        newNewStructure.hasExceededTimeLimit = true;
+                        newStructures.add(newNewStructure);
+                        continue;
+                    }
+
+                    if (this.resultingAction.task.negated == true) {
+                        Hoent newNewStructure = structure.copy();
+                        if (newNewStructure.eAddNegatedActionAtTime(this.resultingAction.actionID,
+                                (byte)(timeID + this.time.timeID)) == false){
+                            String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "]."; //20150906
+                            log.debug(message);
+                            //throw new Exception(message);
+                            continue;
+                        }
+                        //newNewStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
+                        newStructures.add(newNewStructure);
+                        continue;
+                    }
+
                     if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                         == false) {
-                        //continue; //TODO TOMEKL throw error information?
-                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "."; //20150906
-                        //throw new Exception(message); //20150906
+                            //continue; //TODO TOMEKL throw error information?
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "]."; //20150906
                         log.debug(message);
+                        //throw new Exception(message); //20150906
                         continue;
-
                     }
                     newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
 
@@ -141,15 +162,37 @@ public class InvokesSentence extends Sentence {
                     continue;
                 }
 
+                if (structure.isFullTime((byte)(timeID + this.time.timeID))) { //20150909
+                    Hoent newStructure = structure.copy();
+                    newStructure.hasExceededTimeLimit = true;
+                    newStructures.add(newStructure);
+                    continue;
+                }
+
                 Hoent newStructure = structure.copy();
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+
+                if (this.resultingAction.task.negated == true) {
+                    Hoent newNewStructure = structure.copy();
+                    if (newNewStructure.eCanAddNegatedActionAtTime(this.resultingAction.actionID,
+                            (byte)(timeID + this.time.timeID)) == false){
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "]."; //20150906
+                        log.debug(message);
+                        //throw new Exception(message);
+                        continue;
+                     }
+                    //newNewStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
+                    newNewStructure.eAddNegatedActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
+                    newStructures.add(newNewStructure);
+                    continue;
+                }
 
                 if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                         == false) {
                     //continue; //TODO TOMEKL throw error information?
-                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "."; //20150906
-                    //throw new Exception(message); //20150906
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "]."; //20150906
                     log.debug(message);
+                    //throw new Exception(message); //20150906
                     continue;
                 }
                 newStructure.eAddAction(this.resultingAction.actionID, (byte) (timeID + this.time.timeID));
@@ -176,6 +219,7 @@ public class InvokesSentence extends Sentence {
             ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
 
             for (Hoent structure : structures) {
+                structure.addTypicalActionIndex((byte)(timeID + this.time.timeID));
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
@@ -202,6 +246,14 @@ public class InvokesSentence extends Sentence {
                     //}
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+
+                    if (structure.isFullTime((byte)(timeID + this.time.timeID))) { //20150909
+                        Hoent newNewStructure = newStructure.copy();
+                        newNewStructure.hasExceededTimeLimit = true;
+                        newStructures.add(newNewStructure);
+                        continue;
+                    }
+
                     newStructure.nSetToTrue((byte)(timeID + this.time.timeID), this.resultingAction.actionID);
 
                     if (newStructure.eCanInsertActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
@@ -222,6 +274,7 @@ public class InvokesSentence extends Sentence {
             //A invokes B after t if p
 
             for (Hoent structure : structures) {
+                structure.addTypicalActionIndex((byte)(timeID + this.time.timeID));
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 

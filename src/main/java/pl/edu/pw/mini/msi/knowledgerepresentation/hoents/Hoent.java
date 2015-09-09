@@ -17,14 +17,24 @@ public class Hoent {
     public ArrayList<SysElemNAtTimeUnit> sysElemN;
     public short tMax;
     public short fluentsCount;
+    public boolean hasExceededTimeLimit;
+    public byte firstTypicalActionIndex;
 
-    private Hoent(short tMax, short fluentsCount, boolean privateConstructor) {
+    /**
+     * Constructor for copy method
+     * @param tMax
+     * @param fluentsCount
+     * @param bDoNotUse
+     */
+    private Hoent(short tMax, short fluentsCount, boolean hasExceededTimeLimit, byte firstTypicalActionIndex, boolean bDoNotUse) {
         sysElemH = new ArrayList<String>(tMax);
         sysElemO = new ArrayList<HashMap<Byte, String>>(tMax);
         sysElemE = new ArrayList<SysElemEAtTimeUnit>(tMax);
         sysElemN = new ArrayList<SysElemNAtTimeUnit>(tMax);
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
+        this.hasExceededTimeLimit = hasExceededTimeLimit;
+        this.firstTypicalActionIndex = firstTypicalActionIndex;
     }
 
     public Hoent(short tMax, short fluentsCount) {
@@ -34,6 +44,8 @@ public class Hoent {
         sysElemN = new ArrayList<SysElemNAtTimeUnit>(tMax);
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
+        this.hasExceededTimeLimit = false;
+        this.firstTypicalActionIndex = -1;
 
         StringBuilder fluentValuesQuestionMark = new StringBuilder("");
         for (short fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
@@ -117,7 +129,7 @@ public class Hoent {
     }
 
     public Hoent copy() {
-        Hoent newHoent = new Hoent(tMax, fluentsCount, true);
+        Hoent newHoent = new Hoent(this.tMax, this.fluentsCount, this.hasExceededTimeLimit, this.firstTypicalActionIndex, true);
 
         for (short timeIndex = 0; timeIndex < tMax; timeIndex++) {
             HashMap<Byte, String> sysElemOAtTimeUnit = HashMapByteStringUtils.copy(this.sysElemO.get(timeIndex));
@@ -161,6 +173,14 @@ public class Hoent {
         }
 
         return (this.sysElemE.get(timeID).occuringAction == actionID);
+    }
+
+    public boolean eIsNegatedActionAtTime(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return false;
+        }
+
+        return ArrayListOfByteUtils.contains(this.sysElemE.get(timeID).disallowedActions, actionID);
     }
 
     //    public ArrayList<HashMap<Byte, String>> sysElemO;
@@ -229,18 +249,44 @@ public class Hoent {
         this.sysElemE.get(timeID).occuringAction = actionID;
     }
 
-    public void eAddNegatedActionAtTime(byte actionID, byte timeID) {
+    //public void eAddAction(byte actionID, byte timeID, boolean isOccuringActionTriggeredByQuestionMark) {
+    //    if (timeID >= tMax) {
+    //        return;
+    //    }
+    //
+    //    this.sysElemE.get(timeID).occuringAction = actionID;
+    //    this.sysElemE.get(timeID).isOccuringActionTriggeredByQuestionMark = isOccuringActionTriggeredByQuestionMark;
+    //}
+
+    public boolean eAddNegatedActionAtTime(byte actionID, byte timeID) {
         if (timeID >= tMax) {
-            return;
+            return false;
+        }
+
+        if (this.sysElemE.get(timeID).occuringAction == actionID) { //20150909
+            return false;
         }
 
         ArrayList<Byte> disallowedActionsAL = this.sysElemE.get(timeID).disallowedActions;
         if (ArrayListOfByteUtils.contains(disallowedActionsAL, actionID) ) {
-            return;
+            return true;
         }
         else {
             ArrayListOfByteUtils.insertIntoArrayList(disallowedActionsAL, actionID);
+            return true;
         }
+    }
+
+    public boolean eCanAddNegatedActionAtTime(byte actionID, byte timeID) {
+        if (timeID >= tMax) {
+            return false;
+        }
+
+        if (this.sysElemE.get(timeID).occuringAction == actionID) { //20150909
+            return false;
+        }
+
+        return true;
     }
 
     public void nSetToTrue(byte timeID, byte actionID) {
@@ -450,4 +496,33 @@ public class Hoent {
         }
         return true;
     }
+
+    public boolean isFullTime(byte timeID) {
+        if (timeID  >= tMax) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void addTypicalActionIndex(byte newIndex) {
+        if (this.firstTypicalActionIndex == -1) {
+            this.firstTypicalActionIndex = newIndex;
+        }
+        else {
+            this.firstTypicalActionIndex = (byte)Math.min(this.firstTypicalActionIndex, newIndex);
+        }
+    }
+
+    public boolean isTypicalAtTime(byte timeIndex) {
+        if (this.firstTypicalActionIndex == -1) {
+            return false;
+        }
+        else {
+            return timeIndex > this.firstTypicalActionIndex; //TODO TOMEKL >= or > ?
+
+        }
+    }
+
 }

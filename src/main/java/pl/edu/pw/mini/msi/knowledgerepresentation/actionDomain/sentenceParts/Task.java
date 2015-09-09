@@ -19,4 +19,9 @@ public class Task {
     public String toString() {
         return StringUtils.concatenateStringAndBoolean(task, negated);
     }
+
+    public String toStringWithoutNegation() {
+        return task;
+    }
+
 }

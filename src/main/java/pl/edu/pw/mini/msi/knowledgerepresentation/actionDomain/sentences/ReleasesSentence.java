@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Fluent;
@@ -14,6 +16,9 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class ReleasesSentence extends Sentence {
+
+    private static final Logger log = LoggerFactory.getLogger(ReleasesSentence.class);
+
     public Action action;
     public Fluent fluent;
     public IFormula conditionFormula;

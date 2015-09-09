@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
@@ -13,6 +15,9 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class CausesSentence extends Sentence {
+
+    private static final Logger log = LoggerFactory.getLogger(CausesSentence.class);
+
     public Action action;
     public IFormula causesFormula;
     public IFormula conditionFormula;
@@ -120,13 +125,18 @@ public class CausesSentence extends Sentence {
                         //newStructures.add(structure.copy());
                         continue;
                     }
+                    boolean isAtLEastOnePosResultEvalCompatible = false;
                     for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
                         boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition,
                                 (byte) (timeID + 1));
                         if (hCompatibilityOfResCond == false) {
                             //newStructures.add(structure.copy()); //20150906
+                            //String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Byte(timeID).toString() + "]."; //20150906
+                            //log.debug(message);
+                            //throw new Exception(message);
                             continue;
                         }
+                        isAtLEastOnePosResultEvalCompatible = true;
                         String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
                                 (byte) (timeID + 1));
                         byte zerosAndOnesCounterOfResultCondition = StringUtils.countZerosAndOnes(newEvaluatesOfResultCondition);
@@ -145,6 +155,12 @@ public class CausesSentence extends Sentence {
                         newStructureOfResultCondition.oAddFluents(this.action.actionID, this.causesFormula.getFluentsIDs(), (byte) (timeID));
                         newStructures.add(newStructureOfResultCondition);
                         isAtLeastOneResultingStructure = true;
+                    }
+                    if (isAtLEastOnePosResultEvalCompatible == false) {
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "]."; //20150906
+                        log.debug(message);
+                        //throw new Exception(message);
+                        continue; //not relevant
                     }
                     //if (isAtLeastOneResultingStructure == false) {
                     //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");
@@ -174,6 +190,7 @@ public class CausesSentence extends Sentence {
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
                 //resultCondition
+                boolean isAtLEastOnePosResultEvalCompatible = false;
                 boolean isAtLeastOneSameResultingStructure = false;
                 boolean isAtLeastOneResultingStructure = false;
                 ArrayList<ArrayList<String>> posAndNegEvaluatesOfResultCondition =
@@ -190,6 +207,7 @@ public class CausesSentence extends Sentence {
                         //newStructures.add(structure.copy()); //20150906
                         continue;
                     }
+                    isAtLEastOnePosResultEvalCompatible = true;
                     String newEvaluatesOfResultCondition = newStructure.hGetNewEvaluates(posEvaluateOfResultCondition,
                             (byte) (timeID + 1));
                     byte zerosAndOnesCounterOfResultCondition = StringUtils.countZerosAndOnes(newEvaluatesOfResultCondition);
@@ -210,6 +228,12 @@ public class CausesSentence extends Sentence {
                             (byte) (timeID));
                     newStructures.add(newStructureOfResultCondition);
                     isAtLeastOneResultingStructure = true;
+                }
+                if (isAtLEastOnePosResultEvalCompatible == false) {
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "]."; //20150906
+                    log.debug(message);
+                    //throw new Exception(message);
+                    continue; //not relevant
                 }
                 //if (isAtLeastOneResultingStructure == false) {
                 //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");

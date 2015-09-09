@@ -103,7 +103,7 @@ class BasicTest extends Specification {
         '/definition_o_06.al'     | 4     | 'true, true, true, true'
         '/definition_o_07.al'     | 4     | 'true, true, true, false, false, false'
         '/definition_o_08.al'     | 4     | 'true'
-        '/definition_o_09.al'     | 4     | 'null'
+        '/definition_o_09.al'     | 4     | 'null' //contradictory at sentences
         '/definition_o_10.al'     | 9     | 'true, true, true, true'
         '/definition_o_11.al'     | 9     | 'true, true, true, true, true, true, true, true'
         '/definition_o_12.al'     | 16    | 'true, true, true, true, true, true, true, true'
@@ -114,6 +114,16 @@ class BasicTest extends Specification {
         '/definition_o_17.al'     | 13    | 'true, true, true, true'
         '/definition_o_18.al'     | 13    | 'true, true, true, true, true, true'
         '/definition_o_19.al'     | 10    | 'true, true, true, false, true, true, true, false'
+        '/definition_o_20.al'     | 11    | 'false' //typically invokes "conflicting" with observation
+        '/definition_o_21.al'     | 11    | 'false' //typically occurs "conflicting" with observation
+        '/definition_o_22.al'     | 5     | 'null, true' //occurs -A
+        '/definition_o_23.al'     | 5     | 'null, null, true, true' //triggers -A
+        '/definition_o_24.al'     | 10    | 'null, null, true, true' //invokes -A
+        '/definition_o_25.al'     | 10    | 'null, null, true, true' //releases, invokes -A, occurs A
+        '/definition_o_26.al'     | 2     | 'null' //releases, invokes -A, occurs A
+        '/definition_o_27.al'     | 8     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation
+        '/definition_o_28.al'     | 8     | 'true' //initially, typically occurs, causes, only typical execution consistent with "at sentence" observation
+        '/definition_o_29.al'     | 8     | 'true' //initially, typically occurs, causes, only atypical execution consistent with "at sentence" observation
         '/definition_r_01.al'     | 6     | 'false'
         '/definition_r_02.al'     | 7     | 'true'
         '/definition_fapr96.al'   | 5     | 'true, true, true, true, true, true'
