@@ -11,3 +11,4 @@ scenarioEmpty {
 }
 
 ever a at 6 when scenarioEmpty
+typically a at 4 when scenarioEmpty
