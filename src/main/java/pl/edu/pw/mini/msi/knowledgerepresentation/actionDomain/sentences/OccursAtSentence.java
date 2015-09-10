@@ -48,32 +48,47 @@ public class OccursAtSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
+                                                 boolean secondPass)
             throws Exception {
         //A occurs at t
         byte time = this.time.timeID;
         //ArrayList<Hoent> newHoents = new ArrayList<Hoent>();
+
+        ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
         for (Hoent structure : structures) {
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
             if (this.action.task.negated == true) {
                 if (structure.eCanAddNegatedActionAtTime(this.action.actionID, time) == false) {
-                    throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
-                    //continue; //20150909
+                    String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
+                    if (structure.isActionTypicalAtTime(time) == false) {
+                        throw new Exception(message);
+                    }
+                    else {
+                        continue; //not relevant
+                    }
                 }
                 ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
+                newStructures.add(structure.copy());
                 continue;
             }
 
             //negated == false
             if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
             //if (eAtTime.occuringAction != -1) {
-                throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
-                //continue; //20150909
+                String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
+                if (structure.isActionTypicalAtTime(time) == false) {
+                    throw new Exception(message);
+                }
+                else {
+                    continue; //not relevant
+                }
             }
 
             eAtTime.occuringAction = this.action.actionID;
+            newStructures.add(structure.copy());
 
             //Hoent newHoent = structure.copy();
             //newHoent.hAddNewEvaluates(newEvaluates, time);
@@ -84,7 +99,7 @@ public class OccursAtSentence extends Sentence {
         //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
         //}
 
-        return structures;
+        return newStructures;
     }
 
     @Override
@@ -105,10 +120,16 @@ public class OccursAtSentence extends Sentence {
             //}
 
             //change compared to applyCertainSentence
-            newStructures.add(structure.copy()); //not typically, action doesn't occur
+
+            //old place of atypical structure addition
+
             if (secondPass) { //20150906
                 continue;
             }
+
+            Hoent newAStructure = structure.copy();
+            newAStructure.aAddAtypicalAction(time, this.action.actionID);
+            newStructures.add(newAStructure); //not typically, action doesn't occur
 
             //negated == false
             if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909

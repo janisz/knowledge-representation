@@ -67,7 +67,8 @@ public class Sentence {
         //throw new Exception("Sentence.fillFluentAndActionIDs(...) not overridden.");
     }
 
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception {
         //return null; //empty, should be overriden
         throw new Exception("Sentence.applyCertainSentence(...) not overridden.");

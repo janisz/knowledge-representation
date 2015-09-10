@@ -44,7 +44,8 @@ public class AtSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
+                                                 boolean secondPass)
             throws Exception {
         //a at t
         AtSentence atSentence = this;
@@ -90,9 +91,9 @@ public class AtSentence extends Sentence {
                 newStructures.add(newStructure);
             }
             if (isAtLEastOnePosEvalCompatible == false) {
-                String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Byte(timeID).toString() + "]."; //20150906
+                String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Byte(timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                 log.debug(message);
-                if (structure.isTypicalAtTime(timeID) == false) {
+                if (structure.isStateTypicalAtTime(timeID) == false) {
                     throw new Exception(message);
                 }
                 else {

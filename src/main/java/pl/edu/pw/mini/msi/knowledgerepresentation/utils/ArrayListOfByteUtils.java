@@ -32,4 +32,41 @@ public class ArrayListOfByteUtils {
         return false;
         //TODO TOMEKL optimize, because list is sorted
     }
+
+    public static ArrayList<Byte> copy(ArrayList<Byte> oldList) {
+        ArrayList<Byte> newList = new ArrayList<Byte>();
+        for (Byte oldElem : oldList) {
+            newList.add( new Byte(oldElem) );
+        }
+        return newList;
+    }
+
+    public static boolean areSame(ArrayList<Byte> list1, ArrayList<Byte> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+        for (Byte elem1 : list1) {
+            if (ArrayListOfByteUtils.contains(list2, elem1) == false) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String myToString(ArrayList<Byte> list) {
+        StringBuilder resultSB = new StringBuilder();
+        resultSB.append("[");
+        for (int index = 0; index < list.size(); index++) {
+            if (index == 0) {
+                resultSB.append(list.get(index));
+            }
+            else {
+                resultSB.append(",");
+                resultSB.append(list.get(index));
+            }
+        }
+        resultSB.append("]");
+
+        return resultSB.toString();
+    }
 }

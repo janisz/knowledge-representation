@@ -57,7 +57,8 @@ public class ReleasesSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception{
         //A releases f if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();

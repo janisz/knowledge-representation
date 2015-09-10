@@ -48,7 +48,8 @@ public class TriggersSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception{
         //p triggers A
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -85,10 +86,15 @@ public class TriggersSentence extends Sentence {
                 if (this.action.task.negated == true) {
                     Hoent newStructure = structure.copy();
                     if (newStructure.eCanAddNegatedActionAtTime(this.action.actionID, timeID) == false){
-                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "] secondPass==[" + secondPass + "].";
                         log.debug(message);
-                        //throw new Exception(message);
-                        continue;
+                        if (structure.isActionTypicalAtTime(timeID) == false &&
+                                zerosAndOnesCounter == 0) {
+                            throw new Exception(message);
+                        }
+                        else {
+                            continue; //not relevant
+                        }
                     }
                     newStructure.eAddNegatedActionAtTime(this.action.actionID, timeID);
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
@@ -106,10 +112,15 @@ public class TriggersSentence extends Sentence {
                 if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {
                     //newStructures.add(structure.copy());
                     //continue; //TODO TOMEKL throw error information?
-                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "].";
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "] secondPass==[" + secondPass + "].";
                     log.debug(message);
-                    //throw new Exception(message); //20150906
-                    continue;
+                    if (structure.isActionTypicalAtTime(timeID) == false &&
+                            zerosAndOnesCounter == 0) {
+                        throw new Exception(message);
+                    }
+                    else {
+                        continue; //not relevant
+                    }
                 }
 
                 Hoent newStructure = structure.copy();
@@ -146,15 +157,16 @@ public class TriggersSentence extends Sentence {
             //boolean isAtLeastOneNewStructure = false;
             //boolean addedIdenticalStructure = false;
 
-            newStructures.add(structure.copy()); //important; not typically, triggers didn't occur
+            //old place of atypical structure addition
+
             if (secondPass) { //20150906
                 continue;
             }
 
-            //if (posEvaluates.size() == 0) { //20150906
-            //    newStructures.add(structure.copy());
-            //    continue;
-            //}
+            if (posEvaluates.size() == 0) { //20150906 //20150910
+                newStructures.add(structure.copy());
+                continue;
+            }
 
             for (String posEvaluate : posEvaluates) {
 
@@ -171,21 +183,28 @@ public class TriggersSentence extends Sentence {
                 //    continue;
                 //}
 
-                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906_3
-                //    newStructures.add(structure.copy());
+                if (structure.hCheckCompatibility(posEvaluate, timeID) == false) { //20150906_3 //20150910
+                    newStructures.add(structure.copy());
                     continue;
                 }
 
                 String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID); //20150906_02
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
-                //if (zerosAndOnesCounter != 0) { //20150906_02
-                //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
-                //} //20150905_02
+                byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150906_02
+                if (zerosAndOnesCounter != 0) { //20150906_02
+                    newStructures.add(structure.copy()); //add hoent with "?'s" //20150906_02
+                } //20150905_02
 
-                if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
+                //if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
                     //newStructures.add(structure.copy());
                     //ARBITRARY WHAT TO DO IN SUCH A SITUATION
-                    continue;
+                //    continue;
+                //}
+
+                if (structure.eIsActionAtTime(this.action.actionID, timeID) == false) {
+                    Hoent newAStructure = structure.copy();
+                    newAStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
+                    newAStructure.aAddAtypicalAction(timeID, this.action.actionID);
+                    newStructures.add(newAStructure); //important; not typically, triggers didn't occur
                 }
 
                 if (structure.eCanInsertActionAtTime(this.action.actionID, timeID) == false) {

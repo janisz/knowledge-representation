@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.FormulaUtils;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.AtSentence;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.OccursAtSentence;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
+import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.*;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
@@ -83,7 +80,7 @@ public class Hoents {
         for (Sentence sentence : certainSentences) {
             if ( (sentence instanceof AtSentence)
                     || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1);
+                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1, false);
             }
         }
 
@@ -100,8 +97,9 @@ public class Hoents {
         for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
+                        && (sentence instanceof OccursAtSentence) == false
+                        && (sentence instanceof TriggersSentence) == true) {
+                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false);
                 }
             }
         //}
@@ -111,7 +109,8 @@ public class Hoents {
         //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
+                        && (sentence instanceof OccursAtSentence) == false
+                        && (sentence instanceof TriggersSentence) == true) {
                     structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
                 }
             }
@@ -123,8 +122,9 @@ public class Hoents {
         //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID);
+                        && (sentence instanceof OccursAtSentence) == false
+                        && (sentence instanceof TriggersSentence) == false) {
+                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false);
                 }
             }
         //}
@@ -134,7 +134,8 @@ public class Hoents {
         //for (byte timeID = 0; timeID < tMax; timeID++) {
             for (Sentence sentence : typicallySentences) {
                 if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
+                        && (sentence instanceof OccursAtSentence) == false
+                        && (sentence instanceof TriggersSentence) == false) {
                     structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
                 }
             }
@@ -262,7 +263,7 @@ public class Hoents {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
-                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID);
+                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID, true);
                 }
             }
         }
@@ -298,11 +299,11 @@ public class Hoents {
         }
         modelsOfTypeOne = newModelsOfTypeOne;
 
-        for (Hoent modelofTypeOne : modelsOfTypeOne) {
-            if (modelofTypeOne.hasExceededTimeLimit == true) {
-                throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
-            }
-        }
+        //for (Hoent modelofTypeOne : modelsOfTypeOne) {
+        //    if (modelofTypeOne.hasExceededTimeLimit == true) {
+        //        throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
+        ///    }
+        //}
 
         log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
@@ -377,6 +378,26 @@ public class Hoents {
         modelsOfTypeTwo = newModelsOfTypeTwo;
         log.debug("preserve hoents with max number of ns deletions: " + String.valueOf(deletionsOfGMDPreferredModelsCounter_2));
 
+        //preserve hoents with min number of As===============================================
+        int deletionsOfGMDPreferredModelsCounter_2a = 0;
+        newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
+        int minAs = Integer.MAX_VALUE;
+        for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
+            int as = modelOfTypeTwo.aCountAs();
+            if (as <= minAs) {
+                minAs = as;
+            }
+        }
+        for (Hoent modelOfTypeTwo : modelsOfTypeTwo) {
+            if (modelOfTypeTwo.aCountAs() > minAs) {
+                newModelsOfTypeTwo.remove(modelOfTypeTwo);
+                deletionsOfGMDPreferredModelsCounter_2a++;
+            }
+        }
+
+        modelsOfTypeTwo = newModelsOfTypeTwo;
+        log.debug("preserve hoents with min number of As deletions: " + String.valueOf(deletionsOfGMDPreferredModelsCounter_2a));
+
         //remove duplicate HOENTs===============================================
         int deletionsOfGMDPreferredModelsCounter_3 = 0;
         newModelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeTwo.clone();//new ArrayList<Hoent>();
@@ -387,7 +408,8 @@ public class Hoents {
                 if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) &&
                         firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO) &&
                         firstHoent.eAreSysElemEsTheSame(secondHoent.sysElemE) &&
-                        firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN)) {
+                        firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) &&
+                        firstHoent.aAreSysElemAsTheSame(secondHoent.sysElemA)) {
                     newModelsOfTypeTwo.remove(secondHoent);
                     deletionsOfGMDPreferredModelsCounter_3++;
                 }

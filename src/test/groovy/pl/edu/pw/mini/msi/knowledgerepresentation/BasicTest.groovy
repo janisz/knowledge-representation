@@ -120,7 +120,7 @@ class BasicTest extends Specification {
         '/definition_o_23.al'     | 5     | 'null, null, true, true' //triggers -A
         '/definition_o_24.al'     | 10    | 'null, null, true, true' //invokes -A
         '/definition_o_25.al'     | 10    | 'null, null, true, true' //releases, invokes -A, occurs A
-        '/definition_o_26.al'     | 2     | 'null' //releases, invokes -A, occurs A
+        '/definition_o_26.al'     | 2     | 'true' //occurs, invokes, time NOT sufficient
         '/definition_o_27.al'     | 8     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation
         '/definition_o_28.al'     | 8     | 'true' //initially, typically occurs, causes, only typical execution consistent with "at sentence" observation
         '/definition_o_29.al'     | 8     | 'true' //initially, typically occurs, causes, only atypical execution consistent with "at sentence" observation
@@ -135,10 +135,10 @@ class BasicTest extends Specification {
         '/5-releases'    	  | 5     | 'true, true, true, true, true, false'
         '/6-occurs'     	  | 5     | 'true, true, false, false'
         '/7-occursTypically'      | 5     | 'true, true, true, false, true'
-        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, false' //changed last result to false
+        '/8-triggerTypically'     | 5     | 'true, true, true, true, false, false, true, false, true' //changed last result to false
         '/9-occursTypicallyQ'     | 5     | 'true, true, true, true, false, true, true, true, false, true'
         '/10-XOR_Typically'       | 5     | 'true, true, true, true, true, true, true, true, true, true'
-        '/11-typicallyInChain'    | 5     | 'true, false, true, true, true, false, false, false, true, false, false' //changed two last to false, false
+        '/11-typicallyInChain'    | 4     | 'true, false, true, true, true, false, false, false, true, true, true' //changed two last to false, false
         '/12-typicallyInChain2'   | 5     | 'true, false, true, true, true, false, false, false, true, true, true'
         '/13-invokes'             | 5     | 'true, true, true, true'
         '/1-involved.al'          | 1     | 'false'

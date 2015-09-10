@@ -55,7 +55,8 @@ public class CausesSentence extends Sentence {
     }
 
     @Override
-    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID)
+    public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
+                                                 boolean secondPass)
             throws Exception{
         //A causes a if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -115,6 +116,13 @@ public class CausesSentence extends Sentence {
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
+                    if (structure.isFullTime((byte)(timeID + 1))) { //20150910
+                        Hoent newNewStructure = newStructure.copy();
+                        newNewStructure.hasExceededTimeLimit = true;
+                        newStructures.add(newNewStructure);
+                        continue;
+                    }
+
                     //resultCondition
                     boolean isAtLeastOneSameResultingStructure = false;
                     boolean isAtLeastOneResultingStructure = false;
@@ -157,10 +165,14 @@ public class CausesSentence extends Sentence {
                         isAtLeastOneResultingStructure = true;
                     }
                     if (isAtLEastOnePosResultEvalCompatible == false) {
-                        String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "]."; //20150906
+                        String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        //throw new Exception(message);
-                        continue; //not relevant
+                        if (secondPass == false && structure.isActionTypicalAtTime(timeID) == false) {
+                            throw new Exception(message);
+                        }
+                        else {
+                            continue; //not relevant
+                        }
                     }
                     //if (isAtLeastOneResultingStructure == false) {
                     //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");
@@ -188,6 +200,13 @@ public class CausesSentence extends Sentence {
 
                 Hoent newStructure = structure.copy();
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+
+                if (structure.isFullTime((byte)(timeID + 1))) { //20150910
+                    Hoent newNewStructure = newStructure.copy();
+                    newNewStructure.hasExceededTimeLimit = true;
+                    newStructures.add(newNewStructure);
+                    continue;
+                }
 
                 //resultCondition
                 boolean isAtLEastOnePosResultEvalCompatible = false;
@@ -230,10 +249,14 @@ public class CausesSentence extends Sentence {
                     isAtLeastOneResultingStructure = true;
                 }
                 if (isAtLEastOnePosResultEvalCompatible == false) {
-                    String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "]."; //20150906
+                    String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Integer(timeID + 1).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                     log.debug(message);
-                    //throw new Exception(message);
-                    continue; //not relevant
+                    if (secondPass == false && structure.isActionTypicalAtTime(timeID) == false) {
+                        throw new Exception(message);
+                    }
+                    else {
+                        continue; //not relevant
+                    }
                 }
                 //if (isAtLeastOneResultingStructure == false) {
                 //    throw new Exception("Zero resulting HOENTs after sentence: [" + this.toString() + "]");

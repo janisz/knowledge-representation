@@ -15,6 +15,7 @@ public class Hoent {
     public ArrayList<HashMap<Byte, String>> sysElemO; //timeID actionID fluents
     public ArrayList<SysElemEAtTimeUnit> sysElemE;
     public ArrayList<SysElemNAtTimeUnit> sysElemN;
+    public ArrayList<SysElemAAtTimeUnit> sysElemA;
     public short tMax;
     public short fluentsCount;
     public boolean hasExceededTimeLimit;
@@ -31,6 +32,7 @@ public class Hoent {
         sysElemO = new ArrayList<HashMap<Byte, String>>(tMax);
         sysElemE = new ArrayList<SysElemEAtTimeUnit>(tMax);
         sysElemN = new ArrayList<SysElemNAtTimeUnit>(tMax);
+        sysElemA = new ArrayList<SysElemAAtTimeUnit>(tMax);
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
         this.hasExceededTimeLimit = hasExceededTimeLimit;
@@ -42,6 +44,7 @@ public class Hoent {
         sysElemO = new ArrayList<HashMap<Byte, String>>(tMax);
         sysElemE = new ArrayList<SysElemEAtTimeUnit>(tMax);
         sysElemN = new ArrayList<SysElemNAtTimeUnit>(tMax);
+        sysElemA = new ArrayList<SysElemAAtTimeUnit>(tMax);
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
         this.hasExceededTimeLimit = false;
@@ -61,6 +64,7 @@ public class Hoent {
             sysElemO.add( new HashMap<Byte, String>() ); //fluentValuesZero.toString()
             sysElemE.add( new SysElemEAtTimeUnit() );
             sysElemN.add( new SysElemNAtTimeUnit() );
+            sysElemA.add( new SysElemAAtTimeUnit() );
         }
     }
 
@@ -138,6 +142,7 @@ public class Hoent {
             newHoent.sysElemO.add( sysElemOAtTimeUnit );
             newHoent.sysElemE.add( this.sysElemE.get(timeIndex).copy() );
             newHoent.sysElemN.add( this.sysElemN.get(timeIndex).copy() );
+            newHoent.sysElemA.add( this.sysElemA.get(timeIndex).copy() );
         }
 
         return newHoent;
@@ -515,7 +520,19 @@ public class Hoent {
         }
     }
 
-    public boolean isTypicalAtTime(byte timeIndex) {
+    public boolean isActionTypicalAtTime(byte timeIndex) {
+        //return true;
+        if (this.firstTypicalActionIndex == -1) {
+            return false;
+        }
+        else {
+            return timeIndex >= this.firstTypicalActionIndex; //TODO TOMEKL >= or > ?
+
+        }
+    }
+
+    public boolean isStateTypicalAtTime(byte timeIndex) {
+        //return true;
         if (this.firstTypicalActionIndex == -1) {
             return false;
         }
@@ -524,5 +541,34 @@ public class Hoent {
 
         }
     }
+
+    public boolean aAreSysElemAsTheSame(ArrayList<SysElemAAtTimeUnit> otherSysElemA) {
+        for (byte index = 0; index < this.sysElemA.size(); index++) {
+            if (this.sysElemA.get(index).areSame(otherSysElemA.get(index)) == false) {
+                return false;
+            }
+            else {
+                ;//empty
+            }
+        }
+        return true;
+    }
+
+    public void aAddAtypicalAction(byte timeID, byte actionID) {
+        if (timeID  >= tMax) {
+            return; //20150905
+        }
+        ArrayListOfByteUtils.insertIntoArrayList(this.sysElemA.get(timeID).actionIDs, actionID);
+    }
+
+    public int aCountAs() {
+        int result = 0;
+        for (byte timeIndex = 0; timeIndex < tMax; timeIndex++) {
+            SysElemAAtTimeUnit sysElemA = this.sysElemA.get(timeIndex);
+            result += sysElemA.actionIDs.size();
+        }
+        return result;
+    }
+
 
 }
