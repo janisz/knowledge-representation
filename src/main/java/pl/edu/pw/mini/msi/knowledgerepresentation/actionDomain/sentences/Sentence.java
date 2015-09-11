@@ -3,6 +3,7 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,14 +69,14 @@ public class Sentence {
     }
 
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception {
         //return null; //empty, should be overriden
         throw new Exception("Sentence.applyCertainSentence(...) not overridden.");
     }
 
     public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception {
         //return null; //empty, should be overriden
         throw new Exception("Sentence.applyTypicalSentence(...) not overridden.");

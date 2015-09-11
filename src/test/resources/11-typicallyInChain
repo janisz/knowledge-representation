@@ -1,9 +1,10 @@
 initially (a && (-b && -c))
 typically a triggers (A,X)
-(A,X) causes b
+(A,X) causes (-a && b)
 typically b triggers (B,X)
-(B,X) causes c
+(B,X) causes (-b && c)
 typically c triggers (C,X)
+(C,X) causes -c
 
 scenarioEmpty {
   ACS = {

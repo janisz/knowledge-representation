@@ -26,6 +26,7 @@ public class Hoents {
     public byte tMax;
     public byte fluentsCount;
     public ArrayList<String> actions;
+    public HoentsSettings hoentsSettings;
 
     public ArrayList<Hoent> structures;
     public ArrayList<Hoent> oMinimalStructures;
@@ -33,12 +34,13 @@ public class Hoents {
     public ArrayList<Hoent> modelsOfTypeTwo; //maximization of typicalities
 
     public Hoents( ArrayList<Sentence> sentences, ArrayList<Query> queries, byte tMax, byte fluentsCount,
-                   ArrayList<String> actions) {
+                   ArrayList<String> actions, HoentsSettings hoentsSettings) {
         this.sentences = sentences;
         this.queries = queries;
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
         this.actions = actions;
+        this.hoentsSettings = hoentsSettings;
 
         structures = new ArrayList<Hoent>();
         oMinimalStructures= new ArrayList<Hoent>();
@@ -80,7 +82,7 @@ public class Hoents {
         for (Sentence sentence : certainSentences) {
             if ( (sentence instanceof AtSentence)
                     || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1, false);
+                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1, false, hoentsSettings);
             }
         }
 
@@ -88,7 +90,7 @@ public class Hoents {
         for (Sentence sentence : typicallySentences) {
             if ( (sentence instanceof AtSentence)
                     || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false);
+                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false, hoentsSettings);
             }
         }
 
@@ -99,7 +101,7 @@ public class Hoents {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false
                         && (sentence instanceof TriggersSentence) == true) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false);
+                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false, hoentsSettings);
                 }
             }
         //}
@@ -111,7 +113,7 @@ public class Hoents {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false
                         && (sentence instanceof TriggersSentence) == true) {
-                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
+                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false, hoentsSettings);
                 }
             }
         //}
@@ -124,7 +126,7 @@ public class Hoents {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false
                         && (sentence instanceof TriggersSentence) == false) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false);
+                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false, hoentsSettings);
                 }
             }
         //}
@@ -136,7 +138,7 @@ public class Hoents {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false
                         && (sentence instanceof TriggersSentence) == false) {
-                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false);
+                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false, hoentsSettings);
                 }
             }
         }
@@ -254,7 +256,7 @@ public class Hoents {
             modelsOfTypeOne = newModelsOfTypeOne;
         }
 
-        //20150906
+        //20150906 //20150911 commented
         //after filling '?' with values (using occlusion) check if new HOENT's are compatible with sentences
         //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
         //Boolean hasChanged = true;
@@ -263,7 +265,7 @@ public class Hoents {
             for (Sentence sentence : certainSentences) {
                 if ((sentence instanceof AtSentence) == false
                         && (sentence instanceof OccursAtSentence) == false) {
-                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID, true);
+                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID, true, hoentsSettings);
                 }
             }
         }
@@ -299,11 +301,21 @@ public class Hoents {
         }
         modelsOfTypeOne = newModelsOfTypeOne;
 
-        //for (Hoent modelofTypeOne : modelsOfTypeOne) {
-        //    if (modelofTypeOne.hasExceededTimeLimit == true) {
-        //        throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
-        ///    }
-        //}
+        if (hoentsSettings.isDoThrowIfExceededTimeLimit()) {
+            for (Hoent modelofTypeOne : modelsOfTypeOne) {
+                if (modelofTypeOne.hasExceededTimeLimit == true && modelofTypeOne.firstTypicalActionIndex == -1) {
+                    throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
+                }
+            }
+        }
+
+//        if (hoentsSettings.isDoThrow()) {
+//            for (Hoent modelofTypeOne : modelsOfTypeOne) {
+//                if (modelofTypeOne.hasContradiction == true) {
+//                    throw new Exception("modelofTypeOne.hasContradiction == true");
+//                }
+//            }
+//        }
 
         log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
@@ -335,7 +347,7 @@ public class Hoents {
      * Maximization of typicalities.
      * FAPR96.pdf site 9 Definition 3
      */
-    private void calculateModelsOfTypeTwo() {
+    private void calculateModelsOfTypeTwo() throws Exception {
         modelsOfTypeTwo = (ArrayList<Hoent>)modelsOfTypeOne.clone();//new ArrayList<Hoent>();
         //boolean isStrictlyIn = false;
         //int deletionsOfSameStructuresCounter = 0;
@@ -418,6 +430,16 @@ public class Hoents {
 
         modelsOfTypeTwo = newModelsOfTypeTwo;
         log.debug("remove duplicate HOENTs deletions: " + String.valueOf(deletionsOfGMDPreferredModelsCounter_3));
+
+        if (hoentsSettings.isDoThrowIfExceededTimeLimit()) {
+            for (Hoent modelofTypeTwo : modelsOfTypeTwo) {
+                if (modelofTypeTwo.hasExceededTimeLimit == true) {
+                    throw new Exception("modelofTypeTwo.hasExceededTimeLimit == true");
+                }
+            }
+        }
+
+
     }
 
     //================================================================================================================

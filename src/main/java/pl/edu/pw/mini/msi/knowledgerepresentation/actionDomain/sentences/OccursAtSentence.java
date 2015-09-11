@@ -6,6 +6,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.ActionDomain;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.SysElemEAtTimeUnit;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfByteUtils;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
@@ -49,7 +50,7 @@ public class OccursAtSentence extends Sentence {
 
     @Override
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception {
         //A occurs at t
         byte time = this.time.timeID;
@@ -63,7 +64,7 @@ public class OccursAtSentence extends Sentence {
             if (this.action.task.negated == true) {
                 if (structure.eCanAddNegatedActionAtTime(this.action.actionID, time) == false) {
                     String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
-                    if (structure.isActionTypicalAtTime(time) == false) {
+                    if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(time) == false) {
                         throw new Exception(message);
                     }
                     else {
@@ -79,7 +80,7 @@ public class OccursAtSentence extends Sentence {
             if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
             //if (eAtTime.occuringAction != -1) {
                 String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
-                if (structure.isActionTypicalAtTime(time) == false) {
+                if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(time) == false) {
                     throw new Exception(message);
                 }
                 else {
@@ -104,7 +105,7 @@ public class OccursAtSentence extends Sentence {
 
     @Override
     public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception {
         byte time = this.time.timeID;
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();

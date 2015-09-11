@@ -7,6 +7,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.For
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.IFormula;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class AtSentence extends Sentence {
 
     @Override
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeIDDoNotUse,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception {
         //a at t
         AtSentence atSentence = this;
@@ -93,7 +94,7 @@ public class AtSentence extends Sentence {
             if (isAtLEastOnePosEvalCompatible == false) {
                 String message = "Error in applying sentence: [" + this.toString() + "] - can't apply resulting condition at time [" + new Byte(timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                 log.debug(message);
-                if (structure.isStateTypicalAtTime(timeID) == false) {
+                if (hoentsSettings.isDoThrow() && structure.isStateTypicalAtTime(timeID) == false) {
                     throw new Exception(message);
                 }
                 else {

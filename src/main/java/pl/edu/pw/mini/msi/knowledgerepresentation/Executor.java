@@ -13,7 +13,9 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentenc
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageLexer;
 import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoents;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class Executor {
     private static final Logger log = LoggerFactory.getLogger(Executor.class);
     private final ANTLRErrorListener errorListener;
     private final ActionLanguageListener parseTreeListener;
+
+    private static int counter = 0;
 
     private String errorInformation = "";
 
@@ -43,7 +47,13 @@ public class Executor {
         return errorInformation;
     }
 
-    public List<Boolean> getResults(String input, InputStream inputStream, int tMaxArg) {
+    public List<Boolean> getResults(String input, InputStream inputStream, int tMaxArg, HoentsSettings hoentsSettings) {
+        //if (inputStream != null && inputStream instanceof BufferedInputStream) {
+        //    String s = ((BufferedInputStream)inputStream).toString();
+            counter++;
+            log.debug("counter" + counter);
+        //}
+
         byte tMax = (byte)tMaxArg;
         //log.debug("Create a lexer and parser for input", input);
         ActionLanguageLexer lexer = null;
@@ -73,7 +83,7 @@ public class Executor {
             ArrayList<Sentence> fullScenario = actionDomain.fullScenarios.get(scenarioName);
 
             Hoents hoents = new Hoents(fullScenario, queriesForScenario, tMax, (byte)actionDomain.fluents.size(),
-                    actionDomain.actions);
+                    actionDomain.actions, hoentsSettings);
             ArrayList<Boolean> resultsForScenario = new ArrayList<Boolean>();
             try {
                 resultsForScenario = hoents.getQueriesAnswers();

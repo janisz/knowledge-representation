@@ -19,6 +19,7 @@ public class Hoent {
     public short tMax;
     public short fluentsCount;
     public boolean hasExceededTimeLimit;
+    public boolean hasContradiction;
     public byte firstTypicalActionIndex;
 
     /**
@@ -27,7 +28,8 @@ public class Hoent {
      * @param fluentsCount
      * @param bDoNotUse
      */
-    private Hoent(short tMax, short fluentsCount, boolean hasExceededTimeLimit, byte firstTypicalActionIndex, boolean bDoNotUse) {
+    private Hoent(short tMax, short fluentsCount, boolean hasExceededTimeLimit, boolean hasContradiction,
+                  byte firstTypicalActionIndex, boolean bDoNotUse) {
         sysElemH = new ArrayList<String>(tMax);
         sysElemO = new ArrayList<HashMap<Byte, String>>(tMax);
         sysElemE = new ArrayList<SysElemEAtTimeUnit>(tMax);
@@ -36,6 +38,7 @@ public class Hoent {
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
         this.hasExceededTimeLimit = hasExceededTimeLimit;
+        this.hasContradiction = hasContradiction;
         this.firstTypicalActionIndex = firstTypicalActionIndex;
     }
 
@@ -48,6 +51,7 @@ public class Hoent {
         this.tMax = tMax;
         this.fluentsCount = fluentsCount;
         this.hasExceededTimeLimit = false;
+        this.hasContradiction = false;
         this.firstTypicalActionIndex = -1;
 
         StringBuilder fluentValuesQuestionMark = new StringBuilder("");
@@ -133,7 +137,8 @@ public class Hoent {
     }
 
     public Hoent copy() {
-        Hoent newHoent = new Hoent(this.tMax, this.fluentsCount, this.hasExceededTimeLimit, this.firstTypicalActionIndex, true);
+        Hoent newHoent = new Hoent(this.tMax, this.fluentsCount, this.hasExceededTimeLimit, this.hasContradiction,
+                this.firstTypicalActionIndex, true);
 
         for (short timeIndex = 0; timeIndex < tMax; timeIndex++) {
             HashMap<Byte, String> sysElemOAtTimeUnit = HashMapByteStringUtils.copy(this.sysElemO.get(timeIndex));
@@ -248,6 +253,9 @@ public class Hoent {
      */
     public void eAddAction(byte actionID, byte timeID) {
         if (timeID >= tMax) {
+            return;
+        }
+        if (this.sysElemE.get(timeID).occuringAction != -1) {
             return;
         }
 

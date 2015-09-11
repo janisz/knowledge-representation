@@ -16,6 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.edu.pw.mini.msi.knowledgerepresentation.Executor;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class Gui extends Application {
         Label definitionsLabel = new Label("Definitions");
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_w_02.al"))); ///definition_w_14.al
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_w_14.al"))); ///definition_w_14.al
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);
@@ -104,8 +105,9 @@ public class Gui extends Application {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
                         int maxTime = (int) maxTimeSpinner.getValue();
+                        HoentsSettings hoentsSettings = new HoentsSettings(); //TODO initialize hoentsSettings doThrow with checkbox value
                         //List<Boolean> returns = new Interpreter().eval(code);
-                        List<Boolean> returns = new Executor().getResults(code, null, maxTime);
+                        List<Boolean> returns = new Executor().getResults(code, null, maxTime, hoentsSettings);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

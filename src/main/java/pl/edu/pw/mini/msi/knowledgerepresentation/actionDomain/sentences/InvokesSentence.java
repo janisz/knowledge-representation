@@ -8,6 +8,7 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.For
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.IFormula;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Time;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoent;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.StringUtils;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ public class InvokesSentence extends Sentence {
 
     @Override
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception{
         //A invokes B after t if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -76,6 +77,7 @@ public class InvokesSentence extends Sentence {
             ArrayList<ArrayList<String>> posAndNegEvaluates =
                     FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
             ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+            ArrayList<String> negEvaluates = posAndNegEvaluates.get(1);
 
             for (Hoent structure : structures) {
                 boolean isAtLeastOneNewStructure = false;
@@ -88,15 +90,36 @@ public class InvokesSentence extends Sentence {
                     continue;
                 }
 
-                if (posEvaluates.size() == 0) {
-                    newStructures.add(structure.copy());
-                    continue;
+                //if (posEvaluates.size() == 0) { //20150911
+                //    newStructures.add(structure.copy());
+                //    continue;
+                //}
+                for (String negEvaluate : negEvaluates) { //20150911
+
+                    boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
+                    if (hCompatibility == false) {
+                        //newStructures.add(structure.copy());
+                        continue;
+                    }
+                    String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    //if (zerosAndOnesCounter == 0) {
+                    //    //newStructures.add(structure.copy());
+                    //    continue;
+                    //}
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
+                    //if (zerosAndOnesCounter != 0) { //20150905_02
+                    //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
+                    //} //20150905_02
+                    Hoent newStructure = structure.copy();
+                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+                    newStructures.add(newStructure);
                 }
 
                 for (String posEvaluate : posEvaluates) {
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
-                        newStructures.add(structure.copy()); //20150905
+                        //newStructures.add(structure.copy()); //20150905 //20150911
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
@@ -107,7 +130,7 @@ public class InvokesSentence extends Sentence {
                     //}
                     byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
                     if (zerosAndOnesCounter != 0) { //20150905_02
-                        newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
+                        //newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02 //20150911_add?
                     } //20150905_02
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
@@ -125,7 +148,8 @@ public class InvokesSentence extends Sentence {
                                 (byte)(timeID + this.time.timeID)) == false){
                             String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                             log.debug(message);
-                            if (structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+                            if (hoentsSettings.isDoThrow() == true &&
+                                    structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
                                 throw new Exception(message);
                             }
                             else {
@@ -142,7 +166,8 @@ public class InvokesSentence extends Sentence {
                             //continue; //TODO TOMEKL throw error information?
                         String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        if (structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+                        if (hoentsSettings.isDoThrow() == true &&
+                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
                             throw new Exception(message);
                         }
                         else {
@@ -184,10 +209,11 @@ public class InvokesSentence extends Sentence {
                 if (this.resultingAction.task.negated == true) {
                     Hoent newNewStructure = structure.copy();
                     if (newNewStructure.eCanAddNegatedActionAtTime(this.resultingAction.actionID,
-                            (byte)(timeID + this.time.timeID)) == false){
+                            (byte) (timeID + this.time.timeID)) == false){
                         String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        if (structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+                        if (hoentsSettings.isDoThrow() == true &&
+                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
                             throw new Exception(message);
                         }
                         else {
@@ -205,7 +231,8 @@ public class InvokesSentence extends Sentence {
                     //continue; //TODO TOMEKL throw error information?
                     String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                     log.debug(message);
-                    if (structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+                    if (hoentsSettings.isDoThrow() == true &&
+                            structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
                         throw new Exception(message);
                     }
                     else {
@@ -225,7 +252,7 @@ public class InvokesSentence extends Sentence {
 
     @Override
     public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
-                                                 boolean secondPass)
+                                                 boolean secondPass, HoentsSettings hoentsSettings)
             throws Exception{
         //A invokes B after t if p
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
@@ -234,9 +261,9 @@ public class InvokesSentence extends Sentence {
             ArrayList<ArrayList<String>> posAndNegEvaluates =
                     FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
             ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
+            ArrayList<String> negEvaluates = posAndNegEvaluates.get(1);
 
             for (Hoent structure : structures) {
-                structure.addTypicalActionIndex((byte)(timeID + this.time.timeID));
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
@@ -251,15 +278,36 @@ public class InvokesSentence extends Sentence {
                     continue;
                 }
 
-                if (posEvaluates.size() == 0) {
-                    newStructures.add(structure.copy());
-                    continue;
+                //if (posEvaluates.size() == 0) { //20150911
+                //    newStructures.add(structure.copy());
+                //    continue;
+                //}
+                for (String negEvaluate : negEvaluates) { //20150911
+
+                    boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
+                    if (hCompatibility == false) {
+                        //newStructures.add(structure.copy());
+                        continue;
+                    }
+                    String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
+                    //if (zerosAndOnesCounter == 0) {
+                    //    //newStructures.add(structure.copy());
+                    //    continue;
+                    //}
+                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
+                    //if (zerosAndOnesCounter != 0) { //20150905_02
+                    //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
+                    //} //20150905_02
+                    Hoent newStructure = structure.copy();
+                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
+                    newStructures.add(newStructure);
                 }
 
                 for (String posEvaluate : posEvaluates) {
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
-                        newStructures.add(structure.copy());
+                        //newStructures.add(structure.copy()); //20150911
                         continue;
                     }
                     String newEvaluates = structure.hGetNewEvaluates(posEvaluate, timeID);
@@ -269,7 +317,7 @@ public class InvokesSentence extends Sentence {
                     //    continue;
                     //}
                     if (zerosAndOnesCounter != 0) {
-                        newStructures.add(structure.copy());
+                        //newStructures.add(structure.copy()); //20150911_add?
                         //continue;
                     }
                     Hoent newStructure = structure.copy();
@@ -282,6 +330,7 @@ public class InvokesSentence extends Sentence {
                         continue;
                     }
 
+                    newStructure.addTypicalActionIndex((byte) (timeID + this.time.timeID)); //20150911
                     if (newStructure.eIsActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
                             == false) {
                         Hoent newAStructure = newStructure.copy();
@@ -309,7 +358,6 @@ public class InvokesSentence extends Sentence {
             //A invokes B after t if p
 
             for (Hoent structure : structures) {
-                structure.addTypicalActionIndex((byte)(timeID + this.time.timeID));
                 boolean isAtLeastOneNewStructure = false;
                 //boolean addedIdenticalStructure = false;
 
@@ -323,7 +371,15 @@ public class InvokesSentence extends Sentence {
                 Hoent newStructure = structure.copy();
                 //newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
 
-                if (newStructure.eIsActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID))
+                if (structure.isFullTime((byte)(timeID + this.time.timeID))) { //20150909
+                    Hoent newNewStructure = newStructure.copy();
+                    newNewStructure.hasExceededTimeLimit = true;
+                    newStructures.add(newNewStructure);
+                    continue;
+                }
+
+                newStructure.addTypicalActionIndex((byte)(timeID + this.time.timeID));
+                if (newStructure.eIsActionAtTime(this.resultingAction.actionID, (byte) (timeID + this.time.timeID))
                         == false) {
                     Hoent newAStructure = structure.copy();
                     newAStructure.aAddAtypicalAction((byte) (timeID + this.time.timeID), this.resultingAction.actionID);
