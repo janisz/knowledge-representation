@@ -147,10 +147,20 @@ class BasicTest extends Specification {
         '/definition_o_34b.al'    | 10    | true    | false     | 'null' //conflicting triggers
         '/definition_o_34c.al'    | 10    | true    | false     | 'null' //conflicting triggers
 
+
+
+        '/definition_o_40.al'     | 8    | true    | false     | 'true' //typically invokes, one branch ok, second not ok
+        '/definition_o_40a.al'    | 11    | true    | false     | 'true, true' //typically invokes, one branch ok, second not ok
+        '/definition_o_41.al'     | 8    | true    | false     | 'true, true, true, true' //typically occurs at, one branch ok, second not ok
+        '/definition_o_41a.al'    | 8    | true    | false     | 'true, false, true, false' //typically occurs at, one branch ok, second not ok
+        '/definition_o_42.al'     | 4    | true    | false     | 'true, true, true, true' //typically triggers, one branch ok, second not ok
+
         '/definition_r_01.al'     | 6     | true    | false     | 'false'
         '/definition_r_02.al'     | 7     | true    | false     | 'true'
         '/definition_fapr96.al'   | 5     | true    | false     | 'true, true, true, true, true, true'
         '/definition_fapr96_02.al'| 5     | true    | false     | 'true, true, true, true, true, true, true'
+        '/definition_fapr96_03.al'| 5     | true    | false     | 'true, true, true, true, true, true, true'
+
 	    '/1-alternatywa'	      | 5     | true    | false     | 'true, true, true, true, true, false'
         '/2-koniunkcja'  	      | 5     | true    | false     | 'true, true, true, true, true'
         '/3-implikacja'  	      | 5     | true    | false     | 'true, true, true, true, true'

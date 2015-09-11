@@ -206,6 +206,7 @@ public class Hoents {
         }
 
         //time > 0
+        int deletionsBecauseOfOcclusionCounter = 0;
         for (byte timeIndex = 1; timeIndex < tMax; timeIndex++) {
             ArrayList<Hoent> newModelsOfTypeOne = new ArrayList<Hoent>();
             for (Hoent modelOfTypeOne : modelsOfTypeOne) {
@@ -221,6 +222,7 @@ public class Hoents {
                     //}
                     if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
                             modelOfTypeOne.sysElemH.get(timeIndex), null, null) == false ) {
+                        deletionsBecauseOfOcclusionCounter++;
                         continue;
                     }
                     newModelsOfTypeOne.add( newModelOfTypeOne );
@@ -246,6 +248,7 @@ public class Hoents {
                         //}
                         if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
                                modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, null) == false) {
+                            deletionsBecauseOfOcclusionCounter++;
                             continue;
                         }
 
@@ -255,6 +258,7 @@ public class Hoents {
             }
             modelsOfTypeOne = newModelsOfTypeOne;
         }
+        log.debug("deletionsBecauseOfOcclusionCounter: " + String.valueOf(deletionsBecauseOfOcclusionCounter));
 
         //20150906 //20150911 commented
         //after filling '?' with values (using occlusion) check if new HOENT's are compatible with sentences
@@ -300,6 +304,7 @@ public class Hoents {
             }
         }
         modelsOfTypeOne = newModelsOfTypeOne;
+        log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
         if (hoentsSettings.isDoThrowIfExceededTimeLimit()) {
             for (Hoent modelofTypeOne : modelsOfTypeOne) {
@@ -317,7 +322,6 @@ public class Hoents {
 //            }
 //        }
 
-        log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
 
     }
 
