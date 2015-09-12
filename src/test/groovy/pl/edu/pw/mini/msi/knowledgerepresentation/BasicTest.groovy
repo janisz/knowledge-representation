@@ -223,5 +223,6 @@ class BasicTest extends Specification {
         '/13-invokes'             | 5     | true    | false     | 'true, true, true, true'
         '/1-involved.al'          | 1     | true    | false     | 'false'
         '/2-involved.al'          | 3     | true    | false     | 'false, true, false, true, false, true, false, true'
+        '/13-actions-1'          | 3     | true    | false     | 'true, true, true, true'
     }
 }
