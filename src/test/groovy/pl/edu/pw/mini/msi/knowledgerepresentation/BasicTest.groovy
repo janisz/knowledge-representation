@@ -79,9 +79,9 @@ class BasicTest extends Specification {
     @Unroll
     def "proceeding file '#filename' with params (#doThrow,#doThrIfTm) returned #expectedResults"() {
         given:
-        InputStream resourceAsStream = getClass().getResourceAsStream(filename);
+        def code = getClass().getResourceAsStream(filename).text;
 
-        List<Boolean> actualResults = new Executor().getResults(null, resourceAsStream, tMax,
+        List<Boolean> actualResults = new Executor().getResults(code, tMax,
                 new HoentsSettings(doThrow, doThrIfTm));
         //List<Boolean> expectedResults = new ArrayList<Boolean>();
 

@@ -29,6 +29,8 @@ public class Gui extends Application {
     private TextArea definitionsTextArea;
     private TextArea queriesTextArea;
     private Spinner maxTimeSpinner;
+    private CheckBox doThrowCheckbox;
+    private CheckBox doThrowIfExceededTimeLimit;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -65,7 +67,12 @@ public class Gui extends Application {
         Label maxTimeLabel = new Label("Maximum time to render");
         maxTimeBox.getChildren().addAll(maxTimeLabel, maxTimeSpinner);
 
-        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, maxTimeBox, buttonsBox);
+        doThrowCheckbox = new CheckBox("return error when at least one HOENT system \n(not resulting from typically sentence) is contradictory");
+        doThrowCheckbox.setSelected(true);
+        doThrowIfExceededTimeLimit = new CheckBox("return error when exceeded time limit");
+        doThrowCheckbox.setSelected(false);
+
+        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, maxTimeBox, doThrowCheckbox, doThrowIfExceededTimeLimit, buttonsBox);
 
         HBox.setHgrow(vbox2, Priority.ALWAYS);
 
@@ -105,9 +112,10 @@ public class Gui extends Application {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
                         int maxTime = (int) maxTimeSpinner.getValue();
-                        HoentsSettings hoentsSettings = new HoentsSettings(); //TODO initialize hoentsSettings doThrow with checkbox value
-                        //List<Boolean> returns = new Interpreter().eval(code);
-                        List<Boolean> returns = new Executor().getResults(code, null, maxTime, hoentsSettings);
+                        HoentsSettings hoentsSettings = new HoentsSettings(
+                                doThrowCheckbox.isSelected(), doThrowIfExceededTimeLimit.isSelected()
+                        );
+                        List<Boolean> returns = new Executor().getResults(code, maxTime, hoentsSettings);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));
