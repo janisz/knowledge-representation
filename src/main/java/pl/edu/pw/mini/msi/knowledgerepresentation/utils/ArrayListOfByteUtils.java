@@ -1,6 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.utils;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Created by Tomek on 2015-09-01.
@@ -34,11 +35,7 @@ public class ArrayListOfByteUtils {
     }
 
     public static ArrayList<Byte> copy(ArrayList<Byte> oldList) {
-        ArrayList<Byte> newList = new ArrayList<Byte>();
-        for (Byte oldElem : oldList) {
-            newList.add( new Byte(oldElem) );
-        }
-        return newList;
+        return oldList.stream().map(Byte::new).collect(Collectors.toCollection(ArrayList::new));
     }
 
     public static boolean areSame(ArrayList<Byte> list1, ArrayList<Byte> list2) {

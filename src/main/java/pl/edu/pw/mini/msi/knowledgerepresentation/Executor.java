@@ -1,6 +1,5 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation;
 
-import org.antlr.runtime.tree.CommonTree;
 import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -15,9 +14,6 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.grammar.ActionLanguageParser;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.Hoents;
 import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,26 +43,17 @@ public class Executor {
         return errorInformation;
     }
 
-    public List<Boolean> getResults(String input, InputStream inputStream, int tMaxArg, HoentsSettings hoentsSettings) {
+    public List<Boolean> getResults(String input, int tMaxArg, HoentsSettings hoentsSettings) {
         //if (inputStream != null && inputStream instanceof BufferedInputStream) {
         //    String s = ((BufferedInputStream)inputStream).toString();
-            counter++;
-            log.debug("counter" + counter);
+        counter++;
+        log.debug("counter" + counter);
         //}
 
-        byte tMax = (byte)tMaxArg;
+        byte tMax = (byte) tMaxArg;
         //log.debug("Create a lexer and parser for input", input);
-        ActionLanguageLexer lexer = null;
-        if (input != null) {
-            lexer = new ActionLanguageLexer(new ANTLRInputStream(input));
-        }
-        else if (inputStream != null) {
-            try {
-                lexer = new ActionLanguageLexer(new ANTLRInputStream(inputStream));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        ActionLanguageLexer lexer = new ActionLanguageLexer(new ANTLRInputStream(input));
+
         ActionLanguageParser parser = new ActionLanguageParser(new CommonTokenStream(lexer));
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
@@ -77,18 +64,17 @@ public class Executor {
         //parser.programm().instruction(1)
 
         //byte tMax = 4; //important
-        HashMap<Integer, Boolean> resultsHM = new HashMap<Integer,Boolean>();
+        HashMap<Integer, Boolean> resultsHM = new HashMap<Integer, Boolean>();
         for (String scenarioName : actionDomain.mappedQueries.keySet()) {
             ArrayList<Query> queriesForScenario = actionDomain.mappedQueries.get(scenarioName);
             ArrayList<Sentence> fullScenario = actionDomain.fullScenarios.get(scenarioName);
 
-            Hoents hoents = new Hoents(fullScenario, queriesForScenario, tMax, (byte)actionDomain.fluents.size(),
+            Hoents hoents = new Hoents(fullScenario, queriesForScenario, tMax, (byte) actionDomain.fluents.size(),
                     actionDomain.actions, hoentsSettings);
             ArrayList<Boolean> resultsForScenario = new ArrayList<Boolean>();
             try {
                 resultsForScenario = hoents.getQueriesAnswers();
-            }
-            catch (Exception exc) {
+            } catch (Exception exc) {
                 String error = "While processing scenario [" + scenarioName + "] occurred exception [" + exc.getMessage() +
                         "][" + exc.toString() + "]";
                 log.debug(error);
@@ -104,7 +90,7 @@ public class Executor {
         }
         ArrayList<Boolean> results = new ArrayList<Boolean>();
         for (int queryIDindex = actionDomain.minQueryID; queryIDindex < actionDomain.minQueryID + resultsHM.keySet().size();
-                queryIDindex++) {
+             queryIDindex++) {
             results.add(resultsHM.get(queryIDindex));
         }
         return results;

@@ -107,9 +107,6 @@ public class Fluents {
 
     public static boolean checkCompatibilityUsingMask(String oldFluents, String newFluents, String changingFluents,
                                                       ArrayList<String>  posEvalsFromAtSentences) {
-        ArrayList<String> results = new ArrayList<String>();
-        results.add( new String("") );
-
         for (byte index = 0; index < oldFluents.length(); index++) {
             if (newFluents.charAt(index) == '0' || newFluents.charAt(index) == '1') {
                 if (oldFluents.charAt(index) == '0' || oldFluents.charAt(index) == '1') {
@@ -137,7 +134,7 @@ public class Fluents {
             if (index > 0) {
                 resultSB.append(",");
             }
-            resultSB.append(fluentsMapping.get(index) + "=" + evaluation.charAt(index));
+            resultSB.append(fluentsMapping.get(index)).append("=").append(evaluation.charAt(index));
         }
         return resultSB.toString();
     }
