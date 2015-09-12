@@ -23,4 +23,3 @@ always a at 5 when ScenarioOne
 ever a at 7 when ScenarioTwo
 always a at 7 when ScenarioTwo
 
-//true, true, true, true

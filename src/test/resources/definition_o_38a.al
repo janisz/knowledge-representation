@@ -14,4 +14,3 @@ ScenarioOne {
 ever performed (Janek, B) at 1 when ScenarioOne
 always performed (Janek, B) at 1 when ScenarioOne
 
-//true, false

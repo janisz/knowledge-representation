@@ -23,5 +23,3 @@ ever performed (Janek, C) at 9 when ScenarioOne
 always performed (Janek, C) at 9 when ScenarioOne
 ever performed (Janek, C) at 9 when ScenarioTwo
 always performed (Janek, C) at 9 when ScenarioTwo
-
-//true, false, null, null

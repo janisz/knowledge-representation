@@ -21,5 +21,3 @@ ScenarioTwo {
 
 typically -a at 10 when ScenarioOne
 typically -a at 10 when ScenarioTwo
-
-//true, true

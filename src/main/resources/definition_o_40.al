@@ -12,5 +12,3 @@ ScenarioOne {
 }
 
 typically a at 7 when ScenarioOne
-
-//true

@@ -22,5 +22,3 @@ typically -a at 7 when ScenarioOne
 typically performed (Janek, A) at 3 when ScenarioOne
 typically -a at 7 when ScenarioTwo
 typically performed (Janek, A) at 3 when ScenarioTwo
-
-//true, true, true, true

@@ -14,4 +14,3 @@ ScenarioOne {
 ever b at 9 when ScenarioOne
 always b at 9 when ScenarioOne
 
-//true, false

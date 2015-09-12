@@ -248,4 +248,13 @@ public class Fluents {
         }
         return false;
     }
+
+    public static String getOneFluentMaskWithQM(byte fluentID, byte fluentsCount, char newValue) {
+        StringBuilder resultSB = new StringBuilder("");
+        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
+            resultSB.append('?');
+        }
+        resultSB.replace(fluentID, fluentID + 1, String.valueOf(newValue));
+        return resultSB.toString();
+    }
 }

@@ -77,7 +77,7 @@ class BasicTest extends Specification {
     }
 
     @Unroll
-    def "proceeding file '#filename' returned #expectedResults"() {
+    def "proceeding file '#filename' with params (#doThrow,#doThrIfTm) returned #expectedResults"() {
         given:
         InputStream resourceAsStream = getClass().getResourceAsStream(filename);
 
@@ -147,13 +147,50 @@ class BasicTest extends Specification {
         '/definition_o_34b.al'    | 10    | true    | false     | 'null' //conflicting triggers
         '/definition_o_34c.al'    | 10    | true    | false     | 'null' //conflicting triggers
 
+        //releases, one branch ok, second not ok, DOTHROW == true
+        '/definition_o_35.al'     | 11    | true    | false     | 'null, null, null, null' //releases, causes, one branch ok, second not ok
+        '/definition_o_36.al'     | 10    | true    | false     | 'true, false, null, null'  //releases, invokes, one branch ok, second not ok
+        '/definition_o_36a.al'    | 10    | true    | false     | 'true, false, null, null'  //releases, invokes, one branch ok, second not ok
+        '/definition_o_37.al'     | 10    | true    | false     | 'true, false' //releases, releases, one branch ok, second not ok
+        '/definition_o_37a.al'    | 10    | true    | false     | 'true, false' //releases, releases, one branch ok, second not ok
+        '/definition_o_37b.al'    | 5     | true    | false     | 'null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_37c.al'    | 11    | true    | false     | 'null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_37d.al'    | 11    | true    | false     | 'null, null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_37e.al'    | 11    | true    | false     | 'null, null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_37f.al'    | 9     | true    | false     | 'null, null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_37g.al'    | 9     | true    | false     | 'null, null, null, null, null' //releases, releases, one branch ok, second not ok
+        '/definition_o_38.al'     | 10    | true    | false     | 'true, false' //releases, triggers, one branch ok, second not ok
+        '/definition_o_38a.al'    | 10    | true    | false     | 'true, false' //releases, triggers, one branch ok, second not ok
+        '/definition_o_39.al'     | 10    | true    | false     | 'null, null, null, null' //releases, at, one branch ok, second not ok
 
+        //releases, one branch ok, second not ok, DOTHROW == false
+        '/definition_o_35.al'     | 11    | false   | false     | 'true, true, true, true' //releases, causes, one branch ok, second not ok
+        '/definition_o_36.al'     | 10    | false   | false     | 'true, false, false, false'  //releases, invokes, one branch ok, second not ok
+        '/definition_o_36a.al'    | 10    | false   | false     | 'true, false, false, false'  //releases, invokes, one branch ok, second not ok
+        '/definition_o_37.al'     | 10    | false   | false     | 'true, false' //releases, releases, one branch ok, second not ok
+        '/definition_o_37a.al'    | 10    | false   | false     | 'true, false' //releases, releases, one branch ok, second not ok
+        '/definition_o_37b.al'    | 5     | false   | false     | 'true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_37c.al'    | 11    | false   | false     | 'true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_37d.al'    | 11    | false   | false     | 'true, true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_37e.al'    | 11    | false   | false     | 'true, true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_37f.al'    | 9     | false   | false     | 'true, true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_37g.al'    | 9     | false   | false     | 'true, true, true, true, true' //releases, releases, one branch ok, second not ok
+        '/definition_o_38.al'     | 10    | false   | false     | 'true, false' //releases, triggers, one branch ok, second not ok
+        '/definition_o_38a.al'    | 10    | false   | false     | 'true, false' //releases, triggers, one branch ok, second not ok
+        '/definition_o_39.al'     | 10    | false   | false     | 'true, true, true, true' //releases, at, one branch ok, second not ok
 
-        '/definition_o_40.al'     | 8    | true    | false     | 'true' //typically invokes, one branch ok, second not ok
+        '/definition_o_40.al'     | 8     | true    | false     | 'true' //typically invokes, one branch ok, second not ok
         '/definition_o_40a.al'    | 11    | true    | false     | 'true, true' //typically invokes, one branch ok, second not ok
-        '/definition_o_41.al'     | 8    | true    | false     | 'true, true, true, true' //typically occurs at, one branch ok, second not ok
-        '/definition_o_41a.al'    | 8    | true    | false     | 'true, false, true, false' //typically occurs at, one branch ok, second not ok
-        '/definition_o_42.al'     | 4    | true    | false     | 'true, true, true, true' //typically triggers, one branch ok, second not ok
+        '/definition_o_41.al'     | 8     | true    | false     | 'true, true, true, true' //typically occurs at, one branch ok, second not ok
+        '/definition_o_41a.al'    | 8     | true    | false     | 'true, false, true, false' //typically occurs at, one branch ok, second not ok
+        '/definition_o_42.al'     | 4     | true    | false     | 'true, true, true, true' //typically triggers, one branch ok, second not ok
+
+        //two typicalities at the same time 'conflict'
+        '/definition_o_43.al'     | 7     | true    | false     | 'false, true, false, true' //invokes
+        '/definition_o_43a.al'    | 5     | true    | false     | 'false, true, false, true' //invokes
+        '/definition_o_44.al'     | 2     | true    | false     | 'false, true, false, true' //triggers
+        '/definition_o_45.al'     | 2     | true    | false     | 'false, true, false, true' //occurs at
+        '/definition_o_45a.al'    | 4     | true    | false     | 'false, true, false, true' //occurs at
 
         '/definition_r_01.al'     | 6     | true    | false     | 'false'
         '/definition_r_02.al'     | 7     | true    | false     | 'true'
