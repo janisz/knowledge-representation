@@ -339,6 +339,7 @@ public class Hoents {
     }
 
     //old{==================================================================================================================
+    //do not delete this
     /*private void calculateStructures() throws Exception {
         boolean isCurrentlyProcessingTypicalSentences = false; //Yes, I know it's a long name.
         ArrayList<Sentence> certainSentences = getSentences(isCurrentlyProcessingTypicalSentences);

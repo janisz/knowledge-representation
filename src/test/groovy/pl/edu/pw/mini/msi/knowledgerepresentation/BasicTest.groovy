@@ -129,6 +129,8 @@ class BasicTest extends Specification {
 
         '/definition_o_27.al'     | 8     | true    | false     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation
         '/definition_o_27a.al'    | 8     | true    | false     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation, time difference == 1
+        '/definition_o_27b.al'    | 8     | true    | false     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation
+        '/definition_o_27c.al'    | 8     | true    | false     | 'null' //initially, occurs, causes, contradictory with "at" sentence observation, time difference == 1
         '/definition_o_28.al'     | 8     | true    | false     | 'true, true' //initially, typically occurs, causes, only typical execution consistent with "at sentence" observation
         '/definition_o_29.al'     | 8     | true    | false     | 'true, true' //initially, typically occurs, causes, only atypical execution consistent with "at sentence" observation
         '/definition_o_30.al'     | 10    | true    | false     | 'true, false, null, null' //initially, releases, invokes if; conflicting actions
@@ -191,6 +193,14 @@ class BasicTest extends Specification {
         '/definition_o_44.al'     | 2     | true    | false     | 'false, true, false, true' //triggers
         '/definition_o_45.al'     | 2     | true    | false     | 'false, true, false, true' //occurs at
         '/definition_o_45a.al'    | 4     | true    | false     | 'false, true, false, true' //occurs at
+
+        //complicated scenarios
+        '/definition_o_46.al'     | 5     | true    | false     | 'true' //
+        '/definition_o_46a.al'    | 7     | true    | false     | 'true' //
+        '/definition_o_47.al'     | 5     | true    | false     | 'true' //
+        '/definition_o_47a.al'    | 8     | true    | false     | 'true' //
+        '/definition_o_48.al'     | 8     | true    | false     | 'true' //
+        '/definition_o_48a.al'    | 8     | true    | false     | 'true' //
 
         '/definition_r_01.al'     | 6     | true    | false     | 'false'
         '/definition_r_02.al'     | 7     | true    | false     | 'true'

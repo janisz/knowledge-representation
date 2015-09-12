@@ -154,7 +154,7 @@ public class CausesSentence extends Sentence {
                     ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
                     if (posEvaluatesOfResultCondition.size() == 0) { //20150906
                         //newStructures.add(structure.copy());
-                        continue;
+                        //continue; //20150912
                     }
                     boolean isAtLEastOnePosResultEvalCompatible = false;
                     for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
@@ -241,7 +241,7 @@ public class CausesSentence extends Sentence {
                 ArrayList<String> posEvaluatesOfResultCondition = posAndNegEvaluatesOfResultCondition.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
                 if (posEvaluatesOfResultCondition.size() == 0) { //20150906
                     //newStructures.add(structure.copy());
-                    continue;
+                    //continue; //20150912
                 }
                 for (String posEvaluateOfResultCondition : posEvaluatesOfResultCondition) {
                     boolean hCompatibilityOfResCond = newStructure.hCheckCompatibility(posEvaluateOfResultCondition,

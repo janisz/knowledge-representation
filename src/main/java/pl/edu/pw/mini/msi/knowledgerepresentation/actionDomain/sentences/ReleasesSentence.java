@@ -234,7 +234,7 @@ public class ReleasesSentence extends Sentence {
                     if (isAtLeastOneResPosEval == false || isAtLeastOneResNegEval == false) {
                         String message = "Error in checking sentence: [" + this.toString() + "] - can't find resulting condition at time [" + new Integer(timeID + 1).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        if (hoentsSettings.isDoThrow() == true) {
+                        if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(timeID) == false) {
                             throw new Exception(message);
                         }
                     }
@@ -278,7 +278,7 @@ public class ReleasesSentence extends Sentence {
                 if (isAtLeastOneResPosEval == false || isAtLeastOneResNegEval == false) {
                     String message = "Error in checking sentence: [" + this.toString() + "] - can't find resulting condition at time [" + new Integer(timeID + 1).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                     log.debug(message);
-                    if (hoentsSettings.isDoThrow() == true) {
+                    if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(timeID) == false) {
                         throw new Exception(message);
                     }
                 }
