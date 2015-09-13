@@ -21,6 +21,7 @@ public class Hoent {
     public boolean hasExceededTimeLimit;
     public boolean hasContradiction;
     public byte firstTypicalActionIndex;
+    private byte errorInsertingActionAtTime;
 
     /**
      * Constructor for copy method
@@ -29,7 +30,7 @@ public class Hoent {
      * @param bDoNotUse
      */
     private Hoent(short tMax, short fluentsCount, boolean hasExceededTimeLimit, boolean hasContradiction,
-                  byte firstTypicalActionIndex, boolean bDoNotUse) {
+                  byte firstTypicalActionIndex, byte errorInsertingActionAtTime, boolean bDoNotUse) {
         sysElemH = new ArrayList<String>(tMax);
         sysElemO = new ArrayList<HashMap<Byte, String>>(tMax);
         sysElemE = new ArrayList<SysElemEAtTimeUnit>(tMax);
@@ -40,6 +41,7 @@ public class Hoent {
         this.hasExceededTimeLimit = hasExceededTimeLimit;
         this.hasContradiction = hasContradiction;
         this.firstTypicalActionIndex = firstTypicalActionIndex;
+        this.errorInsertingActionAtTime = errorInsertingActionAtTime;
     }
 
     public Hoent(short tMax, short fluentsCount) {
@@ -53,6 +55,7 @@ public class Hoent {
         this.hasExceededTimeLimit = false;
         this.hasContradiction = false;
         this.firstTypicalActionIndex = -1;
+        this.errorInsertingActionAtTime = -1;
 
         StringBuilder fluentValuesQuestionMark = new StringBuilder("");
         for (short fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
@@ -138,7 +141,7 @@ public class Hoent {
 
     public Hoent copy() {
         Hoent newHoent = new Hoent(this.tMax, this.fluentsCount, this.hasExceededTimeLimit, this.hasContradiction,
-                this.firstTypicalActionIndex, true);
+                this.firstTypicalActionIndex, this.errorInsertingActionAtTime, true);
 
         for (short timeIndex = 0; timeIndex < tMax; timeIndex++) {
             HashMap<Byte, String> sysElemOAtTimeUnit = HashMapByteStringUtils.copy(this.sysElemO.get(timeIndex));
@@ -578,5 +581,17 @@ public class Hoent {
         return result;
     }
 
+    public byte getErrorInsertingActionAtTime() {
+        return this.errorInsertingActionAtTime;
+    }
+
+    public void addErrorInsertingActionAtTime(byte newTime) {
+        if (this.errorInsertingActionAtTime == -1) {
+            this.errorInsertingActionAtTime = newTime;
+        }
+        else {
+            this.errorInsertingActionAtTime = (byte)Math.min(this.errorInsertingActionAtTime, newTime);
+        }
+    }
 
 }

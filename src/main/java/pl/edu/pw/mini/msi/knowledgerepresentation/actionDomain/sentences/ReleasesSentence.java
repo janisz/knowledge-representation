@@ -197,7 +197,7 @@ public class ReleasesSentence extends Sentence {
                     continue;
                 }
 
-                if (structure.isStateTypicalAtTime(timeID) == true) {
+                if (structure.isStateTypicalAtTime( (byte)(timeID + 1) ) == true) {
                     continue;
                 }
 
@@ -205,8 +205,10 @@ public class ReleasesSentence extends Sentence {
                 boolean isAtLeastOneResNegEval = false;
                 boolean isAtLeastOnePosEvaluateCompatible = false;
                 PosEvaluateLoop:
-                for (String posEvaluate : posEvaluates) {
+                for (String posEvaluate : posEvaluates) { //only one or zero of posEvaluates should be compatible
                     boolean leftConditions = true;
+                    isAtLeastOneResPosEval = false; //20150913
+                    isAtLeastOneResNegEval = false; //20150913
 
                     boolean hCompatibility = structure.hCheckCompatibility(posEvaluate, timeID);
                     if (hCompatibility == false) {
@@ -215,7 +217,7 @@ public class ReleasesSentence extends Sentence {
                     }
                     isAtLeastOnePosEvaluateCompatible = true;
 
-                    //we have releases sentence with A and p==true and isStateTypicalAtTime(timeID) == true
+                    //we have releases sentence with A and p==true and isStateTypicalAtTime(timeID+1) == true
                     for (Hoent structure2 : structures) {
                         String posEvaluate2 = Fluents.getOneFluentMaskWithQM( this.fluent.fluentID, fluentsCount, '1');
                         String negEvaluate2 = Fluents.getOneFluentMaskWithQM( this.fluent.fluentID, fluentsCount, '0');
@@ -239,7 +241,7 @@ public class ReleasesSentence extends Sentence {
                         }
                     }
                 }
-        }
+            }
         }
         else {
             //empty if part=================================================================================================
@@ -254,7 +256,7 @@ public class ReleasesSentence extends Sentence {
                     continue;
                 }
 
-                if (structure.isStateTypicalAtTime(timeID) == true) {
+                if (structure.isStateTypicalAtTime( (byte)(timeID + 1) ) == true) {
                     continue;
                 }
 

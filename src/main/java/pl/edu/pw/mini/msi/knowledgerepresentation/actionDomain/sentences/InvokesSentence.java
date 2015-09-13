@@ -148,13 +148,14 @@ public class InvokesSentence extends Sentence {
                                 (byte)(timeID + this.time.timeID)) == false){
                             String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                             log.debug(message);
-                            if (hoentsSettings.isDoThrow() == true &&
-                                    structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
-                                throw new Exception(message);
-                            }
-                            else {
-                                continue; //not relevant
-                            }
+//                            if (hoentsSettings.isDoThrow() == true &&
+//                                    structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+//                                throw new Exception(message);
+//                            }
+//                            else {
+//                                continue; //not relevant
+//                            }
+                            newNewStructure.addErrorInsertingActionAtTime( (byte)(timeID + this.time.timeID) ); //20150913
                         }
                         //newNewStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                         newStructures.add(newNewStructure);
@@ -166,13 +167,14 @@ public class InvokesSentence extends Sentence {
                             //continue; //TODO TOMEKL throw error information?
                         String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        if (hoentsSettings.isDoThrow() == true &&
-                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
-                            throw new Exception(message);
-                        }
-                        else {
-                            continue; //not relevant
-                        }
+//                        if (hoentsSettings.isDoThrow() == true &&
+//                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+//                            throw new Exception(message);
+//                        }
+//                        else {
+//                            continue; //not relevant
+//                        }
+                        newStructure.addErrorInsertingActionAtTime( (byte)(timeID + this.time.timeID) ); //20150913
                     }
                     newStructure.eAddAction(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
 
@@ -212,14 +214,15 @@ public class InvokesSentence extends Sentence {
                             (byte) (timeID + this.time.timeID)) == false){
                         String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                         log.debug(message);
-                        if (hoentsSettings.isDoThrow() == true &&
-                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
-                            throw new Exception(message);
-                        }
-                        else {
-                            continue; //not relevant
-                        }
-                     }
+//                        if (hoentsSettings.isDoThrow() == true &&
+//                                structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+//                            throw new Exception(message);
+//                        }
+//                        else {
+//                            continue; //not relevant
+//                        }
+                        newNewStructure.addErrorInsertingActionAtTime( (byte)(timeID + this.time.timeID) ); //20150913
+                    }
                     //newNewStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
                     newNewStructure.eAddNegatedActionAtTime(this.resultingAction.actionID, (byte)(timeID + this.time.timeID));
                     newStructures.add(newNewStructure);
@@ -231,13 +234,14 @@ public class InvokesSentence extends Sentence {
                     //continue; //TODO TOMEKL throw error information?
                     String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + new Integer(timeID + this.time.timeID).toString() + "] secondPass==[" + secondPass + "]."; //20150906
                     log.debug(message);
-                    if (hoentsSettings.isDoThrow() == true &&
-                            structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
-                        throw new Exception(message);
-                    }
-                    else {
-                        continue; //not relevant
-                    }
+//                    if (hoentsSettings.isDoThrow() == true &&
+//                            structure.isActionTypicalAtTime((byte)(timeID + this.time.timeID)) == false) {
+//                        throw new Exception(message);
+//                    }
+//                    else {
+//                        continue; //not relevant
+//                    }
+                    newStructure.addErrorInsertingActionAtTime( (byte)(timeID + this.time.timeID) ); //20150913
                 }
                 newStructure.eAddAction(this.resultingAction.actionID, (byte) (timeID + this.time.timeID));
 

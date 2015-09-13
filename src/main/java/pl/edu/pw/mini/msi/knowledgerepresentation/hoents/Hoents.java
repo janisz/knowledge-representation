@@ -139,6 +139,24 @@ public class Hoents {
                 }
             }
 
+            //check if invoked actions (by "invoke" sentence) that couldn't be inserted are really erroneous
+            //(if isActionTypicalAtTime is false at the time of action invoke
+            ArrayList<Hoent> newStructures = (ArrayList<Hoent>) structures.clone();
+            for (Hoent structure : structures) {
+                byte erroneousTime = structure.getErrorInsertingActionAtTime();
+                if (erroneousTime == timeID) {
+                    if (erroneousTime != -1) {
+                        if (hoentsSettings.isDoThrow() == true &&
+                                structure.isActionTypicalAtTime(erroneousTime) == false) {
+                            String message = "Error in structure - error inserting action at time [" + new Integer(erroneousTime).toString() + "]."; //20150906
+                            log.debug(message);
+                            throw new Exception(message);
+                        }
+                        newStructures.remove(structure);
+                    }
+                }
+            }
+            structures = newStructures;
         }
 
     }

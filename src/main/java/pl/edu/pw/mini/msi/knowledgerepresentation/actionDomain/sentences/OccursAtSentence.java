@@ -128,9 +128,11 @@ public class OccursAtSentence extends Sentence {
                 continue;
             }
 
-            Hoent newAStructure = structure.copy();
-            newAStructure.aAddAtypicalAction(time, this.action.actionID);
-            newStructures.add(newAStructure); //not typically, action doesn't occur
+            if (structure.eIsActionAtTime(this.action.actionID, time) == false) { //20150913
+                Hoent newAStructure = structure.copy();
+                newAStructure.aAddAtypicalAction(time, this.action.actionID);
+                newStructures.add(newAStructure); //not typically, action doesn't occur
+            }
 
             //negated == false
             if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
