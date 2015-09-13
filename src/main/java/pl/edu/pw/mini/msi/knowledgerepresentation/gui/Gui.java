@@ -70,7 +70,7 @@ public class Gui extends Application {
         doThrowCheckbox = new CheckBox("return error when at least one HOENT system \n(not resulting from typically sentence) is contradictory");
         doThrowCheckbox.setSelected(true);
         doThrowIfExceededTimeLimit = new CheckBox("return error when exceeded time limit");
-        doThrowCheckbox.setSelected(false);
+        doThrowIfExceededTimeLimit.setSelected(false);
 
         vbox2.getChildren().addAll(queriesLabel, queriesTextArea, maxTimeBox, doThrowCheckbox, doThrowIfExceededTimeLimit, buttonsBox);
 
