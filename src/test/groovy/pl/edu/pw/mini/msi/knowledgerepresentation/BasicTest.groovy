@@ -201,6 +201,8 @@ class BasicTest extends Specification {
         '/definition_o_47a.al'    | 8     | true    | false     | 'true' //
         '/definition_o_48.al'     | 8     | true    | false     | 'true' //
         '/definition_o_48a.al'    | 8     | true    | false     | 'true' //
+        '/definition_o_49.al'     | 8     | true    | false     | 'true, true, true' //
+        '/definition_o_49a.al'    | 9     | true    | false     | 'true, true, true' //
 
         '/definition_r_01.al'     | 6     | true    | false     | 'false'
         '/definition_r_02.al'     | 7     | true    | false     | 'true'
