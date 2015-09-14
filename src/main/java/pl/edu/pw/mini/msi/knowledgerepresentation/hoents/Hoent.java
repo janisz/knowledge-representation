@@ -80,38 +80,7 @@ public class Hoent {
             return false;
         }
 
-        String actualEvaluation = sysElemH.get(time);
-        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInActEval = actualEvaluation.charAt(fluentIndex);
-            char charAtIndexInEvalToTest = evaluationToTest.charAt(fluentIndex);
-
-            if (charAtIndexInEvalToTest == '?') {
-                continue;
-            }
-            else if (charAtIndexInEvalToTest == '1') {
-                if (charAtIndexInActEval == '1') {
-                    continue;
-                }
-                else if (charAtIndexInActEval == '0') {
-                    return false;
-                }
-                else if (charAtIndexInActEval == '?') {
-                    continue;
-                }
-            }
-            else if (charAtIndexInEvalToTest == '0') {
-                if (charAtIndexInActEval == '0') {
-                    continue;
-                }
-                else if (charAtIndexInActEval == '1') {
-                    return false;
-                }
-                else if (charAtIndexInActEval == '?') {
-                    continue;
-                }
-            }
-        }
-        return true;
+        return Fluents.hCheckCompatibility(sysElemH.get(time), evaluationToTest, (byte)this.fluentsCount);
     }
 
     public String hGetNewEvaluates(String posEvaluate, byte time) {
@@ -123,20 +92,7 @@ public class Hoent {
             return resultSB.toString();
         }
 
-        StringBuilder resultSB = new StringBuilder("");
-        String evaluationInH = sysElemH.get(time);
-        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
-            char charAtIndexInEvalToTest = posEvaluate.charAt(fluentIndex);
-            if ( (charAtIndexInEvalToTest == '0' || charAtIndexInEvalToTest == '1')
-                    && (charAtIndexInEvalInH == '?') ){
-                resultSB.append(charAtIndexInEvalToTest);
-            }
-            else {
-                resultSB.append("-");
-            }
-        }
-        return resultSB.toString();
+        return Fluents.hGetNewEvaluates(sysElemH.get(time), posEvaluate);
     }
 
     public Hoent copy() {
@@ -161,23 +117,10 @@ public class Hoent {
             return;
         }
 
-        //Hoent newHoent = this.copy();
-        String evaluationInH = sysElemH.get(time);
-        StringBuilder newEvaluationInH = new StringBuilder("");
-        for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
-            char charAtIndexInNewEvaluates = newEvaluates.charAt(fluentIndex);
-            if (charAtIndexInNewEvaluates == '0' || charAtIndexInNewEvaluates == '1') {
-                newEvaluationInH.append(charAtIndexInNewEvaluates);
-            }
-            else {
-                newEvaluationInH.append(charAtIndexInEvalInH);
-            }
-        }
-        this.sysElemH.remove(time);
-        this.sysElemH.add(time, newEvaluationInH.toString());
+        String newEvaluationInH = Fluents.hAddNewEvaluates(sysElemH.get(time), newEvaluates);
 
-       // return this;
+        this.sysElemH.remove(time);
+        this.sysElemH.add(time, newEvaluationInH);
     }
 
     public boolean eIsActionAtTime(byte actionID, byte timeID) {
