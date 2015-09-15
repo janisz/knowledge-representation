@@ -346,7 +346,7 @@ public class Hoent {
                 }
             }
             else {
-                if (thisN.get(timeIndex).actionID == otherN.get(timeIndex).actionID) {
+                if (thisN.get(timeIndex).actionID.equals( otherN.get(timeIndex).actionID )) { //20150915
                     ; //empty (equals)
                 }
                 else {
@@ -414,7 +414,7 @@ public class Hoent {
                 return false;
             }
             //compare actionID
-            else if (this.sysElemO.get(index).keySet().iterator().next() == otherSysElemO.get(index).keySet().iterator().next()) {
+            else if (this.sysElemO.get(index).keySet().iterator().next().equals( otherSysElemO.get(index).keySet().iterator().next() )) { //20150915
                 byte thisActionIDAtTime = this.sysElemO.get(index).keySet().iterator().next();
                 if (this.sysElemO.get(index).get( thisActionIDAtTime ).equals(
                         otherSysElemO.get(index).get( thisActionIDAtTime ))) {
