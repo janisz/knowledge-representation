@@ -148,7 +148,7 @@ public class Hoents {
                     if (erroneousTime != -1) {
                         if (hoentsSettings.isDoThrow() == true &&
                                 structure.isActionTypicalAtTime(erroneousTime) == false) {
-                            String message = "Error in structure - error inserting action at time [" + new Integer(erroneousTime).toString() + "]."; //20150906
+                            String message = "Error in structure - error inserting action at time [" + Integer.toString(erroneousTime) + "]."; //20150906
                             log.debug(message);
                             throw new Exception(message);
                         }
@@ -232,8 +232,8 @@ public class Hoents {
                        //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
                        //continue;
                        //}
-                       if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                               modelOfTypeOne.sysElemH.get(timeIndex), null, null) == false) {
+                       if (!Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                               modelOfTypeOne.sysElemH.get(timeIndex), null, null)) {
                            deletionsBecauseOfOcclusionCounter++;
                            continue;
                        }
@@ -257,8 +257,8 @@ public class Hoents {
                            //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
                            //   continue;
                            //}
-                           if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                                   modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, null) == false) {
+                           if (!Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
+                                   modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, null)) {
                                deletionsBecauseOfOcclusionCounter++;
                                continue;
                            }
@@ -354,285 +354,6 @@ public class Hoents {
 //        }
 
 
-    }
-
-    //old{==================================================================================================================
-    //do not delete this
-    /*private void calculateStructures() throws Exception {
-        boolean isCurrentlyProcessingTypicalSentences = false; //Yes, I know it's a long name.
-        ArrayList<Sentence> certainSentences = getSentences(isCurrentlyProcessingTypicalSentences);
-        isCurrentlyProcessingTypicalSentences = true;
-        ArrayList<Sentence> typicallySentences = getSentences(isCurrentlyProcessingTypicalSentences);
-
-        //1. proceed atSentence and occursAt sentences=================================================================
-        for (Sentence sentence : certainSentences) {
-            if ( (sentence instanceof AtSentence)
-                    || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyCertainSentence(structures, fluentsCount, (byte)-1, false, hoentsSettings);
-            }
-        }
-
-        //3. proceed occursAt "typically" sentences=================================================================
-        for (Sentence sentence : typicallySentences) {
-            if ( (sentence instanceof AtSentence)
-                    || (sentence instanceof OccursAtSentence) ){
-                structures = sentence.applyTypicalSentence(structures, fluentsCount, (byte) -1, false, hoentsSettings);
-            }
-        }
-
-        //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
-        //Boolean hasChanged = true;
-        for (byte timeID = 0; timeID < tMax; timeID++) {
-            for (Sentence sentence : certainSentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false
-                        && (sentence instanceof TriggersSentence) == true) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false, hoentsSettings);
-                }
-            }
-            //}
-
-            //4. proceed "typically" sentences other than occursAtSentence=======================================
-            //Boolean hasChanged = true;
-            //for (byte timeID = 0; timeID < tMax; timeID++) {
-            for (Sentence sentence : typicallySentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false
-                        && (sentence instanceof TriggersSentence) == true) {
-                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false, hoentsSettings);
-                }
-            }
-            //}
-
-            //20150906
-            //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
-            //Boolean hasChanged = true;
-            //for (byte timeID = 0; timeID < tMax; timeID++) {
-            for (Sentence sentence : certainSentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false
-                        && (sentence instanceof TriggersSentence) == false) {
-                    structures = sentence.applyCertainSentence(structures, fluentsCount, timeID, false, hoentsSettings);
-                }
-            }
-            //}
-
-            //4. proceed "typically" sentences other than occursAtSentence=======================================
-            //Boolean hasChanged = true;
-            //for (byte timeID = 0; timeID < tMax; timeID++) {
-            for (Sentence sentence : typicallySentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false
-                        && (sentence instanceof TriggersSentence) == false) {
-                    structures = sentence.applyTypicalSentence(structures, fluentsCount, timeID, false, hoentsSettings);
-                }
-            }
-        }
-
-
-
-    }
-
-    //
-    // FAPR96.pdf site 8 ABOVE Definition 2
-    // H=H', N=N' forall (timeid, actionid), fluents are in (strictly in) fluents'
-    //
-    private void calculateOMinimalStructures() {
-        oMinimalStructures = (ArrayList<Hoent>)structures.clone();//new ArrayList<Hoent>();
-        //boolean isStrictlyIn = false;
-        //int deletionsOfSameStructuresCounter = 0;
-        int deletionsOfNotOMinimalStructuresCounter = 0;
-
-        for (int index1 = 0; index1 < structures.size(); index1++) {
-            for (int index2 = index1 + 1; index2 < structures.size(); index2++) {
-                Hoent firstHoent = structures.get(index1);
-                Hoent secondHoent = structures.get(index2);
-
-                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) == false) {
-                    continue;
-                }
-                if (firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) == false) {
-                    continue;
-                }
-                if (firstHoent.oIsIn(secondHoent.sysElemO)) {
-                    oMinimalStructures.remove(secondHoent);
-                    deletionsOfNotOMinimalStructuresCounter++;
-                }
-                else if (secondHoent.oIsIn(firstHoent.sysElemO)) {
-                    oMinimalStructures.remove(firstHoent);
-                    deletionsOfNotOMinimalStructuresCounter++;
-                }
-                //TODO TOMEKL throws?
-            }
-        }
-        log.debug("deletionsOfNotOMinimalStructuresCounter:" + String.valueOf(deletionsOfNotOMinimalStructuresCounter));
-    }
-
-    //
-    //Fluents that changed are in the set O(A,t)
-    //FAPR96.pdf site 8 Definition 2
-    //
-    private void calculateModelsOfTypeOne() throws Exception {
-        modelsOfTypeOne = new ArrayList<Hoent>();
-
-        //time == 0
-        for (Hoent oMinimalStructure : oMinimalStructures) {
-            String hAtTimeZero = oMinimalStructure.sysElemH.get(0);
-            if (Fluents.countQuestionMarks(hAtTimeZero) == 0) {
-                modelsOfTypeOne.add(oMinimalStructure);
-            } else {
-                ArrayList<String> hElems = Fluents.expandQuestionMarks(hAtTimeZero);
-                for (String hElem : hElems) {
-                    Hoent copyOfOMinStr = oMinimalStructure.copy();
-                    copyOfOMinStr.sysElemH.remove(0);
-                    copyOfOMinStr.sysElemH.add(0, hElem);
-                    modelsOfTypeOne.add(copyOfOMinStr);
-                }
-            }
-        }
-
-        //time > 0
-        int deletionsBecauseOfOcclusionCounter = 0;
-        for (byte timeIndex = 1; timeIndex < tMax; timeIndex++) {
-            ArrayList<Hoent> newModelsOfTypeOne = new ArrayList<Hoent>();
-            for (Hoent modelOfTypeOne : modelsOfTypeOne) {
-                ArrayList<HashMap<Byte, String>> sysElemO = modelOfTypeOne.sysElemO;
-                HashMap<Byte, String> sysElemOAtTime = sysElemO.get(timeIndex - 1); // "- 1" important
-                //ArrayList<String> posEvalsFromAtSentences = getPosEvalsFromAtSentences(sentences, timeIndex);
-                if (sysElemOAtTime.keySet().size() == 0){
-                    //20150906
-                    Hoent newModelOfTypeOne = modelOfTypeOne.copy();
-                    newModelOfTypeOne.hPreserveFluentsAtTime(timeIndex);
-                    //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
-                    //continue;
-                    //}
-                    if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                            modelOfTypeOne.sysElemH.get(timeIndex), null, null) == false ) {
-                        deletionsBecauseOfOcclusionCounter++;
-                        continue;
-                    }
-                    newModelsOfTypeOne.add( newModelOfTypeOne );
-                }
-                else {
-                    String fluentsInO = sysElemOAtTime.entrySet().iterator().next().getValue();
-                    ////20150906
-                    //-------------------------------------------------------------------------------------------------
-                    //ArrayList<ArrayList<String>> posAndNegEvaluates =
-                    //        FormulaUtils.getPositiveAndNegativeEvaluates(this.conditionFormula, fluentsCount);
-                    //ArrayList<String> posEvaluates = posAndNegEvaluates.get(0); //e.g., ?100? [fluentIDs: 2,3,4; negations: 0,1,1; fluentCount: 5]
-
-                    //-------------------------------------------------------------------------------------------------
-                    ArrayList<String> newHsFromOcclusion =
-                            Fluents.expandQuestionMarksWithMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                                    modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO);
-                    for( String newH : newHsFromOcclusion) {
-                        Hoent newModelOfTypeOne = modelOfTypeOne.copy();
-                        newModelOfTypeOne.sysElemH.remove(timeIndex);
-                        newModelOfTypeOne.sysElemH.add(timeIndex, newH);
-                        //if (newModelOfTypeOne.hCheckCompatibility(modelOfTypeOne.sysElemH.get(timeIndex), timeIndex) == false) {
-                        //   continue;
-                        //}
-                        if (Fluents.checkCompatibilityUsingMask(modelOfTypeOne.sysElemH.get(timeIndex - 1),
-                                modelOfTypeOne.sysElemH.get(timeIndex), fluentsInO, null) == false) {
-                            deletionsBecauseOfOcclusionCounter++;
-                            continue;
-                        }
-
-                        newModelsOfTypeOne.add(newModelOfTypeOne);
-                    }
-                }
-            }
-            modelsOfTypeOne = newModelsOfTypeOne;
-        }
-        log.debug("deletionsBecauseOfOcclusionCounter: " + String.valueOf(deletionsBecauseOfOcclusionCounter));
-
-        //20150906 //20150911 commented
-        //after filling '?' with values (using occlusion) check if new HOENT's are compatible with sentences
-        //2. proceed certain sentences other than atSentence and occursAtSentence=======================================
-        //Boolean hasChanged = true;
-        ArrayList<Sentence> certainSentences = getSentences(false);
-        for (byte timeID = 0; timeID < tMax; timeID++) {
-            for (Sentence sentence : certainSentences) {
-                if ((sentence instanceof AtSentence) == false
-                        && (sentence instanceof OccursAtSentence) == false) {
-                    modelsOfTypeOne = sentence.applyCertainSentence(modelsOfTypeOne, fluentsCount, timeID, true, hoentsSettings);
-                }
-            }
-        }
-
-        //20150906
-        //minimal set of occured actions
-        int deletionsOfEMinimalModelsCounter = 0;
-
-        ArrayList<Hoent> newModelsOfTypeOne = (ArrayList<Hoent>)modelsOfTypeOne.clone();
-        for (int index1 = 0; index1 < modelsOfTypeOne.size(); index1++) {
-            for (int index2 = index1 + 1; index2 < modelsOfTypeOne.size(); index2++) {
-                Hoent firstHoent = modelsOfTypeOne.get(index1);
-                Hoent secondHoent = modelsOfTypeOne.get(index2);
-
-                if (firstHoent.hAreSysElemHsTheSame(secondHoent.sysElemH) == false) {
-                    continue;
-                }
-                if (firstHoent.oAreSysElemOsTheSame(secondHoent.sysElemO) == false) {
-                    continue;
-                }
-                if (firstHoent.nAreSysElemNsTheSame(secondHoent.sysElemN) == false) {
-                    continue;
-                }
-                if (firstHoent.eIsIn(secondHoent.sysElemE)) {
-                    newModelsOfTypeOne.remove(secondHoent);
-                    deletionsOfEMinimalModelsCounter++;
-                }
-                else if (secondHoent.eIsIn(firstHoent.sysElemE)) {
-                    newModelsOfTypeOne.remove(firstHoent);
-                    deletionsOfEMinimalModelsCounter++;
-                }
-            }
-        }
-        modelsOfTypeOne = newModelsOfTypeOne;
-        log.debug("deletionsOfEMinimalModelsCounter: " + String.valueOf(deletionsOfEMinimalModelsCounter));
-
-        if (hoentsSettings.isDoThrowIfExceededTimeLimit()) {
-            for (Hoent modelofTypeOne : modelsOfTypeOne) {
-                if (modelofTypeOne.hasExceededTimeLimit == true && modelofTypeOne.firstTypicalActionIndex == -1) {
-                    throw new Exception("modelofTypeOne.hasExceededTimeLimit == true");
-                }
-            }
-        }
-
-//        if (hoentsSettings.isDoThrow()) {
-//            for (Hoent modelofTypeOne : modelsOfTypeOne) {
-//                if (modelofTypeOne.hasContradiction == true) {
-//                    throw new Exception("modelofTypeOne.hasContradiction == true");
-//                }
-//            }
-//        }
-
-
-    }
-    */
-    //old}==================================================================================================================
-
-    private ArrayList<String> getPosEvalsFromAtSentences(ArrayList<Sentence> sentences, byte timeIndex) {
-        ArrayList<String> posEvaluates = null;
-        for (Sentence sentence : sentences) {
-            if (sentence instanceof AtSentence) {
-                AtSentence atSentence = (AtSentence)sentence;
-                if (atSentence.time.timeID != timeIndex) {
-                    continue;
-                }
-                ArrayList<ArrayList<String>> posAndNegEvaluatesForSentence =
-                        FormulaUtils.getPositiveAndNegativeEvaluates(atSentence.formula, fluentsCount);
-                ArrayList<String> posEvaluatesForSentence = posAndNegEvaluatesForSentence.get(0);
-                if (posEvaluates == null) {
-                    posEvaluates = posEvaluatesForSentence;
-                }
-                else {
-                    posEvaluates = Fluents.getFluentsConjunction(posEvaluates, posEvaluatesForSentence);
-                }
-            }
-        }
-        return posEvaluates;
     }
 
     /**

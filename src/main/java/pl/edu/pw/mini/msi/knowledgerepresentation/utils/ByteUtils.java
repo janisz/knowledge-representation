@@ -5,14 +5,13 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.utils;
  */
 public class ByteUtils {
     public static char toZeroOrOneChar(byte b) {
-        if (b == 0) {
-            return '0';
-        }
-        else if (b == 1) {
-            return '1';
-        }
-        else {
-            return '?';
+        switch (b) {
+            case 0:
+                return '0';
+            case 1:
+                return '1';
+            default:
+                return '?';
         }
     }
 }

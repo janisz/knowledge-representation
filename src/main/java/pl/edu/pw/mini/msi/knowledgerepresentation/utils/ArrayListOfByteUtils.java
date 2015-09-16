@@ -1,5 +1,7 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.utils;
 
+import com.google.common.base.Joiner;
+
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -19,12 +21,10 @@ public class ArrayListOfByteUtils {
             }
         }
         list.add(newByte);
-        return;
     }
 
     public static boolean contains(ArrayList<Byte> list, Byte newByte) {
-        for (byte index = 0; index < list.size(); index++) {
-            Byte listElem = list.get(index);
+        for (Byte listElem : list) {
             int comparisonResult = listElem.compareTo(newByte);
             if (comparisonResult == 0) {
                 return true;
@@ -43,7 +43,7 @@ public class ArrayListOfByteUtils {
             return false;
         }
         for (Byte elem1 : list1) {
-            if (ArrayListOfByteUtils.contains(list2, elem1) == false) {
+            if (!ArrayListOfByteUtils.contains(list2, elem1)) {
                 return false;
             }
         }
@@ -51,19 +51,6 @@ public class ArrayListOfByteUtils {
     }
 
     public static String myToString(ArrayList<Byte> list) {
-        StringBuilder resultSB = new StringBuilder();
-        resultSB.append("[");
-        for (int index = 0; index < list.size(); index++) {
-            if (index == 0) {
-                resultSB.append(list.get(index));
-            }
-            else {
-                resultSB.append(",");
-                resultSB.append(list.get(index));
-            }
-        }
-        resultSB.append("]");
-
-        return resultSB.toString();
+        return "[" + Joiner.on(",").join(list) + "]";
     }
 }

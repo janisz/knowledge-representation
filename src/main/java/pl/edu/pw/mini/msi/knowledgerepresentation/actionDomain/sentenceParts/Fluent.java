@@ -8,7 +8,7 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class Fluent {
-    public String fluent;
+    public final String fluent;
     public byte fluentID = -1;
 
     public Fluent(String fluent){
@@ -16,7 +16,7 @@ public class Fluent {
     }
 
     public void fillFluentID(ArrayList<String> fluentsMapping) {
-        fluentID = (byte)ArrayListOfStringUtils.getIndexOfString(fluentsMapping, fluent);
+        fluentID = ArrayListOfStringUtils.getIndexOfString(fluentsMapping, fluent);
     }
 
     @Override

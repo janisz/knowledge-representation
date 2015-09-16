@@ -82,31 +82,7 @@ public class ReleasesSentence extends Sentence {
                     continue;
                 }
 
-                //if (posEvaluates.size() == 0) { //20150909 //20150911
-                //    newStructures.add(structure.copy()); //20150905
-                //    continue;
-                //}
-                for (String negEvaluate : negEvaluates) { //20150911
-
-                    boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
-                    if (hCompatibility == false) {
-                        //newStructures.add(structure.copy());
-                        continue;
-                    }
-                    String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
-                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                    //if (zerosAndOnesCounter == 0) {
-                    //    //newStructures.add(structure.copy());
-                    //    continue;
-                    //}
-                    //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
-                    //if (zerosAndOnesCounter != 0) { //20150905_02
-                    //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
-                    //} //20150905_02
-                    Hoent newStructure = structure.copy();
-                    newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
-                    newStructures.add(newStructure);
-                }
+                new CommonMethod(timeID, newStructures, negEvaluates, structure).invoke();
 
 
                 for (String posEvaluate : posEvaluates) {

@@ -61,10 +61,10 @@ public class OccursAtSentence extends Sentence {
         for (Hoent structure : structures) {
             SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
 
-            if (this.action.task.negated == true) {
-                if (structure.eCanAddNegatedActionAtTime(this.action.actionID, time) == false) {
+            if (this.action.task.negated) {
+                if (!structure.eCanAddNegatedActionAtTime(this.action.actionID, time)) {
                     String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
-                    if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(time) == false) {
+                    if (hoentsSettings.isDoThrow() && !structure.isActionTypicalAtTime(time)) {
                         throw new Exception(message);
                     }
                     else {
@@ -77,10 +77,10 @@ public class OccursAtSentence extends Sentence {
             }
 
             //negated == false
-            if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
+            if (!structure.eCanInsertActionAtTime(this.action.actionID, time)) { //20150909
             //if (eAtTime.occuringAction != -1) {
                 String message = "Conflicting actions while processing sentence [" + this.toString() + "] secondPass==[" + secondPass + "].";
-                if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(time) == false) {
+                if (hoentsSettings.isDoThrow() && !structure.isActionTypicalAtTime(time)) {
                     throw new Exception(message);
                 }
                 else {
@@ -90,16 +90,7 @@ public class OccursAtSentence extends Sentence {
 
             eAtTime.occuringAction = this.action.actionID;
             newStructures.add(structure.copy());
-
-            //Hoent newHoent = structure.copy();
-            //newHoent.hAddNewEvaluates(newEvaluates, time);
-            //newHoents.add(newHoent);
         }
-
-        //if (newHoents.size() == 0) {
-        //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
-        //}
-
         return newStructures;
     }
 
@@ -112,33 +103,19 @@ public class OccursAtSentence extends Sentence {
 
         for (Hoent structure : structures) {
             structure.addTypicalActionIndex(this.time.timeID);
-            SysElemEAtTimeUnit eAtTime = structure.sysElemE.get(time);
-
-            //change compared to applyCertainSentence
-            //if (this.action.task.negated == true) {
-            //    ArrayListOfByteUtils.insertIntoArrayList(eAtTime.disallowedActions, this.action.actionID);
-            //    continue;
-            //}
-
-            //change compared to applyCertainSentence
-
-            //old place of atypical structure addition
 
             if (secondPass) { //20150906
                 continue;
             }
 
-            if (structure.eIsActionAtTime(this.action.actionID, time) == false) { //20150913
+            if (!structure.eIsActionAtTime(this.action.actionID, time)) { //20150913
                 Hoent newAStructure = structure.copy();
                 newAStructure.aAddAtypicalAction(time, this.action.actionID);
                 newStructures.add(newAStructure); //not typically, action doesn't occur
             }
 
             //negated == false
-            if (structure.eCanInsertActionAtTime(this.action.actionID, time) == false) { //20150909
-            //if (eAtTime.occuringAction != -1) {
-                //change compared to applyCertainSentence
-                //throw new Exception("Conflicting actions while processing sentence [" + this.toString() + "]");
+            if (!structure.eCanInsertActionAtTime(this.action.actionID, time)) { //20150909
                 continue;
             }
 
@@ -147,19 +124,7 @@ public class OccursAtSentence extends Sentence {
             newStructure.nSetToTrue(time, this.action.actionID);
             newStructure.eAddAction(this.action.actionID, time); //20150906_2
             newStructures.add(newStructure);
-
-            //eAtTime.occuringAction = this.action.actionID; //20150906_2
-
-            //Hoent newHoent = structure.copy();
-            //newHoent.hAddNewEvaluates(newEvaluates, time);
-            //newHoents.add(newHoent);
         }
-
-        //structures.addAll(newStructures);
-
-        //if (newHoents.size() == 0) {
-        //    throw new Exception("Zero HOENTs (contradictory action domain) after sentence: [" + atSentence + "]");
-        //}
 
         return newStructures;
     }

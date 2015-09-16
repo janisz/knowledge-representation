@@ -27,7 +27,6 @@ public class Sentence {
             }
         }
         actionDomain.fluents.add(fluent); //append to end
-        return;
     }
 
     public void addFluentsToActionDomain(List<String> fluents, ActionDomain actionDomain){
@@ -51,7 +50,6 @@ public class Sentence {
             }
         }
         actionDomain.actions.add(action); //append to end
-        return;
     }
 
     public void addActionToActionDomain(Action action, ActionDomain actionDomain){

@@ -2,10 +2,6 @@ package pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Action;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Actor;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Fluent;
-import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentenceParts.Task;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Query;
 import pl.edu.pw.mini.msi.knowledgerepresentation.actionDomain.sentences.Sentence;
 import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
@@ -15,30 +11,28 @@ import java.util.HashMap;
 
 /**
  * Usage:
- *      1. create
- *      2. add baseSentences, scenarios, queries
- *      3. calculateFullScenarios()
- *      4. calculateMappedQueries()
- *      5. fillFluentsAndActionsIDs()
- *
+ * 1. create
+ * 2. add baseSentences, scenarios, queries
+ * 3. calculateFullScenarios()
+ * 4. calculateMappedQueries()
+ * 5. fillFluentsAndActionsIDs()
+ * <p/>
  * Created by Tomek on 2015-08-29.
  */
 public class ActionDomain {
 
     private static final Logger log = LoggerFactory.getLogger(ActionDomain.class);
 
-    private ArrayList<Sentence> baseSentences = new ArrayList<Sentence>();
-    private HashMap<String, ArrayList<Sentence>> scenarios = new HashMap<String, ArrayList<Sentence>>();
+    private final ArrayList<Sentence> baseSentences = new ArrayList<Sentence>();
+    private final HashMap<String, ArrayList<Sentence>> scenarios = new HashMap<String, ArrayList<Sentence>>();
 
-    public ArrayList<String> actions = new ArrayList<String>(); //e.g., "(student,learn)"
-    //public ArrayList<Actor> actors = new ArrayList<Actor>();
-    //public ArrayList<Task> tasks = new ArrayList<Task>();
-    public ArrayList<String> fluents = new ArrayList<String>(); //e.g., "night"
+    public final ArrayList<String> actions = new ArrayList<>(); //e.g., "(student,learn)"
+    public final ArrayList<String> fluents = new ArrayList<String>(); //e.g., "night"
 
-    public HashMap<String, ArrayList<Sentence>> fullScenarios = new HashMap<String, ArrayList<Sentence>>();
+    public final HashMap<String, ArrayList<Sentence>> fullScenarios = new HashMap<String, ArrayList<Sentence>>();
 
-    private ArrayList<Query> queries = new ArrayList<Query>();
-    public HashMap<String, ArrayList<Query>> mappedQueries = new HashMap<String, ArrayList<Query>>();
+    private final ArrayList<Query> queries = new ArrayList<Query>();
+    public final HashMap<String, ArrayList<Query>> mappedQueries = new HashMap<String, ArrayList<Query>>();
     public int minQueryID = Integer.MAX_VALUE;
 
     public ActionDomain() {
@@ -62,17 +56,16 @@ public class ActionDomain {
     public void addScenarioSentence(String scenarioName, Sentence sentence) {
         if (scenarios.containsKey(scenarioName)) {
             scenarios.get(scenarioName).add(sentence);
-        }
-        else {
-            scenarios.put(scenarioName, new ArrayList<Sentence>());
+        } else {
+            scenarios.put(scenarioName, new ArrayList<>());
             scenarios.get(scenarioName).add(sentence);
         }
 
-        log.debug("Added scenario: [" + scenarioName.toString() + "][" + sentence.toString() + "]");
+        log.debug("Added scenario: [" + scenarioName + "][" + sentence.toString() + "]");
     }
 
     public void addEmptyScenario(String scenarioName) {
-        if (scenarios.containsKey(scenarioName) == false) {
+        if (!scenarios.containsKey(scenarioName)) {
             scenarios.put(scenarioName, new ArrayList<Sentence>());
         }
     }
@@ -97,8 +90,7 @@ public class ActionDomain {
             if (mappedQueries.containsKey(queryName)) {
                 ArrayList<Query> queriesInMap = mappedQueries.get(queryName);
                 queriesInMap.add(oldQuery);
-            }
-            else {
+            } else {
                 ArrayList<Query> queriesAL = new ArrayList<Query>();
                 queriesAL.add(oldQuery);
                 mappedQueries.put(queryName, queriesAL);
@@ -123,25 +115,4 @@ public class ActionDomain {
         log.debug("Added [" + fluents.size() + "] fluents: [" + ArrayListOfStringUtils.myToString(fluents) + "]");
         log.debug("Added [" + actions.size() + "] actions: [" + ArrayListOfStringUtils.myToString(actions) + "]");
     }
-
-    /*public void calculateElementToIntMappings() {
-        ArrayList<Sentence> tempMergedSentences = new ArrayList<Sentence>();
-        for (Sentence sentence : baseSentences) {
-            tempMergedSentences.add(sentence);
-        }
-        for (String scenarioName : scenarios.keySet()) {
-            for (Sentence sentence : scenarios.get(scenarioName)) {
-                tempMergedSentences.add(sentence);
-            }
-        }
-
-        for (Sentence sentence : tempMergedSentences) {
-
-        }
-    }*/
-
-    //calculateIDsInSentences
-    //buildFullScenarios
-    //calculate HOENTs
-    //respond to queries
 }

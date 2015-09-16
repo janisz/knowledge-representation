@@ -8,8 +8,8 @@ import java.util.ArrayList;
  * Created by Tomek on 2015-08-29.
  */
 public class Action {
-    public Actor actor;
-    public Task task;
+    public final Actor actor;
+    public final Task task;
 
     public byte actionID = -1;
 

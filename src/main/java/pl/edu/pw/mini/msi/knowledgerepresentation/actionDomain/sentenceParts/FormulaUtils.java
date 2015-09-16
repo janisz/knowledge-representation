@@ -16,10 +16,10 @@ public class FormulaUtils {
 
         //String mask = null;
         //if (formula == null) {
-            //mask = FormulaUtils.getFullFluentsMask(fluentsCount);
+        //mask = FormulaUtils.getFullFluentsMask(fluentsCount);
         //}
         //else {
-            String mask = formula.getFluentsMask(fluentsCount);
+        String mask = formula.getFluentsMask(fluentsCount);
         //}
         ArrayList<String> allEvaluates = getAllEvaluates(fluentsCount, mask);
         ArrayList<String> positiveEvaluates = new ArrayList<>();
@@ -29,8 +29,7 @@ public class FormulaUtils {
             char formulaEvaluate = formula.evaluateForValues(evaluate);
             if (formulaEvaluate == '1') {
                 positiveEvaluates.add(evaluate);
-            }
-            else if (formulaEvaluate == '0') {
+            } else if (formulaEvaluate == '0') {
                 negativeEvaluates.add(evaluate);
             }
         }
@@ -77,16 +76,9 @@ public class FormulaUtils {
                 return null;
             }
             for (int index = 0; index < restricted.length(); index++) {
-                if (restricting.charAt(index) == '1' && restricted.charAt(index) == '1') {
-                    ; //do nothing
-                }
-                else if (restricting.charAt(index) == '0' && restricted.charAt(index) == '0') {
-                    ; //do nothing
-                }
-                else if (restricting.charAt(index) == '?') {
-                    ; //do nothing
-                }
-                else {
+                if ((restricting.charAt(index) != '1' || restricted.charAt(index) != '1')
+                        && (restricting.charAt(index) != '0' || restricted.charAt(index) != '0')
+                        && restricting.charAt(index) != '?') {
                     continue outerLoop;
                 }
             }
@@ -97,18 +89,15 @@ public class FormulaUtils {
     }
 
     /**
-     *
      * @param ch We assume, that it was checked before for being '?'
      * @return
      */
     public static short getShortForChar(char ch) {
         if (ch == '0') {
             return 0;
-        }
-        else if (ch == '1') {
+        } else if (ch == '1') {
             return 1;
-        }
-        else {
+        } else {
             return -1;
         }
     }
@@ -128,8 +117,7 @@ public class FormulaUtils {
                     String newResultWithOne = result + '1';
                     newResults.add(newResultWithZero);
                     newResults.add(newResultWithOne);
-                }
-                else {
+                } else {
                     String newResultWithQuestionMark = result + '?';
                     newResults.add(newResultWithQuestionMark);
                 }
@@ -140,28 +128,5 @@ public class FormulaUtils {
 
         return results;
     }
-
-    /* old
-    private static ArrayList<String> getAllEvaluates(short fluentCount) {
-        short processedLength = 0;
-        ArrayList<String> results = new ArrayList<String>();
-        String emptyString = "";
-        results.add(emptyString);
-
-        while (processedLength < fluentCount) {
-            ArrayList<String> newResults = new ArrayList<String>();
-            for (String result : results) {
-                String newResultWithZero = result + '0';
-                String newResultWithOne = result + '1';
-                newResults.add(newResultWithZero);
-                newResults.add(newResultWithOne);
-            }
-            results = newResults;
-            processedLength++;
-        }
-
-        return results;
-    }
-    */
 
 }

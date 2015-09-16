@@ -4,7 +4,8 @@ import pl.edu.pw.mini.msi.knowledgerepresentation.utils.ArrayListOfStringUtils;
 
 import java.util.ArrayList;
 
-/** TODO TOMEKL
+/**
+ * TODO TOMEKL
  * Created by Tomek on 2015-09-03.
  */
 public class Fluents {
@@ -22,41 +23,36 @@ public class Fluents {
             if (firstCharAt == '0') {
                 if (secondCharAt == '0') {
                     ;
-                }
-                else if (secondCharAt == '1') {
+                } else if (secondCharAt == '1') {
                     isStrictlyIn = true;
                 }
-            }
-            else if (firstCharAt == '1') {
+            } else if (firstCharAt == '1') {
                 if (secondCharAt == '1') {
                     ;
-                }
-                else if (secondCharAt == '0') {
+                } else if (secondCharAt == '0') {
                     return 2;
                 }
             }
         }
         if (isStrictlyIn == false) {
             return 0;
-        }
-        else {
+        } else {
             return 1;
         }
     }
 
     public static ArrayList<String> expandQuestionMarks(String argument) {
         ArrayList<String> results = new ArrayList<String>();
-        results.add( new String("") );
+        results.add(new String(""));
 
         for (byte index = 0; index < argument.length(); index++) {
             ArrayList<String> newResults = new ArrayList<String>();
             for (String oldResult : results) {
                 if (argument.charAt(index) == '?') {
-                    newResults.add( new String(oldResult + "0") );
-                    newResults.add( new String(oldResult + "1") );
-                }
-                else {
-                    newResults.add( new String(oldResult + argument.charAt(index)) );
+                    newResults.add(new String(oldResult + "0"));
+                    newResults.add(new String(oldResult + "1"));
+                } else {
+                    newResults.add(new String(oldResult + argument.charAt(index)));
                 }
             }
             results = newResults;
@@ -79,7 +75,7 @@ public class Fluents {
 
     public static ArrayList<String> expandQuestionMarksWithMask(String oldFluents, String newFluents, String changingFluents) {
         ArrayList<String> results = new ArrayList<String>();
-        results.add( new String("") );
+        results.add("");
 
         for (byte index = 0; index < oldFluents.length(); index++) {
             ArrayList<String> newResults = new ArrayList<String>();
@@ -87,16 +83,15 @@ public class Fluents {
                 //======================================================================================================
                 if (newFluents.charAt(index) == '?') {
                     if (changingFluents.charAt(index) == '1') {
-                        newResults.add(new String(oldResult + "0"));
-                        newResults.add(new String(oldResult + "1"));
-                    }
-                    else {
-                        newResults.add(new String(oldResult + oldFluents.charAt(index)));
+                        newResults.add(oldResult + "0");
+                        newResults.add(oldResult + "1");
+                    } else {
+                        newResults.add(oldResult + oldFluents.charAt(index));
                     }
                 }
                 //======================================================================================================
                 else {
-                    newResults.add( new String(oldResult + newFluents.charAt(index)) );
+                    newResults.add(oldResult + newFluents.charAt(index));
                 }
             }
             results = newResults;
@@ -106,37 +101,32 @@ public class Fluents {
     }
 
     public static boolean checkCompatibilityUsingMask(String oldFluents, String newFluents, String changingFluents,
-                                                      ArrayList<String>  posEvalsFromAtSentences) {
+                                                      ArrayList<String> posEvalsFromAtSentences) {
         for (byte index = 0; index < oldFluents.length(); index++) {
-            if (newFluents.charAt(index) == '0' || newFluents.charAt(index) == '1') {
-                if (oldFluents.charAt(index) == '0' || oldFluents.charAt(index) == '1') {
-                    if (newFluents.charAt(index) != oldFluents.charAt(index)) {
-                        if (posEvalsFromAtSentences != null && posEvalsFromAtSentences.size() > 0 &&
-                                isNewValueisInOneOfChangedFluents( newFluents.charAt(index), index, //20150907
-                                posEvalsFromAtSentences)) {
-                            ; //do nothing
-                        }
-                        else if (changingFluents == null || changingFluents.charAt(index) == '0') {
+            if (
+                    (
+                            newFluents.charAt(index) == '0'
+                                    || newFluents.charAt(index) == '1')
+                            && (
+                            oldFluents.charAt(index) == '0'
+                                    || oldFluents.charAt(index) == '1')
+                            && newFluents.charAt(index) != oldFluents.charAt(index)
+                            && (
+                            posEvalsFromAtSentences == null
+                                    || posEvalsFromAtSentences.size() <= 0
+                                    || !isNewValueisInOneOfChangedFluents(newFluents.charAt(index), index, posEvalsFromAtSentences)
+                    )
+                            && (
+                            changingFluents == null
+                                    || changingFluents.charAt(index) == '0'
+                    )
+                    ) {
 
-                            return false;
-                        }
-                    }
-                }
+                return false;
             }
         }
 
         return true;
-    }
-
-    public static String evaluationToString(String evaluation, ArrayList<String> fluentsMapping) {
-        StringBuilder resultSB = new StringBuilder("");
-        for (int index = 0; index < fluentsMapping.size(); index++) {
-            if (index > 0) {
-                resultSB.append(",");
-            }
-            resultSB.append(fluentsMapping.get(index)).append("=").append(evaluation.charAt(index));
-        }
-        return resultSB.toString();
     }
 
     public static ArrayList<String> getFluentsConjunction(ArrayList<String> posEvaluates,
@@ -144,12 +134,12 @@ public class Fluents {
         ArrayList<String> results = new ArrayList<String>();
         for (String posEvaluate : posEvaluates) {
             for (String posEvaluateForSentence : posEvaluatesForSentence) {
-                if (hCheckCompatibility(posEvaluate, posEvaluateForSentence, (byte)posEvaluate.length()) == false) {
+                if (!hCheckCompatibility(posEvaluate, posEvaluateForSentence, (byte) posEvaluate.length())) {
                     continue;
                 }
                 String newEvaluates = hGetNewEvaluates(posEvaluate, posEvaluateForSentence);
                 newEvaluates = hAddNewEvaluates(posEvaluate, newEvaluates);
-                if (ArrayListOfStringUtils.contains(results, newEvaluates) == false) {
+                if (!ArrayListOfStringUtils.contains(results, newEvaluates)) {
                     results.add(newEvaluates);
                 }
             }
@@ -158,35 +148,19 @@ public class Fluents {
     }
 
     public static boolean hCheckCompatibility(String firstEvaluation, String secondEvaluation, byte fluentsCount) {
-        String actualEvaluation = firstEvaluation;
-        String evaluationToTest = secondEvaluation;
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInActEval = actualEvaluation.charAt(fluentIndex);
-            char charAtIndexInEvalToTest = evaluationToTest.charAt(fluentIndex);
+            char charAtIndexInActEval = firstEvaluation.charAt(fluentIndex);
+            char charAtIndexInEvalToTest = secondEvaluation.charAt(fluentIndex);
 
-            if (charAtIndexInEvalToTest == '?') {
-                continue;
-            }
-            else if (charAtIndexInEvalToTest == '1') {
-                if (charAtIndexInActEval == '1') {
-                    continue;
-                }
-                else if (charAtIndexInActEval == '0') {
-                    return false;
-                }
-                else if (charAtIndexInActEval == '?') {
-                    continue;
-                }
-            }
-            else if (charAtIndexInEvalToTest == '0') {
-                if (charAtIndexInActEval == '0') {
-                    continue;
-                }
-                else if (charAtIndexInActEval == '1') {
-                    return false;
-                }
-                else if (charAtIndexInActEval == '?') {
-                    continue;
+            if (charAtIndexInEvalToTest != '?') {
+                if (charAtIndexInEvalToTest == '1') {
+                    if (charAtIndexInActEval == '0') {
+                        return false;
+                    }
+                } else if (charAtIndexInEvalToTest == '0') {
+                    if (charAtIndexInActEval == '1') {
+                        return false;
+                    }
                 }
             }
         }
@@ -197,16 +171,13 @@ public class Fluents {
         byte fluentsCount = (byte) firstEvaluation.length();
 
         StringBuilder resultSB = new StringBuilder("");
-        String evaluationInH = firstEvaluation;
-        String posEvaluate = secondEvaluation;
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
-            char charAtIndexInEvalToTest = posEvaluate.charAt(fluentIndex);
-            if ( (charAtIndexInEvalToTest == '0' || charAtIndexInEvalToTest == '1')
-                    && (charAtIndexInEvalInH == '?') ){
+            char charAtIndexInEvalInH = firstEvaluation.charAt(fluentIndex);
+            char charAtIndexInEvalToTest = secondEvaluation.charAt(fluentIndex);
+            if ((charAtIndexInEvalToTest == '0' || charAtIndexInEvalToTest == '1')
+                    && (charAtIndexInEvalInH == '?')) {
                 resultSB.append(charAtIndexInEvalToTest);
-            }
-            else {
+            } else {
                 resultSB.append("-");
             }
         }
@@ -216,17 +187,14 @@ public class Fluents {
 
     public static String hAddNewEvaluates(String firstEvaluation, String secondEvaluation) {
         //Hoent newHoent = this.copy();
-        String evaluationInH = firstEvaluation;
-        String newEvaluates = secondEvaluation;
-        byte fluentsCount = (byte)firstEvaluation.length();
+        byte fluentsCount = (byte) firstEvaluation.length();
         StringBuilder newEvaluationInH = new StringBuilder("");
         for (byte fluentIndex = 0; fluentIndex < fluentsCount; fluentIndex++) {
-            char charAtIndexInEvalInH = evaluationInH.charAt(fluentIndex);
-            char charAtIndexInNewEvaluates = newEvaluates.charAt(fluentIndex);
+            char charAtIndexInEvalInH = firstEvaluation.charAt(fluentIndex);
+            char charAtIndexInNewEvaluates = secondEvaluation.charAt(fluentIndex);
             if (charAtIndexInNewEvaluates == '0' || charAtIndexInNewEvaluates == '1') {
                 newEvaluationInH.append(charAtIndexInNewEvaluates);
-            }
-            else {
+            } else {
                 newEvaluationInH.append(charAtIndexInEvalInH);
             }
         }
@@ -234,7 +202,7 @@ public class Fluents {
     }
 
     public static boolean isNewValueisInOneOfChangedFluents(char newValue, byte fluentIndex,
-                                                              ArrayList<String> posEvaluationsFromAtSentences) {
+                                                            ArrayList<String> posEvaluationsFromAtSentences) {
         if (posEvaluationsFromAtSentences == null || posEvaluationsFromAtSentences.size() == 0) {
             return true;
         }

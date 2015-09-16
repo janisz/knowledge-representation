@@ -15,12 +15,6 @@ public class SysElemAAtTimeUnit {
         this.actionIDs = new ArrayList<Byte>();
     }
 
-    public SysElemAAtTimeUnit(byte actionID) {
-
-        this.actionIDs = new ArrayList<Byte>();
-        this.actionIDs.add( actionID );
-    }
-
     public SysElemAAtTimeUnit copy(){
         SysElemAAtTimeUnit newA = new SysElemAAtTimeUnit();
         newA.actionIDs = ArrayListOfByteUtils.copy(this.actionIDs);

@@ -10,8 +10,8 @@ public class HashMapByteStringUtils {
         HashMap<Byte, String> newHashMap = new HashMap<Byte, String>();
 
         for (Byte b : oldHashMap.keySet()) {
-            String str = new String( oldHashMap.get(b) );
-            newHashMap.put(new Byte(b), str);
+            String str = oldHashMap.get(b);
+            newHashMap.put(b, str);
         }
 
         return newHashMap;

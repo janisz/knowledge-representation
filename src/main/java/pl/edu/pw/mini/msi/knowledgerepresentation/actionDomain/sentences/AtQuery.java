@@ -49,9 +49,6 @@ public class AtQuery extends Query {
                 if (result == '0') {
                     return false;
                 }
-                else {
-                    ; //empty
-                }
             }
             return true;
         }
@@ -61,21 +58,16 @@ public class AtQuery extends Query {
                 if (result == '1') {
                     return true;
                 }
-                else {
-                    ; //empty
-                }
             }
             return false;
         }
-        else {//if (queryType == EQueryType.typically) {
+        else {
             for (Hoent model : modelsOfTypeTwo) {
                 char result = this.formula.evaluateForValues( model.sysElemH.get( this.time.timeID ) );
                 if (result == '0') {
                     return false;
                 }
-                else {
-                    ; //empty
-                }
+
             }
             return true;
         }

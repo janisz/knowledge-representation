@@ -45,13 +45,13 @@ public class TriggersSentence extends Sentence {
     @Override
     public String toString() {
         String typicallyString = StringUtils.booleanTypicallyToString(typically);
-        return "[" + typicallyString + "[" +  conditionFormula.toString() + " triggers " + action.toString() + "]";
+        return "[" + typicallyString + "[" + conditionFormula.toString() + " triggers " + action.toString() + "]";
     }
 
     @Override
     public ArrayList<Hoent> applyCertainSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
                                                  boolean secondPass, HoentsSettings hoentsSettings)
-            throws Exception{
+            throws Exception {
         //p triggers A
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
@@ -70,27 +70,7 @@ public class TriggersSentence extends Sentence {
             //    newStructures.add(structure.copy());
             //    continue;
             //}
-            for (String negEvaluate : negEvaluates) { //20150911
-
-                boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
-                if (hCompatibility == false) {
-                    //newStructures.add(structure.copy());
-                    continue;
-                }
-                String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                //if (zerosAndOnesCounter == 0) {
-                //    //newStructures.add(structure.copy());
-                //    continue;
-                //}
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
-                //if (zerosAndOnesCounter != 0) { //20150905_02
-                //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
-                //} //20150905_02
-                Hoent newStructure = structure.copy();
-                newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
-                newStructures.add(newStructure);
-            }
+            new CommonMethod(timeID, newStructures, negEvaluates, structure).invoke();
 
 
             for (String posEvaluate : posEvaluates) {
@@ -110,14 +90,13 @@ public class TriggersSentence extends Sentence {
                 if (this.action.task.negated == true) {
                     Hoent newStructure = structure.copy();
                     newStructure.hAddNewEvaluates(newEvaluates, timeID); //20150906_3
-                    if (newStructure.eCanAddNegatedActionAtTime(this.action.actionID, timeID) == false){
+                    if (newStructure.eCanAddNegatedActionAtTime(this.action.actionID, timeID) == false) {
                         String message = "Error in applying sentence: [" + this.toString() + "] - can't insert resulting action at time [" + timeID + "] secondPass==[" + secondPass + "].";
                         log.debug(message);
                         if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(timeID) == false
                                 && zerosAndOnesCounter == 0) { //
                             throw new Exception(message);
-                        }
-                        else {
+                        } else {
                             continue; //not relevant
                         }
                     }
@@ -141,8 +120,7 @@ public class TriggersSentence extends Sentence {
                     if (hoentsSettings.isDoThrow() == true && structure.isActionTypicalAtTime(timeID) == false
                             && zerosAndOnesCounter == 0) { //
                         throw new Exception(message);
-                    }
-                    else {
+                    } else {
                         continue; //not relevant
                     }
                 }
@@ -168,7 +146,7 @@ public class TriggersSentence extends Sentence {
     @Override
     public ArrayList<Hoent> applyTypicalSentence(ArrayList<Hoent> structures, byte fluentsCount, byte timeID,
                                                  boolean secondPass, HoentsSettings hoentsSettings)
-            throws Exception{
+            throws Exception {
         //p triggers A
         ArrayList<Hoent> newStructures = new ArrayList<Hoent>();
 
@@ -187,31 +165,7 @@ public class TriggersSentence extends Sentence {
                 continue;
             }
 
-            //if (posEvaluates.size() == 0) { //20150906 //20150910 //20150911
-            //    newStructures.add(structure.copy());
-            //    continue;
-            //}
-            for (String negEvaluate : negEvaluates) { //20150911
-
-                boolean hCompatibility = structure.hCheckCompatibility(negEvaluate, timeID);
-                if (hCompatibility == false) {
-                    //newStructures.add(structure.copy());
-                    continue;
-                }
-                String newEvaluates = structure.hGetNewEvaluates(negEvaluate, timeID);
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates);
-                //if (zerosAndOnesCounter == 0) {
-                //    //newStructures.add(structure.copy());
-                //    continue;
-                //}
-                //byte zerosAndOnesCounter = StringUtils.countZerosAndOnes(newEvaluates); //20150905_02
-                //if (zerosAndOnesCounter != 0) { //20150905_02
-                //    newStructures.add(structure.copy()); //add hoent with "?'s" //20150905_02
-                //} //20150905_02
-                Hoent newStructure = structure.copy();
-                newStructure.hAddNewEvaluates(newEvaluates, timeID); //ifCondition
-                newStructures.add(newStructure);
-            }
+            new CommonMethod(timeID, newStructures, negEvaluates, structure).invoke();
 
             for (String posEvaluate : posEvaluates) {
 
@@ -240,8 +194,8 @@ public class TriggersSentence extends Sentence {
                 } //20150905_02
 
                 //if (structure.eIsActionAtTime(this.action.actionID, timeID) == true) {
-                    //newStructures.add(structure.copy());
-                    //ARBITRARY WHAT TO DO IN SUCH A SITUATION
+                //newStructures.add(structure.copy());
+                //ARBITRARY WHAT TO DO IN SUCH A SITUATION
                 //    continue;
                 //}
 

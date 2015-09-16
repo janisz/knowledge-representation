@@ -47,12 +47,12 @@ public class InvolvedQuery extends Query {
                 boolean agentInvolvedInModel = false;
                 for (byte timeIndex = 0; timeIndex < model.tMax; timeIndex++) {
                     boolean result = model.eIsAgentInvolvedAtTime(this.actor.actor, timeIndex, actionsMapping);
-                    if (result == true) {
+                    if (result) {
                         agentInvolvedInModel = true;
                         break;
                     }
                 }
-                if (agentInvolvedInModel == false) {
+                if (!agentInvolvedInModel) {
                     return false;
                 }
             }
@@ -63,14 +63,10 @@ public class InvolvedQuery extends Query {
                 //boolean agentInvolvedInModel = false;
                 for (byte timeIndex = 0; timeIndex < model.tMax; timeIndex++) {
                     boolean result = model.eIsAgentInvolvedAtTime(this.actor.actor, timeIndex, actionsMapping);
-                    if (result == true) {
-                        //agentInvolvedInModel = true;
+                    if (result) {
                         return true;
                     }
                 }
-                //if (agentInvolvedInModel == false) {
-                //    return false;
-                //}
             }
             return false;
         }

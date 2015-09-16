@@ -22,12 +22,8 @@ public class SysElemNAtTimeUnit {
     }
 
     public boolean areSame(SysElemNAtTimeUnit otherN) {
-        if (this.actionID.equals( otherN.actionID )) { //20150915
-            return true;
-        }
-        else {
-            return false;
-        }
+        //20150915
+        return this.actionID.equals(otherN.actionID);
     }
 
     @Override

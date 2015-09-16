@@ -57,27 +57,26 @@ public class LogExprFormula implements IFormula {
             if (ch1 == '?' || ch2 == '?') {
                 return '?';
             }
-            byte b1 = CharUtils.toZeroOrOneByte(ch1);
-            byte b2 = CharUtils.toZeroOrOneByte(ch2);
+            byte b1 = (byte) FormulaUtils.getShortForChar(ch1);
+            byte b2 = (byte) FormulaUtils.getShortForChar(ch2);
 
-            if (operator.equals("&&")) {
-                byte result = (byte)Math.min(b1, b2);
-                return ByteUtils.toZeroOrOneChar(result);
-            }
-            else if (operator.equals("||")) {
-                byte result = (byte)Math.max(b1, b2);
-                return ByteUtils.toZeroOrOneChar(result);
-            }
-            else if (operator.equals("=>")) {
-                if (b1 == 1 && b2 ==0) {
-                    return '0';
+            switch (operator) {
+                case "&&": {
+                    byte result = (byte) Math.min(b1, b2);
+                    return ByteUtils.toZeroOrOneChar(result);
                 }
-                else {
-                    return '1';
+                case "||": {
+                    byte result = (byte) Math.max(b1, b2);
+                    return ByteUtils.toZeroOrOneChar(result);
                 }
-            }
-            else {
-                return '?';
+                case "=>":
+                    if (b1 == 1 && b2 == 0) {
+                        return '0';
+                    } else {
+                        return '1';
+                    }
+                default:
+                    return '?';
             }
         }
     }

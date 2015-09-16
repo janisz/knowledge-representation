@@ -1,6 +1,10 @@
 package pl.edu.pw.mini.msi.knowledgerepresentation.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
+import java.util.StringJoiner;
 
 /**
  * Created by Tomek on 2015-08-31.
@@ -13,24 +17,10 @@ public class ArrayListOfStringUtils {
             }
         }
         return (byte)-1;
-        //TODO TOMEKL optimize, because list is sorted
     }
 
     public static String myToString(ArrayList<String> list) {
-        StringBuilder resultSB = new StringBuilder();
-        resultSB.append("[");
-        for (int index = 0; index < list.size(); index++) {
-            if (index == 0) {
-                resultSB.append(list.get(index));
-            }
-            else {
-                resultSB.append(",");
-                resultSB.append(list.get(index));
-            }
-        }
-        resultSB.append("]");
-
-        return resultSB.toString();
+        return "[" + Joiner.on(",").join(list) + "]";
     }
 
     public static String myToStringDouble(ArrayList<String> listS, ArrayList<Boolean> listB) {
@@ -53,9 +43,8 @@ public class ArrayListOfStringUtils {
     }
 
     public static boolean contains(ArrayList<String> list, String newString) {
-        for (byte index = 0; index < list.size(); index++) {
-            String listElem = list.get(index);
-            if ( listElem.equals(newString) ) {
+        for (String listElem : list) {
+            if (listElem.equals(newString)) {
                 return true;
             }
         }
