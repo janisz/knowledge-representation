@@ -1,6 +1,6 @@
 # language
 language: java
-
+sudo: required
 # version numbers
 jdk:
     - oraclejdk8
