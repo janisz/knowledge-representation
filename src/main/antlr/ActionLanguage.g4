@@ -6,37 +6,34 @@ grammar ActionLanguage;
 programm: instruction* EOF;
 
 instruction
-  : initiallisation
+  : initialization
   | entry
   | scenario
   | query
   ;
 
 entry
-  : TYPICALLY? causes
+  : causes
   | TYPICALLY? invokes
-  | TYPICALLY? releases
+  | releases
   | TYPICALLY? triggers
   | TYPICALLY? occurs
-  | impossible
-  | always
+  | atsentence
   ;
 
-initiallisation: INITIALLY fluentsList;
-causes: action CAUSES fluentsList afterTime? underCondition?;
+initialization: INITIALLY logicalExpression;
+causes: action CAUSES logicalExpression underCondition?;
 invokes: action INVOKES action afterTime? underCondition?;
-releases: action RELEASES fluentsList afterTime? underCondition?;
-triggers: fluentsList TRIGGERS action;
+releases: action RELEASES fluent underCondition?;
+triggers: logicalExpression TRIGGERS action;
 occurs: action OCCURS AT time;
-impossible: IMPOSSIBLE action AT time underCondition?;
-always: ALWAYS fluentsList;
+atsentence: logicalExpression AT time;
 
-underCondition: IF fluentsList;
+underCondition: IF logicalExpression;
 afterTime: AFTER time;
 action: '('actor ',' task ')';
 
-fluentsList: '[' fluents ']';
-fluents: fluent | fluents ',' fluent;
+fluentsList: fluent | fluentsList ',' fluent;
 
 scenario: IDENTIFIER '{' actions ',' observations '}';
 
@@ -46,7 +43,9 @@ event: '(' action ',' time ')';
 
 observations: OBS '=' '{' observationsList? '}';
 observationsList: observation | observationsList ',' observation;
-observation: '(' fluentsList ',' time ')';
+observation: '(' logicalExpression ',' time ')';
+
+logicalExpression: fluent | '(' logicalExpression logicalOperator logicalExpression ')';
 
 query
   : state
@@ -54,7 +53,7 @@ query
   | involved
   ;
 
-state: question fluentsList AT time WHEN scenarioId;
+state: question logicalExpression AT time WHEN scenarioId;
 performed: question PERFORMED action AT time WHEN scenarioId;
 involved: basicQuestion INVOLVED actorsList WHEN scenarioId;
 
@@ -68,14 +67,15 @@ basicQuestion
   ;
 
 
-actorsList: '[' actors ']';
+actorsList: actors;
 actors: actor | actors ',' actor;
 
 fluent: IDENTIFIER | NOT IDENTIFIER;
 actor: IDENTIFIER;
-task: IDENTIFIER;
+task: IDENTIFIER | NOT IDENTIFIER;
 time: DecimalConstant;
 scenarioId: IDENTIFIER;
+logicalOperator: LOGICAL_AND | LOGICAL_IF | LOGICAL_OR;
 
 WS: [ \n\t\r]+ -> skip;
 
@@ -100,3 +100,6 @@ TYPICALLY: 'typically';
 WHEN: 'when';
 IDENTIFIER : [a-zA-Z]+;
 DecimalConstant: [0-9]+;
+LOGICAL_OR: '||';
+LOGICAL_IF: '=>';
+LOGICAL_AND: '&&';

@@ -4,7 +4,7 @@ typically [-hasCard] triggers (Janek, takesCard)
 typically (Janek, leaves) invokes (Janek, locksTheDoor)
 (Janek, takesCard) causes [hasCard]
 (Janek, leaves) causes [-inHostel]
-(Janek, comeback) causes [inHostel] after 10 if [hasCard]
+(Janek, comeback) causes [inHostel] if [hasCard]
 typically (DoorKeeper, lockTheDoor) occurs at 10
 
 
@@ -15,7 +15,7 @@ scenarioOne {
       ((Janek, comeback), 10)
     },
   OBS = {
-      ([hasCard, inHostel], 4),
+      ([hasCard && inHostel], 4),
       ([-hasCard], 10)
   }
 }

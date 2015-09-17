@@ -15,7 +15,8 @@ import javafx.stage.Stage;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import pl.edu.pw.mini.msi.knowledgerepresentation.Interpreter;
+import pl.edu.pw.mini.msi.knowledgerepresentation.Executor;
+import pl.edu.pw.mini.msi.knowledgerepresentation.hoents.HoentsSettings;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,9 @@ public class Gui extends Application {
     private FileChooser fileChooser;
     private TextArea definitionsTextArea;
     private TextArea queriesTextArea;
+    private Spinner maxTimeSpinner;
+    private CheckBox doThrowCheckbox;
+    private CheckBox doThrowIfExceededTimeLimit;
 
     @Override
     public void start(final Stage stage) throws Exception {
@@ -40,7 +44,7 @@ public class Gui extends Application {
         Label definitionsLabel = new Label("Definitions");
         definitionsTextArea = new TextArea();
         definitionsTextArea.setPrefWidth(100);
-        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition.al")));
+        definitionsTextArea.setText(IOUtils.toString(getClass().getResource("/definition_w_14.al"))); ///definition_w_14.al
         VBox.setVgrow(definitionsTextArea, Priority.ALWAYS);
         HBox.setHgrow(vbox, Priority.ALWAYS);
         vbox.getChildren().addAll(definitionsLabel, definitionsTextArea);
@@ -49,14 +53,26 @@ public class Gui extends Application {
         Label queriesLabel = new Label("Queries");
         queriesTextArea = new TextArea();
         queriesTextArea.setPrefWidth(100);
-        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries.al")));
+        queriesTextArea.setText(IOUtils.toString(getClass().getResource("/queries_empty.al")));
         HBox buttonsBox = new HBox(10);
         Button openButton = new Button("Open");
         Button computeButton = new Button("Compute");
         ProgressBar bar = new ProgressBar();
         bar.setVisible(false);
         buttonsBox.getChildren().addAll(openButton, computeButton, bar);
-        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, buttonsBox);
+
+        HBox maxTimeBox = new HBox(10);
+        maxTimeSpinner = new Spinner(1, 99, 5, 1);
+        maxTimeSpinner.setMaxWidth(60);
+        Label maxTimeLabel = new Label("Maximum time to render");
+        maxTimeBox.getChildren().addAll(maxTimeLabel, maxTimeSpinner);
+
+        doThrowCheckbox = new CheckBox("return error when at least one HOENT system \n(not resulting from typically sentence) is contradictory");
+        doThrowCheckbox.setSelected(true);
+        doThrowIfExceededTimeLimit = new CheckBox("return error when exceeded time limit");
+        doThrowIfExceededTimeLimit.setSelected(false);
+
+        vbox2.getChildren().addAll(queriesLabel, queriesTextArea, maxTimeBox, doThrowCheckbox, doThrowIfExceededTimeLimit, buttonsBox);
 
         HBox.setHgrow(vbox2, Priority.ALWAYS);
 
@@ -95,7 +111,11 @@ public class Gui extends Application {
                 e -> {
                     try {
                         String code = definitionsTextArea.getText() + "\n" + queriesTextArea.getText();
-                        List<Boolean> returns = new Interpreter().eval(code);
+                        int maxTime = (int) maxTimeSpinner.getValue();
+                        HoentsSettings hoentsSettings = new HoentsSettings(
+                                doThrowCheckbox.isSelected(), doThrowIfExceededTimeLimit.isSelected()
+                        );
+                        List<Boolean> returns = new Executor().getResults(code, maxTime, hoentsSettings);
                         log.info(Joiner.on(", ").useForNull("null").join(returns));
 
                         showDialog(Alert.AlertType.INFORMATION, "Info", "Computation complete", Joiner.on("\n").useForNull("null").join(returns));

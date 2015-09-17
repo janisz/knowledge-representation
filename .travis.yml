@@ -1,32 +1,11 @@
-# language
 language: java
-sudo: required
-# version numbers
+
 jdk:
-    - oraclejdk8
-
-before_install:
-   - apt-get update
-
-before_script:
-   - if [[ $SHIPPABLE_JDK_VERSION == "oraclejdk8" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; export PATH="$PATH:/usr/lib/jvm/java-8-oracle/bin"; export java_path="/usr/lib/jvm/java-8-oracle/jre/bin/java"; fi
-   - update-alternatives --set java $java_path
-   - java -version
-after_success:
-  - ./gradlew jacocoTestReport coveralls
-
-env:
-  global:
-   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
-   #   via the "travis encrypt" command using the project repo's public key
-   - secure: "RX1sT45P3BjODnh3xs8rsc9kojPsbypane61TrR3Qa+4botpftp6t/AJUMQid69/2T28vXUflW9Co7TW8KljAQhGA4pz+F0iWoSgn3UAB0sjbj//SKOqZYxylZpqeNLlLlzbyJWCyz2QlMxODWqct7V/5bqKdrA8aaaHHarmjhg="
+  - oraclejdk8
 
 addons:
-  coverity_scan:
-    project:
-      name: "janisz/knowledge-representation"
-      description: "<Your project description here>"
-    notification_email: janiszt@gmail.com
-    build_command_prepend: "./gradlew clean"
-    build_command:   "./gradlew build"
-    branch_pattern: master
+  apt:
+    packages:
+      - oracle-java8-installer
+after_success:
+  - ./gradlew jacocoTestReport coveralls

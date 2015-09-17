@@ -1,12 +1,8 @@
-initially [-roomClosed, -hostelClosed, inHostel, -hasCard]
-(Janek, closesDoor) causes [hostelClosed]
-typically [-hasCard] triggers (Janek, takesCard)
-typically (Janek, leaves) invokes (Janek, locksTheDoor)
-(Janek, takesCard) causes [hasCard]
-(Janek, leaves) causes [-inHostel]
-(Janek, comeback) causes [inHostel] after 10 if [hasCard]
-typically (DoorKeeper, lockTheDoor) occurs at 10
-
+initially ((night || day) => sleep)
+(Janek, GoToBed) causes sleep if night
+(Janek, GoToBed) causes nap if ((sleep => night) && (night || day))
+(Janek, GoToBed) invokes (Janek, WakeUp) after 8 if night
+(Janek, WakeUp) releases tired if (-hangover && -headache)
 
 scenarioOne {
   ACS = {
@@ -15,8 +11,8 @@ scenarioOne {
       ((Janek, comeback), 10)
     },
   OBS = {
-      ([hasCard, inHostel], 4),
-      ([-hasCard], 10)
+      ((hasCard && inHostel), 4),
+      (-hasCard, 10)
   }
 }
 
@@ -28,13 +24,12 @@ scenarioTwo {
       ((Janek, comeback), 10)
     },
   OBS = {
-      ([-hasCard], 4),
-      ([inHostel], 4),
-      ([hasCard], 10)
+      (-hasCard, 4),
+      (inHostel, 4),
+      (hasCard, 10)
   }
 }
 
-always involved [DoorKepper] when scenarioOne
-typically [inHostel, -hasCard] at 11 when scenarioTwo
-ever involved [Janek, DoorKepper] when scenarioOne
-
+always involved DoorKeeper when scenarioOne
+typically (inHostel && -hasCard) at 11 when scenarioTwo
+ever involved Janek, DoorKeeper when scenarioOne

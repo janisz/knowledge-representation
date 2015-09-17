@@ -20,6 +20,7 @@ Okno programu składa się z
 3. Przycisku "Open", który otwiera menadżera plików w celu wybrania definicji do załadowania
 4. Przycisku "Compute", który uruchamia obliczenia
 5. Okna komunikatów
+6. Menu wyboru maksymalnego czasu wykonania
 
 ![Alt Text](graphics/overview.png)
 
@@ -60,15 +61,15 @@ Gramatyka języka została opracowana w taki sposób aby wyeliminować
 znaczenie białych znaków. Ponadto, aby ułatwić czytelność kodu
 wszystkie sekcje są otoczone specjalnymi znakami.
 
-1. Listy fluentów zawsze są otoczone przez nawiasy kwadratowe (`[]`)
-```javascript
-initially [dogHungry, -dogDead]
-```
-
-2. Każda akcja ma postać `(aktor, zadanie)`
+1. Każda akcja ma postać `(aktor, zadanie)`
 ```javascript
 ever performed (dog, CommitSuicide) at 4 when scenarioOne
 ```
+
+2. Dostępne są następujące operatory logiczne, za pomocą których można budować wyrażenia z fluentów: 
+    1. alternatywa `||`
+    1. koniunkcja `&&`
+    1. implikacja `=>`
 
 3. Scenariusz ma syntaktykę opartą o format [JSON](http://json.org/)
 
@@ -80,9 +81,9 @@ scenario {
                 ((Janek, comeback), 10)
             },
             OBS = {
-                ([-hasCard, inHostel], 4),
-                ([hasCard], 5),
-                ([inHostel], 4)
+                (-hasCard, inHostel, 4),
+                (hasCard, 5),
+                (inHostel, 4)
             }
 }
 ```
@@ -92,13 +93,13 @@ scenario {
 * Plik definicji:
 
 ```javascript
-initially [dogHungry, -dogDead]
+initially (dogHungry && -dogDead)
 
-[dogHungry, -dogDead] triggers (dog, Sad)
+(dogHungry && -dogDead) triggers (dog, Sad)
 (dog, Sad) invokes (dog, CommitSuicide) after 5
-(dog, CommitSuicide) causes [dogDead] if [dogHungry, -dogDead]
+(dog, CommitSuicide) causes dogDead if dogHungry && -dogDead
 
-(dog, eats) causes [-dogHungry]
+(dog, eats) causes -dogHungry
 
 scenarioOne {
     ACS = {
@@ -111,6 +112,6 @@ scenarioOne {
 * Plik zapytań:
 
 ```javascript
-ever [dogHungry] at 0 when scenarioOne
-ever [-dogHungry] at 1 when scenarioOne
+ever dogHungry at 0 when scenarioOne
+ever -dogHungry at 1 when scenarioOne
 ```
