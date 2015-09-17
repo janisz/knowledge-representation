@@ -1,9 +1,17 @@
+# language
 language: java
-before_install:
-  - sudo apt-get update
-  - sudo apt-get install --only-upgrade -y oracle-java8-installer
+
+# version numbers
 jdk:
-  - oraclejdk8
+    - oraclejdk8
+
+before_install:
+   - apt-get update
+
+before_script:
+   - if [[ $SHIPPABLE_JDK_VERSION == "oraclejdk8" ]] ; then export JAVA_HOME="/usr/lib/jvm/java-8-oracle"; export PATH="$PATH:/usr/lib/jvm/java-8-oracle/bin"; export java_path="/usr/lib/jvm/java-8-oracle/jre/bin/java"; fi
+   - update-alternatives --set java $java_path
+   - java -version
 after_success:
   - ./gradlew jacocoTestReport coveralls
 
