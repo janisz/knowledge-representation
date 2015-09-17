@@ -1,12 +1,12 @@
 ### Kod programu
 ```python
-initially night or day
+initially night | day
 typically GoToBed causes sleep if night
 typically GoToBed causes nap if day
 hungry triggers Eat
 
 GoToBed invokes Wakeup after 8 if night
-Wakeup releases tired after 1 if -hangOver, -headache
+Wakeup releases tired after 1 if -hangOver & -headache
 
 Eat releases Hungry
 impossible Eat if night

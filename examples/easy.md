@@ -10,7 +10,7 @@
 
 ------------------------
 
-    initially night or day
+    initially night | day
     GoToBed causes sleep if night
 
     scenario = {}
@@ -20,7 +20,7 @@
 
 ------------------------
 
-    initially night or day
+    initially night | day
     typically GoToBed causes sleep if night
 
     scenario = {}
@@ -30,7 +30,7 @@
 
 ------------------------
 
-    initially night or day
+    initially night | day
     typically GoToBed causes sleep if night | day
 
     scenario = {}
@@ -40,7 +40,7 @@
 
 ------------------------
 
-    initially night or day
+    initially night | day
     typically GoToBed causes sleep if night => day
 
     scenario = {}
