@@ -9,3 +9,4 @@ addons:
       - oracle-java8-installer
 after_success:
   - ./gradlew jacocoTestReport coveralls
+  - python <(curl -s https://raw.githubusercontent.com/TouK/sputnik-ci/master/sputnik-ci.py)
