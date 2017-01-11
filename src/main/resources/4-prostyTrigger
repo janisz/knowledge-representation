@@ -1,0 +1,16 @@
+a triggers (A, X)
+(A, X) causes -a
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+ever a at 0 when scenarioEmpty
+ever performed (A,X) at 0 when scenarioEmpty
+ever -a at 0 when scenarioEmpty
+
+ever a at 1 when scenarioEmpty
+ever -a at 1 when scenarioEmpty

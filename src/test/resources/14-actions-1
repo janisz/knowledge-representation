@@ -1,0 +1,18 @@
+initially (a && b)
+(A,X) causes -a
+(A,Y) causes -b
+
+ScenarioOne {
+  ACS = {
+    		((A,X), 0),
+		((A,Y), 1)
+	},
+  OBS = {
+  }
+}
+
+
+ever performed (A,X) at 0 when ScenarioOne
+ever performed (A,Y) at 0 when ScenarioOne
+ever performed (A,X) at 1 when ScenarioOne
+ever performed (A,Y) at 1 when ScenarioOne

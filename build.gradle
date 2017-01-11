@@ -1,0 +1,92 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'antlr'
+apply plugin: 'idea'
+apply plugin: 'jacoco'
+apply plugin: 'com.github.kt3k.coveralls'
+
+apply from: 'http://dl.bintray.com/content/shemnon/javafx-gradle/0.4.0/javafx.plugin'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.1.0'
+    }
+}
+
+version = '1.0'
+
+run {
+    standardInput = System.in
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    antlr 'org.antlr:antlr4:4.6'
+
+    compile 'ch.qos.logback:logback-classic:1.1.8'
+    compile 'com.google.guava:guava:20.0'
+    compile 'commons-io:commons-io:2.5'
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+}
+
+generateGrammarSource {
+    outputDirectory = file("$buildDir/generated-src/antlr/main/pl/edu/pw/mini/msi/knowledgerepresentation/grammar")
+}
+
+idea {
+    module {
+        generatedSourceDirs += file("$buildDir/generated-src/antlr/main/")
+        jdkName = '1.7'
+    }
+}
+
+allprojects {
+    gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.10'
+}
+
+
+test {
+    jacoco {
+        excludes = ['**/grammar*.class']
+}
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
+}
+
+javafx {
+    appID 'KnowledgeRepresentation'
+    appName 'KnowledgeRepresentation'
+    mainClass 'pl.edu.pw.mini.msi.knowledgerepresentation.gui.Gui'
+
+    embedLauncher = true
+
+    category = 'Science'
+    copyright = 'Copyright (c) 2015 MiNI'
+    description = 'Knowledge Representation'
+    licenseType = 'BSD'
+    vendor = 'MiNI PW'
+    installSystemWide = true
+    menu = true
+    shortcut = true
+}

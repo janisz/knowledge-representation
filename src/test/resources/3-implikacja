@@ -1,0 +1,14 @@
+initially (a => b)
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+ever a at 0 when scenarioEmpty
+ever b at 0 when scenarioEmpty
+ever (a || b) at 0 when scenarioEmpty
+ever (-a || -b) at 0 when scenarioEmpty
+always (a => b) at 0 when scenarioEmpty

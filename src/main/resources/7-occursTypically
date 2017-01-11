@@ -1,0 +1,21 @@
+initially a
+(A,X) causes -a
+typically (A,X) occurs at 3
+
+scenarioEmpty {
+  ACS = {
+    },
+  OBS = {
+  }
+}
+
+ever a at 0 when scenarioEmpty
+always a at 0 when scenarioEmpty
+ever a at 4 when scenarioEmpty
+always a at 4 when scenarioEmpty
+typically performed (A,X) at 3 when scenarioEmpty
+
+
+
+
+
