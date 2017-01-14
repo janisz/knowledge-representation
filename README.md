@@ -1,5 +1,6 @@
 #knowledge-representation
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2abe923f412e4101b8a6fa9dc58948f6)](https://www.codacy.com/app/janiszt/knowledge-representation?utm_source=github.com&utm_medium=referral&utm_content=janisz/knowledge-representation&utm_campaign=badger)
 [![GitHub license](https://img.shields.io/badge/license-ISC-blue.svg)](https://raw.githubusercontent.com/janisz/knowledge-representation/master/LICENSE) [![Build Status](https://travis-ci.org/janisz/knowledge-representation.svg?branch=master)](https://travis-ci.org/janisz/knowledge-representation) [![Dependency Status](https://www.versioneye.com/user/projects/55633032366466001bc30100/badge.svg?style=flat)](https://www.versioneye.com/user/projects/55633032366466001bc30100) [![Coverage Status](https://coveralls.io/repos/janisz/knowledge-representation/badge.svg?branch=master&service=github)](https://coveralls.io/github/janisz/knowledge-representation?branch=master)
 ##Scenariusze działań z projektami domyślymi
 
