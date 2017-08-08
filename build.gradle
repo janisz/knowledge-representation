@@ -31,7 +31,7 @@ dependencies {
     antlr 'org.antlr:antlr4:4.7'
 
     compile 'ch.qos.logback:logback-classic:1.2.2'
-    compile 'com.google.guava:guava:22.0'
+    compile 'com.google.guava:guava:23.0'
     compile 'commons-io:commons-io:2.5'
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
