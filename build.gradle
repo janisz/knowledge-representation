@@ -34,7 +34,7 @@ dependencies {
     compile 'com.google.guava:guava:23.2-jre'
     compile 'commons-io:commons-io:2.6'
 
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4'
+    testCompile 'org.spockframework:spock-core:2.0-groovy-3.0'
 }
 
 generateGrammarSource {
